@@ -1,9 +1,17 @@
+import AuthManager from "./pages/AuthManager";
+import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
+  console.log(localStorage.getItem("jwt-token"));
   return (
-    <div style={{ margin: "0", padding: "0" }}>
-      <Login />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" Component={AuthManager} />
+        <Route path="/login" Component={Login} />
+        <Route path="/dashboard" Component={Dashboard} />
+      </Routes>
+    </Router>
   );
 }
 

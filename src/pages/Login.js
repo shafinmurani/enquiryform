@@ -4,7 +4,10 @@ import axios from "axios";
 import "../styles/Login.css";
 import { Alert, Button, InputAdornment, TextField } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+
 export default function Login() {
+  let navigate = useNavigate();
   const [isPasswordVIsible, setIsPasswordVisible] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -26,8 +29,7 @@ export default function Login() {
       setIsValidEmail(false);
     }
   };
-
-  const submit = () => {
+  const submit = (props) => {
     if (isValidEmail && password.length !== 0) {
       //TODO:  Email and password are valid, perform login logic here
       axios
@@ -37,8 +39,9 @@ export default function Login() {
         })
         .then((res) => {
           console.log(res.data);
-          if (res.data) {
-            console.log("Login Successful");
+          if (res.data.result) {
+            localStorage.setItem("jwt-token", res.data.token);
+            navigate("/dashboard");
           } else {
             setErrorField("Invalid Email or Password");
           }
@@ -56,6 +59,7 @@ export default function Login() {
       }
     }
   };
+
   return (
     <div className="wrapper">
       <div className="box">
@@ -78,8 +82,6 @@ export default function Login() {
           type="email"
           onChange={(e) => {
             validateEmail(e);
-            console.log(isValidEmail);
-            console.log(email);
           }}
         />
         <TextField
