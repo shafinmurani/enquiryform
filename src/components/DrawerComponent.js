@@ -15,9 +15,8 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CategoryIcon from "@mui/icons-material/Category";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import PersonIcon from "@mui/icons-material/Person";
-import ListTile from "../components/ListTile.js";
+import ListTile from "./ListTile.js";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -86,7 +85,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer() {
+export default function DrawerComponent(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -97,7 +96,6 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const navigate = useNavigate();
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -123,22 +121,45 @@ export default function MiniDrawer() {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
+          <Typography
+            variant="body2"
+            style={{ marginInline: "auto", display: open ? "block" : "none" }}
+          >
+            MENU
+          </Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
             ) : (
-              <ChevronLeftIcon />
+              <>
+                <ChevronLeftIcon />
+              </>
             )}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          <ListTile open={open} title="Product Group" icon={<CategoryIcon />} />
-          <ListTile open={open} title="Product" icon={<InventoryIcon />} />
+          <ListTile
+            open={open}
+            title="Product Group"
+            page={"/product-group"}
+            icon={<CategoryIcon />}
+          />
+          <ListTile
+            open={open}
+            title="Product"
+            page={"/product"}
+            icon={<InventoryIcon />}
+          />
         </List>
         <Divider />
         <List>
-          <ListTile open={open} title="Party" icon={<PersonIcon />} />
+          <ListTile
+            open={open}
+            title="Party"
+            icon={<PersonIcon />}
+            page={"/party"}
+          />
         </List>
         <Divider />
         <List>
@@ -152,7 +173,7 @@ export default function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Typography paragraph></Typography>
+        {props.children}
       </Box>
     </Box>
   );
