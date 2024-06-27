@@ -8,7 +8,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" Component={AuthManager} />
-        <Route path="/login" Component={Login} />
+        <Route path="/login" Component={Login} />{" "}
+        <Route path="/logout" Component={Login} />
         <Route path="/dashboard" Component={Dashboard} />
       </Routes>
     </Router>
