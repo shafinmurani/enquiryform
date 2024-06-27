@@ -1,13 +1,20 @@
 /* eslint-disable no-useless-escape */
 import React from "react";
 import "../styles/Login.css";
-import { Button, InputAdornment, TextField } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 export default function Login() {
   const [isPasswordVIsible, setIsPasswordVisible] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [isValidEmail, setIsValidEmail] = React.useState(true);
+  const [isValidEmail, setIsValidEmail] = React.useState(false);
+  const [errorField, setErrorField] = React.useState("");
 
   const validateEmail = (e) => {
     /**
@@ -28,15 +35,33 @@ export default function Login() {
   const submit = () => {
     if (isValidEmail && password.length !== 0) {
       //TODO:  Email and password are valid, perform login logic here
+      setErrorField("");
     } else {
       //TODO: Implement error logic here
-      //Email or password is invalid/empty
+      if (isValidEmail === false && password.length !== 0) {
+        setErrorField("Email");
+      } else if (password.length === 0 && isValidEmail === true) {
+        setErrorField("Password");
+      } else {
+        setErrorField("Email and Password");
+      }
     }
   };
   return (
     <div className="wrapper">
       <div className="box">
-        <h1 className="title">Login</h1>
+        <h1 className="title">Login</h1>{" "}
+        <Alert
+          sx={{ color: "red" }}
+          style={{
+            width: "90%",
+            display: errorField.length === 0 ? "none" : "",
+          }}
+          severity="error"
+          variant="standard"
+        >
+          Enter a valid {errorField}
+        </Alert>
         <TextField
           required
           className="input"
@@ -72,7 +97,6 @@ export default function Login() {
             ),
           }}
         />
-
         <Button
           onClick={submit}
           className="login-btn"
