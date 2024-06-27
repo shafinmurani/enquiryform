@@ -1,13 +1,8 @@
 /* eslint-disable no-useless-escape */
 import React from "react";
+import axios from "axios";
 import "../styles/Login.css";
-import {
-  Alert,
-  AlertTitle,
-  Button,
-  InputAdornment,
-  TextField,
-} from "@mui/material";
+import { Alert, Button, InputAdornment, TextField } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 export default function Login() {
   const [isPasswordVIsible, setIsPasswordVisible] = React.useState(false);
@@ -35,6 +30,20 @@ export default function Login() {
   const submit = () => {
     if (isValidEmail && password.length !== 0) {
       //TODO:  Email and password are valid, perform login logic here
+      axios
+        .post("http://localhost:3001/api/login", {
+          email: email,
+          password: password,
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data) {
+            console.log("Login Successful");
+          } else {
+            setErrorField("Invalid Email or Password");
+          }
+        });
+
       setErrorField("");
     } else {
       //TODO: Implement error logic here
