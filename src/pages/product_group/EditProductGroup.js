@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import { useLocation } from "react-router-dom";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
-import { Button, TextField, Typography } from "@mui/material";
+import { Alert, Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
@@ -12,6 +12,9 @@ export default function EditProductGroup() {
   const [rows, setRows] = React.useState([]);
   const [increment, setIncrement] = React.useState(0);
   const [value, setValue] = React.useState("");
+  const [result, setResult] = React.useState("0");
+  const [message, setMessage] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
   const getData = async (id) => {
     return await axios
       .post("http://localhost:3001/api/product-group/get-specific", { id: id })
@@ -52,7 +55,29 @@ export default function EditProductGroup() {
     console.log(increment);
   }
 
-  const submit = () => {};
+  const submit = () => {
+    setIsLoading(true);
+    axios
+      .post("http://localhost:3001/api/product-group/edit", {
+        category: value,
+        id: id,
+      })
+      .then(async (res) => {
+        console.log(res.data);
+        if (res.data.result) {
+          setResult("success");
+          setMessage(res.data.message);
+          setIsLoading(false);
+          await timeout(1500);
+          setResult("");
+          setResult("");
+        } else {
+          setResult("error");
+          setMessage(res.data.message);
+          setIsLoading(false);
+        }
+      });
+  };
 
   return (
     <>
@@ -69,6 +94,15 @@ export default function EditProductGroup() {
         >
           <h1>Edit Product Group</h1>
           <br />
+          <Alert
+            style={{
+              width: "100%",
+              display: result.length === 0 ? "none" : "",
+            }}
+            severity={result}
+          >
+            {message}
+          </Alert>
         </div>
         {rows.map((row) => (
           <div
