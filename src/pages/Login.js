@@ -3,7 +3,12 @@ import React from "react";
 import axios from "axios";
 import "../styles/Login.css";
 import { Alert, Button, InputAdornment, TextField } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  BadgeRounded,
+  Person,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -61,7 +66,17 @@ export default function Login() {
   return (
     <div className="wrapper">
       <div className="box">
-        <h1 className="title">Login</h1>
+        <h1 className="title">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <BadgeRounded style={{ fontSize: "2rem" }} /> Login
+          </div>
+        </h1>
         <Alert
           sx={{ color: "red" }}
           style={{
