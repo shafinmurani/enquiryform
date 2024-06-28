@@ -14,7 +14,7 @@ export default function BreadcrumbsComponent() {
 
   return (
     <Breadcrumbs separator=">" aria-label="Breadcrumb">
-      <Link color="inherit" component={RouterLink} to="/">
+      <Link style={{ color: "black" }} component={RouterLink} to="/">
         Home
       </Link>
       {pathnames.map((value, index) => {
@@ -22,11 +22,11 @@ export default function BreadcrumbsComponent() {
         const to = `/${pathnames.slice(0, index + 1).join("/")}`;
 
         return last ? (
-          <Typography color="textPrimary" key={to}>
+          <Typography style={{ color: "black" }} color="textPrimary" key={to}>
             {toTitleCase(value)}
           </Typography>
         ) : (
-          <Link color="inherit" component={RouterLink} to="/" key={to}>
+          <Link style={{ color: "black" }} color="inherit" component={RouterLink} to="/" key={to}>
             {toTitleCase(value)}
           </Link>
         );
