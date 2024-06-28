@@ -44,7 +44,7 @@ export default function AddProductGroup() {
   };
   return (
     <>
-      <DrawerComponent title="Add Product Group">
+      <DrawerComponent title="Add Services">
         <BreadcrumbsComponent />
         <div>
           <div
@@ -58,7 +58,7 @@ export default function AddProductGroup() {
               paddingInline: "2rem",
             }}
           >
-            <h1>Add Product Group</h1>
+            <h1>Add Services</h1>
 
             <div
               style={{
@@ -82,7 +82,7 @@ export default function AddProductGroup() {
               <TextField
                 onChange={(e) => setProductGroupName(e.target.value)}
                 style={{ width: "100%" }}
-                label="Product Group Name"
+                label="Services Name"
                 value={productGroupName}
               />
               <div

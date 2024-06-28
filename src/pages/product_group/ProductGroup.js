@@ -1,13 +1,6 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import {
-  Alert,
-  Button,
-  Dialog,
-  DialogTitle,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Button, TextField, Typography } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
@@ -20,7 +13,6 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
-import { internal_processStyles } from "@mui/styled-engine-sc";
 
 export default function ProductGroup() {
   const [rows, setRows] = React.useState([]);
@@ -84,7 +76,7 @@ export default function ProductGroup() {
   };
   return (
     <>
-      <DrawerComponent title="Product Group List">
+      <DrawerComponent title="Services List">
         <BreadcrumbsComponent />
         <div
           style={{
@@ -94,7 +86,7 @@ export default function ProductGroup() {
             alignItems: "center",
           }}
         >
-          <h1>Product Group</h1>
+          <h1>Services</h1>
         </div>
         <Alert
           style={{
@@ -134,7 +126,7 @@ export default function ProductGroup() {
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell align="right">Product Group</TableCell>
+                <TableCell align="right">Services</TableCell>
                 {/* <TableCell align="right">Is Deleted</TableCell> */}
                 <TableCell align="right">Date Created</TableCell>
                 <TableCell align="right">Date Modified</TableCell>
