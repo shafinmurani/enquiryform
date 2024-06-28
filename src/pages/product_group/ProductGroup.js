@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { Alert, Button, Dialog, DialogTitle, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogTitle,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
@@ -31,6 +38,7 @@ export default function ProductGroup() {
   const [title, setTitle] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [deleteId, setDeleteId] = React.useState();
+  const [search, setSearch] = React.useState("");
 
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
@@ -47,6 +55,13 @@ export default function ProductGroup() {
     setTitle("");
     setMessage("");
   };
+  function filter(keyword) {
+    if (keyword.length === 0) {
+      return rows;
+    } else {
+      return rows.filter((row) => row.vCategory.includes(keyword));
+    }
+  }
   const handleDelete = async () => {
     //TODO : IMPLEMENT BACK END LOGIC
     axios
@@ -94,8 +109,8 @@ export default function ProductGroup() {
         <div
           style={{
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
+            flexDirection: "row-reverse",
+            justifyContent: "space-between",
             gap: "1rem",
             alignItems: "center",
             marginBottom: "1rem",
@@ -106,6 +121,13 @@ export default function ProductGroup() {
               Add
             </Button>
           </Link>
+          <TextField
+            style={{ minWidth: "20rem" }}
+            onChange={(e) => setSearch(e.target.value)}
+            id="outlined-basic"
+            label="Search"
+            variant="outlined"
+          />
         </div>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -120,7 +142,7 @@ export default function ProductGroup() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => {
+              {filter(search).map((row) => {
                 if (row.isDeleted === "Yes") {
                   return null;
                 } else {

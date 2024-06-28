@@ -2,7 +2,7 @@ import React from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import { Alert, Button, CircularProgress, TextField } from "@mui/material";
 import axios from "axios";
-import '../../styles/AddProductGroup.css';
+import "../../styles/AddProductGroup.css";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 //TODO: CHANGING A TON OF SHIT COZ THE BACKEND DEVELOPER THINKS ITS OKAY TO PUT PEE COLOURS IN THE FUCKIN WEBSITE
 function timeout(delay) {
@@ -14,6 +14,7 @@ export default function AddProductGroup() {
   const [result, setResult] = React.useState("0");
   const [message, setMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+
   const submit = () => {
     setIsLoading(true);
     axios
@@ -23,8 +24,13 @@ export default function AddProductGroup() {
       .then(async (res) => {
         console.log(res.data);
         if (res.data.result) {
-          setResult("success");
-          setMessage(res.data.message);
+          if (res.data.affectedRows === 0) {
+            setResult("warning");
+            setMessage("No product group added, Data already exists");
+          } else {
+            setResult("success");
+            setMessage(res.data.message);
+          }
           setIsLoading(false);
           await timeout(1500);
           setResult("");
@@ -40,9 +46,7 @@ export default function AddProductGroup() {
     <>
       <DrawerComponent title="Add Product Group">
         <BreadcrumbsComponent />
-        <div >
-
-
+        <div>
           <div
             className="add-product-container"
             style={{
@@ -94,7 +98,7 @@ export default function AddProductGroup() {
                   disabled={isLoading}
                   size="large"
                   variant="contained"
-                // style={{ flex: "2" }}
+                  // style={{ flex: "2" }}
                 >
                   {isLoading ? (
                     <CircularProgress style={{ color: "white" }} />
@@ -110,7 +114,7 @@ export default function AddProductGroup() {
                   size="large"
                   variant="contained"
                   color="warning"
-                // style={{ flex: "2" }}
+                  // style={{ flex: "2" }}
                 >
                   {isLoading ? (
                     <CircularProgress style={{ color: "white" }} />
