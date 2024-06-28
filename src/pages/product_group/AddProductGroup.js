@@ -1,7 +1,14 @@
 import React from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { Alert, Button, CircularProgress, TextField } from "@mui/material";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  TextField,
+  
+} from "@mui/material";
 import axios from "axios";
+import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 
 export default function AddProductGroup() {
   const [productGroupName, setProductGroupName] = React.useState("");
@@ -29,7 +36,17 @@ export default function AddProductGroup() {
   };
   return (
     <>
-      <DrawerComponent>
+      <DrawerComponent title="Add Product Group">
+    <BreadcrumbsComponent />
+        {/* <Breadcrumbs separator=">" aria-label="breadcrumb">
+          <Link underline="hover" color="inherit" to="/">
+            Home
+          </Link>
+          <Link underline="hover" color="inherit" to="/product-group">
+            Product group
+          </Link>
+          <Typography color="text.primary">Add Product group</Typography>
+        </Breadcrumbs> */}
         <div
           style={{
             display: "flex",
@@ -40,7 +57,15 @@ export default function AddProductGroup() {
         >
           <h1>Add Product Group</h1>
         </div>
-        <div style={{ width: "60%", marginInline: "auto" }}>
+        <div
+          style={{
+            width: "80%",
+            marginInline: "auto",
+            backgroundColor: "#EEE8A9",
+            padding: "3rem",
+            paddingInline: "2rem",
+          }}
+        >
           <div
             style={{
               display: "flex",
@@ -64,20 +89,46 @@ export default function AddProductGroup() {
               onChange={(e) => setProductGroupName(e.target.value)}
               style={{ width: "100%" }}
               label="Product Group Name"
+              value={productGroupName}
             />
-            <Button
-              onClick={submit}
-              disabled={isLoading}
-              size="large"
-              variant="contained"
-              style={{ flex: "2" }}
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
             >
-              {isLoading ? (
-                <CircularProgress style={{ color: "white" }} />
-              ) : (
-                "Sumbit"
-              )}
-            </Button>
+              <Button
+                onClick={submit}
+                disabled={isLoading}
+                size="large"
+                variant="contained"
+                // style={{ flex: "2" }}
+              >
+                {isLoading ? (
+                  <CircularProgress style={{ color: "white" }} />
+                ) : (
+                  "Save"
+                )}
+              </Button>
+              <Button
+                onClick={() => {
+                  setProductGroupName("");
+                }}
+                disabled={isLoading}
+                size="large"
+                variant="contained"
+                color="warning"
+                // style={{ flex: "2" }}
+              >
+                {isLoading ? (
+                  <CircularProgress style={{ color: "white" }} />
+                ) : (
+                  "Reset"
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </DrawerComponent>

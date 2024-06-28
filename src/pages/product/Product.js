@@ -4,7 +4,7 @@ import DrawerComponent from "../../components/DrawerComponent";
 export default function Product() {
   return (
     <>
-      <DrawerComponent>Product</DrawerComponent>
+      <DrawerComponent title="Product">Product</DrawerComponent>
     </>
   );
 }

@@ -4,7 +4,7 @@ import DrawerComponent from "../../components/DrawerComponent";
 export default function Party() {
   return (
     <>
-      <DrawerComponent>Party</DrawerComponent>
+      <DrawerComponent title="Party">Party</DrawerComponent>
     </>
   );
 }
