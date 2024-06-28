@@ -1,5 +1,5 @@
 .wrapper {
-    background-image: url(./wallpaper.jpg);
+    background-image: linear-gradient(to left top, #da65a8, #cb6bb9, #b872c8, #a17ad4, #8681dc, #6c90ea, #4a9df3, #00aaf8, #00c1ff, #00d7ff, #00ecfc, #3dfff2);
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
