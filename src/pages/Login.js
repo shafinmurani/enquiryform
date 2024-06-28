@@ -61,7 +61,7 @@ export default function Login() {
   return (
     <div className="wrapper">
       <div className="box">
-        <h1 className="title">Login</h1>{" "}
+        <h1 className="title">Login</h1>
         <Alert
           sx={{ color: "red" }}
           style={{
@@ -73,47 +73,65 @@ export default function Login() {
         >
           Enter a valid {errorField}
         </Alert>
-        <TextField
-          required
-          className="input"
-          label="Email"
-          type="email"
-          onChange={(e) => {
-            validateEmail(e);
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+            width: "90%",
           }}
-        />
-        <TextField
-          required
-          className="input"
-          label="Password"
-          type={isPasswordVIsible ? "text" : "password"}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Button
-                  variant="text"
-                  color="inherit"
-                  onClick={() => {
-                    setIsPasswordVisible(!isPasswordVIsible);
-                  }}
-                >
-                  {isPasswordVIsible ? <Visibility /> : <VisibilityOff />}
-                </Button>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Button
-          onClick={submit}
-          className="login-btn"
-          variant="contained"
-          type="submit"
         >
-          Login
-        </Button>
+          <TextField
+            required
+            className="input"
+            label="Email"
+            type="email"
+            InputProps={{
+              sx: { borderRadius: "100px" },
+            }}
+            onChange={(e) => {
+              validateEmail(e);
+            }}
+          />
+          <TextField
+            required
+            className="input"
+            label="Password"
+            type={isPasswordVIsible ? "text" : "password"}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            InputProps={{
+              sx: { borderRadius: "100px" },
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Button
+                    variant="text"
+                    color="inherit"
+                    onClick={() => {
+                      setIsPasswordVisible(!isPasswordVIsible);
+                    }}
+                  >
+                    {isPasswordVIsible ? <Visibility /> : <VisibilityOff />}
+                  </Button>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button
+            style={{
+              borderRadius: 50,
+              width: "60%",
+              alignSelf: "center",
+            }}
+            onClick={submit}
+            className="login-btn"
+            variant="contained"
+            type="submit"
+          >
+            Login
+          </Button>
+        </div>
       </div>
     </div>
   );
