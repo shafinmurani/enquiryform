@@ -17,6 +17,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import PersonIcon from "@mui/icons-material/Person";
 import ListTile from "./ListTile.js";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { ForkLeft } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -98,9 +99,9 @@ export default function DrawerComponent(props) {
   };
 
   return (
-    <Box sx={{ display: "flex", backgroundColor: "#C4BFCB", height: "100vh" }}>
+    <Box sx={{ display: "flex", backgroundColor: "#eceff4", height: "100vh" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar style={{ backgroundImage: "linear-gradient(to bottom, #00b8e1, #00b0d9, #00a8d0, #00a1c8, #0099c0)" }} position="fixed" open={open}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -120,10 +121,10 @@ export default function DrawerComponent(props) {
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
+        <DrawerHeader >
           <Typography
             variant="body2"
-            style={{ marginInline: "auto", display: open ? "block" : "none" }}
+            style={{ marginInline: "auto", display: open ? "block" : "none", }}
           >
             MENU
           </Typography>
