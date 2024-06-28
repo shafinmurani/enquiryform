@@ -2,8 +2,9 @@ import React from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import { Alert, Button, CircularProgress, TextField } from "@mui/material";
 import axios from "axios";
+import '../../styles/AddProductGroup.css';
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
-
+//TODO: CHANGING A TON OF SHIT COZ THE BACKEND DEVELOPER THINKS ITS OKAY TO PUT PEE COLOURS IN THE FUCKIN WEBSITE
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
 }
@@ -39,88 +40,85 @@ export default function AddProductGroup() {
     <>
       <DrawerComponent title="Add Product Group">
         <BreadcrumbsComponent />
+        <div >
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <h1>Add Product Group</h1>
-        </div>
-        <div
-          style={{
-            width: "80%",
-            marginInline: "auto",
-            backgroundColor: "#EEE8A9",
-            padding: "3rem",
-            paddingInline: "2rem",
-          }}
-        >
+
           <div
+            className="add-product-container"
             style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
               marginTop: "1rem",
-              gap: "1rem",
-              alignItems: "flex-end",
+              width: "80%",
+              marginInline: "auto",
+              backgroundColor: "#FFFFFF",
+              padding: "2rem",
+              paddingInline: "2rem",
             }}
           >
-            <Alert
-              style={{
-                width: "100%",
-                display: result.length === 0 ? "none" : "",
-              }}
-              severity={result}
-            >
-              {message}
-            </Alert>
-            <TextField
-              onChange={(e) => setProductGroupName(e.target.value)}
-              style={{ width: "100%" }}
-              label="Product Group Name"
-              value={productGroupName}
-            />
+            <h1>Add Product Group</h1>
+
             <div
               style={{
-                width: "100%",
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                marginTop: "1rem",
+                gap: "1rem",
+                alignItems: "flex-end",
               }}
             >
-              <Button
-                onClick={submit}
-                disabled={isLoading}
-                size="large"
-                variant="contained"
-                // style={{ flex: "2" }}
-              >
-                {isLoading ? (
-                  <CircularProgress style={{ color: "white" }} />
-                ) : (
-                  "Save"
-                )}
-              </Button>
-              <Button
-                onClick={() => {
-                  setProductGroupName("");
+              <Alert
+                style={{
+                  width: "100%",
+                  display: result.length === 0 ? "none" : "",
                 }}
-                disabled={isLoading}
-                size="large"
-                variant="contained"
-                color="warning"
-                // style={{ flex: "2" }}
+                severity={result}
               >
-                {isLoading ? (
-                  <CircularProgress style={{ color: "white" }} />
-                ) : (
-                  "Reset"
-                )}
-              </Button>
+                {message}
+              </Alert>
+              <TextField
+                onChange={(e) => setProductGroupName(e.target.value)}
+                style={{ width: "100%" }}
+                label="Product Group Name"
+                value={productGroupName}
+              />
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  onClick={submit}
+                  disabled={isLoading}
+                  size="large"
+                  variant="contained"
+                // style={{ flex: "2" }}
+                >
+                  {isLoading ? (
+                    <CircularProgress style={{ color: "white" }} />
+                  ) : (
+                    "Save"
+                  )}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setProductGroupName("");
+                  }}
+                  disabled={isLoading}
+                  size="large"
+                  variant="contained"
+                  color="warning"
+                // style={{ flex: "2" }}
+                >
+                  {isLoading ? (
+                    <CircularProgress style={{ color: "white" }} />
+                  ) : (
+                    "Reset"
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
