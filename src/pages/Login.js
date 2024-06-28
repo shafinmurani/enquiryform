@@ -31,7 +31,6 @@ export default function Login() {
   };
   const submit = (props) => {
     if (isValidEmail && password.length !== 0) {
-      //TODO:  Email and password are valid, perform login logic here
       axios
         .post("http://localhost:3001/api/login", {
           email: email,
@@ -49,7 +48,6 @@ export default function Login() {
 
       setErrorField("");
     } else {
-      //TODO: Implement error logic here
       if (isValidEmail === false && password.length !== 0) {
         setErrorField("Email");
       } else if (password.length === 0 && isValidEmail === true) {
