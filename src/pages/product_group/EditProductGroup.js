@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import { useLocation } from "react-router-dom";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
-import { Alert, Button, TextField, Typography } from "@mui/material";
+import { Alert, Button, CircularProgress, TextField, Typography } from "@mui/material";
 import axios from "axios";
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
@@ -132,17 +132,17 @@ export default function EditProductGroup() {
             >
               <Button
                 onClick={submit}
-                // disabled={isLoading}
+                disabled={isLoading}
                 size="large"
                 variant="contained"
               >
-                Save
+                {isLoading ? <CircularProgress/> :"Save"}
               </Button>
               <Button
                 onClick={() => {
                   setValue(row.vCategory);
                 }}
-                // disabled={isLoading}
+                disabled={isLoading}
                 size="large"
                 variant="contained"
                 color="warning"
