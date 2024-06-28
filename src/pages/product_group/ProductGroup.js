@@ -166,6 +166,7 @@ export default function ProductGroup() {
                             >
                               <Typography>Yes</Typography>
                             </Button>
+
                             <Button
                               onClick={handleClose}
                               size="small"
@@ -190,9 +191,11 @@ export default function ProductGroup() {
                         >
                           <Delete />
                         </Button>
-                        <Button size="small" variant="contained" color="info">
-                          <Edit />
-                        </Button>
+                        <Link to="/product-group/edit">
+                          <Button size="small" variant="contained" color="info">
+                            <Edit />
+                          </Button>
+                        </Link>
                       </TableCell>
                     </TableRow>
                   );
