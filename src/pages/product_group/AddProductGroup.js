@@ -1,14 +1,12 @@
 import React from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import {
-  Alert,
-  Button,
-  CircularProgress,
-  TextField,
-  
-} from "@mui/material";
+import { Alert, Button, CircularProgress, TextField } from "@mui/material";
 import axios from "axios";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
+
+function timeout(delay) {
+  return new Promise((res) => setTimeout(res, delay));
+}
 
 export default function AddProductGroup() {
   const [productGroupName, setProductGroupName] = React.useState("");
@@ -21,12 +19,15 @@ export default function AddProductGroup() {
       .post("http://localhost:3001/api/product-group/add", {
         category: productGroupName,
       })
-      .then((res) => {
+      .then(async (res) => {
         console.log(res.data);
         if (res.data.result) {
           setResult("success");
           setMessage(res.data.message);
           setIsLoading(false);
+          await timeout(1500);
+          setResult("");
+          setResult("");
         } else {
           setResult("error");
           setMessage(res.data.message);
@@ -37,8 +38,8 @@ export default function AddProductGroup() {
   return (
     <>
       <DrawerComponent title="Add Product Group">
-    <BreadcrumbsComponent />
-       
+        <BreadcrumbsComponent />
+
         <div
           style={{
             display: "flex",
