@@ -60,61 +60,64 @@ export default function Login() {
 
   return (
     <div className="wrapper">
-      <div className="box">
-        <h1 className="title">Login</h1>{" "}
-        <Alert
-          sx={{ color: "red" }}
-          style={{
-            width: "90%",
-            display: errorField.length === 0 ? "none" : "",
-          }}
-          severity="error"
-          variant="standard"
-        >
-          Enter a valid {errorField}
-        </Alert>
-        <TextField
-          required
-          className="input"
-          label="Email"
-          type="email"
-          onChange={(e) => {
-            validateEmail(e);
-          }}
-        />
-        <TextField
-          required
-          className="input"
-          label="Password"
-          type={isPasswordVIsible ? "text" : "password"}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Button
-                  variant="text"
-                  color="inherit"
-                  onClick={() => {
-                    setIsPasswordVisible(!isPasswordVIsible);
-                  }}
-                >
-                  {isPasswordVIsible ? <Visibility /> : <VisibilityOff />}
-                </Button>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Button
-          onClick={submit}
-          className="login-btn"
-          variant="contained"
-          type="submit"
-        >
-          Login
-        </Button>
+      <div class="container">
+        <div className="box">
+          <h1 className="title">Login</h1>{" "}
+          <Alert
+            sx={{ color: "red" }}
+            style={{
+              width: "90%",
+              display: errorField.length === 0 ? "none" : "",
+            }}
+            severity="error"
+            variant="standard"
+          >
+            Enter a valid {errorField}
+          </Alert>
+          <TextField
+            required
+            className="input"
+            label="Email"
+            type="email"
+            onChange={(e) => {
+              validateEmail(e);
+            }}
+          />
+          <TextField
+            required
+            className="input"
+            label="Password"
+            type={isPasswordVIsible ? "text" : "password"}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Button
+                    variant="text"
+                    color="inherit"
+                    onClick={() => {
+                      setIsPasswordVisible(!isPasswordVIsible);
+                    }}
+                  >
+                    {isPasswordVIsible ? <Visibility /> : <VisibilityOff />}
+                  </Button>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button
+            onClick={submit}
+            className="login-btn"
+            variant="contained"
+            type="submit"
+          >
+            Login
+          </Button>
+        </div>
       </div>
+
     </div>
   );
 }

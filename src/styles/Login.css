@@ -1,4 +1,7 @@
 .wrapper {
+    background-image: url(./wallpaper.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,8 +9,17 @@
     height: 100vh;
 }
 
+/* .container {
+    border-radius: 1px 50px;
+    outline: 2px solid #e86f1e9d;
+    outline-width: 10px;
+} */
+
 .box {
-    background-color: #DFE0DF;
+    background-color: #f4f9fa;
+    border-radius: 1px 50px;
+    /* outline: 2px solid #1c5b7f5b;
+    outline-width: 10px; */
     padding-inline: 4rem;
     padding-block-end: 3rem;
     padding-block-start: 1rem;
@@ -16,6 +28,7 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
+    height: 40rem;
     width: 25rem;
 }
 
