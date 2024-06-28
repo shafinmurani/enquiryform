@@ -191,7 +191,10 @@ export default function ProductGroup() {
                         >
                           <Delete />
                         </Button>
-                        <Link to="/product-group/edit">
+                        <Link
+                          to={`/product-group/edit/`}
+                          state={{ id: row.iCategoryID }}
+                        >
                           <Button size="small" variant="contained" color="info">
                             <Edit />
                           </Button>
