@@ -38,15 +38,7 @@ export default function AddProductGroup() {
     <>
       <DrawerComponent title="Add Product Group">
     <BreadcrumbsComponent />
-        {/* <Breadcrumbs separator=">" aria-label="breadcrumb">
-          <Link underline="hover" color="inherit" to="/">
-            Home
-          </Link>
-          <Link underline="hover" color="inherit" to="/product-group">
-            Product group
-          </Link>
-          <Typography color="text.primary">Add Product group</Typography>
-        </Breadcrumbs> */}
+       
         <div
           style={{
             display: "flex",
