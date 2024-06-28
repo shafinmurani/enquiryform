@@ -78,7 +78,7 @@ export default function Login() {
             display: "flex",
             flexDirection: "column",
             gap: "1rem",
-            width: "90%",
+            width: "100%",
           }}
         >
           <TextField
@@ -87,7 +87,7 @@ export default function Login() {
             label="Email"
             type="email"
             InputProps={{
-              sx: { borderRadius: "100px" },
+              sx: { borderRadius: "50px" },
             }}
             onChange={(e) => {
               validateEmail(e);
