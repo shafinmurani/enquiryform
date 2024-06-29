@@ -86,9 +86,16 @@ export default function EditProductGroup() {
 
   return (
     <>
-      <DrawerComponent title="Add Services">
-        <BreadcrumbsComponent />
-        <div style={{ backgroundColor: "white", marginTop: "2rem", paddingBottom: "3rem", borderStyle: "outset", borderColor: "#eceff4" }}>
+      <DrawerComponent title="Add Service Group">
+        <div
+          style={{
+            backgroundColor: "white",
+            marginTop: "2rem",
+            paddingBottom: "3rem",
+            borderStyle: "outset",
+            borderColor: "#eceff4",
+          }}
+        >
           <div
             style={{
               display: "flex",
