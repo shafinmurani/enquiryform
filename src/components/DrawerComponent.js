@@ -17,7 +17,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import PersonIcon from "@mui/icons-material/Person";
 import ListTile from "./ListTile.js";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { ForkLeft } from "@mui/icons-material";
+import BreadcrumbsComponent from "./BreadcrumbsComponent.js";
 
 const drawerWidth = 240;
 
@@ -149,14 +149,14 @@ export default function DrawerComponent(props) {
         <List>
           <ListTile
             open={open}
-            title="Services"
-            page={"/product-group"}
+            title="Service Group"
+            page={"/service-group"}
             icon={<CategoryIcon />}
           />
           <ListTile
             open={open}
-            title="Product"
-            page={"/product"}
+            title="Service"
+            page={"/service"}
             icon={<InventoryIcon />}
           />
         </List>
@@ -181,6 +181,8 @@ export default function DrawerComponent(props) {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
+        <BreadcrumbsComponent />
+
         {props.children}
       </Box>
     </Box>

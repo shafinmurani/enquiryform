@@ -11,14 +11,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
-import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
 
 export default function ProductGroup() {
   const [rows, setRows] = React.useState([]);
   const getData = async () => {
     await axios
-      .post("http://localhost:3001/api/product-group/get", {})
+      .post("http://localhost:3001/api/service-group/get", {})
       .then((res) => {
         setRows(res.data.list);
       });
@@ -57,7 +56,7 @@ export default function ProductGroup() {
   const handleDelete = async () => {
     //TODO : IMPLEMENT BACK END LOGIC
     axios
-      .post("http://localhost:3001/api/product-group/delete", {
+      .post("http://localhost:3001/api/service-group/delete", {
         id: deleteId,
       })
       .then(async (res) => {
@@ -76,8 +75,7 @@ export default function ProductGroup() {
   };
   return (
     <>
-      <DrawerComponent title="Services List">
-        <BreadcrumbsComponent />
+      <DrawerComponent title="Service Group List">
         <div
           style={{
             display: "flex",
@@ -86,7 +84,7 @@ export default function ProductGroup() {
             alignItems: "center",
           }}
         >
-          <h1>Services</h1>
+          <h1>Service Group</h1>
         </div>
         <Alert
           style={{
@@ -108,7 +106,7 @@ export default function ProductGroup() {
             marginBottom: "1rem",
           }}
         >
-          <Link to="/product-group/add">
+          <Link to="/service-group/add">
             <Button startIcon={<Add />} variant="contained">
               Add
             </Button>
@@ -126,7 +124,7 @@ export default function ProductGroup() {
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell align="right">Services</TableCell>
+                <TableCell align="right">Service Group</TableCell>
                 {/* <TableCell align="right">Is Deleted</TableCell> */}
                 <TableCell align="right">Date Created</TableCell>
                 <TableCell align="right">Date Modified</TableCell>
@@ -206,7 +204,7 @@ export default function ProductGroup() {
                           <Delete />
                         </Button>
                         <Link
-                          to={`/product-group/edit/`}
+                          to={`/service-group/edit/`}
                           state={{ id: row.iCategoryID }}
                         >
                           <Button size="small" variant="contained" color="info">

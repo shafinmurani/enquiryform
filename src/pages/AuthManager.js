@@ -8,6 +8,6 @@ export default function AuthManager() {
   if (jwtToken == null) {
     return <Navigate to="/login" />;
   } else {
-    return <Navigate to="/product-group" />;
+    return <Navigate to="/service-group" />;
   }
 }

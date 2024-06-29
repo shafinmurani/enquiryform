@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Logout from "./pages/Logout";
 import Product from "./pages/product/Product";
 import Party from "./pages/party/Party";
+import AddProduct from "./pages/product/AddProduct";
 import AddProductGroup from "./pages/product_group/AddProductGroup";
 import EditProductGroup from "./pages/product_group/EditProductGroup";
 function App() {
@@ -15,10 +16,11 @@ function App() {
         <Route path="/" Component={AuthManager} />
         <Route path="/login" Component={Login} />{" "}
         <Route path="/logout" Component={Logout} />
-        <Route path="/product-group" Component={ProductGroup} />
-        <Route path="/product-group/add" Component={AddProductGroup} />
-        <Route path="/product-group/edit" Component={EditProductGroup} />
-        <Route path="/product" Component={Product} />
+        <Route path="/service-group" Component={ProductGroup} />
+        <Route path="/service-group/add" Component={AddProductGroup} />
+        <Route path="/service-group/edit" Component={EditProductGroup} />
+        <Route path="/service" Component={Product} />
+        <Route path="/service/add" Component={AddProduct} />
         <Route path="/party" Component={Party} />
       </Routes>
     </Router>

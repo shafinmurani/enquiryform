@@ -45,7 +45,7 @@ export default function Login() {
           console.log(res.data);
           if (res.data.result) {
             localStorage.setItem("jwt-token", res.data.token);
-            navigate("/product-group");
+            navigate("/service-group");
           } else {
             setErrorField("Invalid Email or Password");
           }

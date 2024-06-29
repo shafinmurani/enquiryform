@@ -1,7 +1,6 @@
 import React from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import { useLocation } from "react-router-dom";
-import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 import {
   Alert,
   Button,
@@ -23,7 +22,7 @@ export default function EditProductGroup() {
   const [isLoading, setIsLoading] = React.useState(false);
   const getData = async (id) => {
     return await axios
-      .post("http://localhost:3001/api/product-group/get-specific", { id: id })
+      .post("http://localhost:3001/api/service-group/get-specific", { id: id })
       .then((res) => {
         console.log(res.data);
         setRows(res.data.list);
@@ -34,7 +33,7 @@ export default function EditProductGroup() {
   if (location.state === null) {
     return (
       <>
-        <DrawerComponent title="Add Services">
+        <DrawerComponent title="Add Service Group">
           <div
             style={{
               display: "flex",
@@ -44,7 +43,7 @@ export default function EditProductGroup() {
               gap: "1rem",
             }}
           >
-            <h1>Edit Services</h1>
+            <h1>Edit Service Group</h1>
             <Typography paragraph>
               There was an error recieving the data. Please try again
             </Typography>
@@ -64,7 +63,7 @@ export default function EditProductGroup() {
   const submit = () => {
     setIsLoading(true);
     axios
-      .post("http://localhost:3001/api/product-group/edit", {
+      .post("http://localhost:3001/api/service-group/edit", {
         category: value,
         id: id,
       })
@@ -87,9 +86,7 @@ export default function EditProductGroup() {
 
   return (
     <>
-      <DrawerComponent title="Add Services">
-        <BreadcrumbsComponent />
-
+      <DrawerComponent title="Add Service Group">
         <div
           style={{
             display: "flex",
@@ -98,7 +95,7 @@ export default function EditProductGroup() {
             alignItems: "center",
           }}
         >
-          <h1>Edit Services</h1>
+          <h1>Edit Service Group</h1>
           <br />
           <Alert
             style={{

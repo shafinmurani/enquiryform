@@ -1,23 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import { Alert, Button, CircularProgress, TextField } from "@mui/material";
 import axios from "axios";
 import "../../styles/AddProductGroup.css";
+import Autocomplete from "@mui/material/Autocomplete";
+
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
 }
 
-export default function AddProductGroup() {
-  const [productGroupName, setProductGroupName] = React.useState("");
+export default function AddProduct() {
+  const [service, setService] = React.useState("");
   const [result, setResult] = React.useState("0");
   const [message, setMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
-
+  const [serviceGroup, setServiceGroup] = React.useState("");
+  const [serviceGroupList, setServiceGroupList] = React.useState([]);
   const submit = () => {
     setIsLoading(true);
     axios
-      .post("http://localhost:3001/api/service-group/add", {
-        category: productGroupName,
+      .post("http://localhost:3001/api/service/add", {
+        serviceGroup: serviceGroup,
+        service: service,
       })
       .then(async (res) => {
         console.log(res.data);
@@ -40,9 +44,29 @@ export default function AddProductGroup() {
         }
       });
   };
+  const getGroupList = async () => {
+    await axios
+      .post("http://localhost:3001/api/service-group/get", {})
+      .then((res) => {
+        var array = [];
+        for (var i = 0; i < res.data.list.length; i++) {
+          console.log(res.data.list[i])
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              label: res.data.list[i].vCategory,
+              id: res.data.list[i].iCategoryID,
+            });
+          }
+        }
+        setServiceGroupList(array);
+      });
+  };
+  useEffect(() => {
+    getGroupList();
+  }, []);
   return (
     <>
-      <DrawerComponent title="Add Service Group">
+      <DrawerComponent title="Add Service">
         <div>
           <div
             className="add-product-container"
@@ -55,7 +79,7 @@ export default function AddProductGroup() {
               paddingInline: "2rem",
             }}
           >
-            <h1>Add Service Group</h1>
+            <h1>Add Service</h1>
 
             <div
               style={{
@@ -76,12 +100,34 @@ export default function AddProductGroup() {
               >
                 {message}
               </Alert>
-              <TextField
-                onChange={(e) => setProductGroupName(e.target.value)}
-                style={{ width: "100%" }}
-                label="Service Group Name"
-                value={productGroupName}
-              />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "1rem",
+                  width: "100%",
+                }}
+              >
+                <Autocomplete
+                  disablePortal
+                  options={serviceGroupList}
+                  label="vCategory"
+                  style={{ flex: "1" }}
+                  onChange={(event, newInputValue) => {
+                    console.log(newInputValue.id)
+                    setServiceGroup(newInputValue.id);
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Service Group" />
+                  )}
+                />
+                <TextField
+                  style={{ flex: "2" }}
+                  onChange={(e) => setService(e.target.value)}
+                  label="Service Name"
+                  value={service}
+                />
+              </div>
               <div
                 style={{
                   width: "100%",
@@ -105,7 +151,7 @@ export default function AddProductGroup() {
                 </Button>
                 <Button
                   onClick={() => {
-                    setProductGroupName("");
+                    setService("");
                   }}
                   disabled={isLoading}
                   size="large"
