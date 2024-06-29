@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { Alert, Button, Dialog, DialogTitle, Typography } from "@mui/material";
+import { Alert, Button, TextField, Typography } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
@@ -13,7 +13,6 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
-import { internal_processStyles } from "@mui/styled-engine-sc";
 
 export default function ProductGroup() {
   const [rows, setRows] = React.useState([]);
@@ -31,6 +30,7 @@ export default function ProductGroup() {
   const [title, setTitle] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [deleteId, setDeleteId] = React.useState();
+  const [search, setSearch] = React.useState("");
 
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
@@ -47,6 +47,13 @@ export default function ProductGroup() {
     setTitle("");
     setMessage("");
   };
+  function filter(keyword) {
+    if (keyword.length === 0) {
+      return rows;
+    } else {
+      return rows.filter((row) => row.vCategory.includes(keyword));
+    }
+  }
   const handleDelete = async () => {
     //TODO : IMPLEMENT BACK END LOGIC
     axios
@@ -69,7 +76,7 @@ export default function ProductGroup() {
   };
   return (
     <>
-      <DrawerComponent title="Product Group List">
+      <DrawerComponent title="Services List">
         <BreadcrumbsComponent />
         <div
           style={{
@@ -79,7 +86,7 @@ export default function ProductGroup() {
             alignItems: "center",
           }}
         >
-          <h1>Product Group</h1>
+          <h1>Services</h1>
         </div>
         <Alert
           style={{
@@ -94,8 +101,8 @@ export default function ProductGroup() {
         <div
           style={{
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
+            flexDirection: "row-reverse",
+            justifyContent: "space-between",
             gap: "1rem",
             alignItems: "center",
             marginBottom: "1rem",
@@ -106,13 +113,20 @@ export default function ProductGroup() {
               Add
             </Button>
           </Link>
+          <TextField
+            style={{ minWidth: "20rem" }}
+            onChange={(e) => setSearch(e.target.value)}
+            id="outlined-basic"
+            label="Search"
+            variant="outlined"
+          />
         </div>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell align="right">Product Group</TableCell>
+                <TableCell align="right">Services</TableCell>
                 {/* <TableCell align="right">Is Deleted</TableCell> */}
                 <TableCell align="right">Date Created</TableCell>
                 <TableCell align="right">Date Modified</TableCell>
@@ -120,7 +134,7 @@ export default function ProductGroup() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => {
+              {filter(search).map((row) => {
                 if (row.isDeleted === "Yes") {
                   return null;
                 } else {

@@ -1,8 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import { useLocation } from "react-router-dom";
 import BreadcrumbsComponent from "../../components/BreadcrumbsComponent";
-import { Alert, Button, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
@@ -28,7 +34,7 @@ export default function EditProductGroup() {
   if (location.state === null) {
     return (
       <>
-        <DrawerComponent title="Add Product Group">
+        <DrawerComponent title="Add Services">
           <div
             style={{
               display: "flex",
@@ -38,7 +44,7 @@ export default function EditProductGroup() {
               gap: "1rem",
             }}
           >
-            <h1>Edit Product Group</h1>
+            <h1>Edit Services</h1>
             <Typography paragraph>
               There was an error recieving the data. Please try again
             </Typography>
@@ -81,7 +87,7 @@ export default function EditProductGroup() {
 
   return (
     <>
-      <DrawerComponent title="Add Product Group">
+      <DrawerComponent title="Add Services">
         <BreadcrumbsComponent />
         <div style={{ backgroundColor: "white", paddingBottom: "2rem" }}>
           <div
@@ -92,7 +98,7 @@ export default function EditProductGroup() {
               alignItems: "center",
             }}
           >
-            <h1>Edit Product Group</h1>
+            <h1>Edit Services</h1>
             <br />
             <Alert
               style={{
@@ -132,17 +138,17 @@ export default function EditProductGroup() {
               >
                 <Button
                   onClick={submit}
-                  // disabled={isLoading}
+                  disabled={isLoading}
                   size="large"
                   variant="contained"
                 >
-                  Save
+                  {isLoading ? <CircularProgress /> : "Save"}
                 </Button>
                 <Button
                   onClick={() => {
                     setValue(row.vCategory);
                   }}
-                  // disabled={isLoading}
+                  disabled={isLoading}
                   size="large"
                   variant="contained"
                   color="warning"
