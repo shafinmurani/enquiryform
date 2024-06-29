@@ -83,75 +83,76 @@ export default function EditProductGroup() {
     <>
       <DrawerComponent title="Add Product Group">
         <BreadcrumbsComponent />
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <h1>Edit Product Group</h1>
-          <br />
-          <Alert
-            style={{
-              width: "100%",
-              display: result.length === 0 ? "none" : "",
-            }}
-            severity={result}
-          >
-            {message}
-          </Alert>
-        </div>
-        {rows.map((row) => (
+        <div style={{ backgroundColor: "white", paddingBottom: "2rem" }}>
           <div
             style={{
               display: "flex",
-              width: "80%",
-              marginInline: "auto",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              gap: "1rem",
             }}
           >
-            <TextField
-              style={{ width: "100%" }}
-              label="Name"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-            />
-            <div
+            <h1>Edit Product Group</h1>
+            <br />
+            <Alert
               style={{
                 width: "100%",
+                display: result.length === 0 ? "none" : "",
+              }}
+              severity={result}
+            >
+              {message}
+            </Alert>
+          </div>
+          {rows.map((row) => (
+            <div
+              style={{
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
+                width: "80%",
+                marginInline: "auto",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "1rem",
               }}
             >
-              <Button
-                onClick={submit}
-                // disabled={isLoading}
-                size="large"
-                variant="contained"
-              >
-                Save
-              </Button>
-              <Button
-                onClick={() => {
-                  setValue(row.vCategory);
+              <TextField
+                style={{ width: "100%" }}
+                label="Name"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                 }}
-                // disabled={isLoading}
-                size="large"
-                variant="contained"
-                color="warning"
               >
-                Reset
-              </Button>
+                <Button
+                  onClick={submit}
+                  // disabled={isLoading}
+                  size="large"
+                  variant="contained"
+                >
+                  Save
+                </Button>
+                <Button
+                  onClick={() => {
+                    setValue(row.vCategory);
+                  }}
+                  // disabled={isLoading}
+                  size="large"
+                  variant="contained"
+                  color="warning"
+                >
+                  Reset
+                </Button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </DrawerComponent>
     </>
   );
