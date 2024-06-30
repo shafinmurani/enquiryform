@@ -32,12 +32,11 @@ export default function ProductGroup() {
         var array = [];
         for (var i = 0; i < res.data.list.length; i++) {
           console.log(res.data.list[i]);
-          if (res.data.list[i].isDeleted == "No") {
             array.push({
               label: res.data.list[i].vCategory,
               id: res.data.list[i].iCategoryID,
             });
-          }
+          
         }
         console.log(array);
         console.log(res.data.list);
