@@ -14,31 +14,36 @@ export default function AddProductGroup() {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const submit = () => {
-    setIsLoading(true);
-    axios
-      .post("http://localhost:3001/api/service-group/add", {
-        category: productGroupName,
-      })
-      .then(async (res) => {
-        console.log(res.data);
-        if (res.data.result) {
-          if (res.data.affectedRows === 0) {
-            setResult("warning");
-            setMessage("No product group added, Data already exists");
+    if (productGroupName.length === 0) {
+      setResult("warning");
+      setMessage("Cannot insert blank service group");
+    } else {
+      setIsLoading(true);
+      axios
+        .post("http://localhost:3001/api/service-group/add", {
+          category: productGroupName,
+        })
+        .then(async (res) => {
+          console.log(res.data);
+          if (res.data.result) {
+            if (res.data.affectedRows === 0) {
+              setResult("warning");
+              setMessage("No service group added, Data already exists");
+            } else {
+              setResult("success");
+              setMessage(res.data.message);
+            }
+            setIsLoading(false);
+            await timeout(1500);
+            setResult("");
+            setResult("");
           } else {
-            setResult("success");
+            setResult("error");
             setMessage(res.data.message);
+            setIsLoading(false);
           }
-          setIsLoading(false);
-          await timeout(1500);
-          setResult("");
-          setResult("");
-        } else {
-          setResult("error");
-          setMessage(res.data.message);
-          setIsLoading(false);
-        }
-      });
+        });
+    }
   };
   return (
     <>

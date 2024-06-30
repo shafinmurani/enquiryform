@@ -17,32 +17,37 @@ export default function AddProduct() {
   const [serviceGroup, setServiceGroup] = React.useState("");
   const [serviceGroupList, setServiceGroupList] = React.useState([]);
   const submit = () => {
-    setIsLoading(true);
-    axios
-      .post("http://localhost:3001/api/service/add", {
-        serviceGroup: serviceGroup,
-        service: service,
-      })
-      .then(async (res) => {
-        console.log(res.data);
-        if (res.data.result) {
-          if (res.data.affectedRows === 0) {
-            setResult("warning");
-            setMessage("No product group added, Data already exists");
+    if (serviceGroup.length === 0 || service.length === 0) {
+      setResult("warning");
+      setMessage("Cannot insert blank service group and service name");
+    } else {
+      setIsLoading(true);
+      axios
+        .post("http://localhost:3001/api/service/add", {
+          serviceGroup: serviceGroup,
+          service: service,
+        })
+        .then(async (res) => {
+          console.log(res.data);
+          if (res.data.result) {
+            if (res.data.affectedRows === 0) {
+              setResult("warning");
+              setMessage("No product group added, Data already exists");
+            } else {
+              setResult("success");
+              setMessage(res.data.message);
+            }
+            setIsLoading(false);
+            await timeout(1500);
+            setResult("");
+            setResult("");
           } else {
-            setResult("success");
+            setResult("error");
             setMessage(res.data.message);
+            setIsLoading(false);
           }
-          setIsLoading(false);
-          await timeout(1500);
-          setResult("");
-          setResult("");
-        } else {
-          setResult("error");
-          setMessage(res.data.message);
-          setIsLoading(false);
-        }
-      });
+        });
+    }
   };
   const getGroupList = async () => {
     await axios
@@ -50,7 +55,7 @@ export default function AddProduct() {
       .then((res) => {
         var array = [];
         for (var i = 0; i < res.data.list.length; i++) {
-          console.log(res.data.list[i])
+          console.log(res.data.list[i]);
           if (res.data.list[i].isDeleted == "No") {
             array.push({
               label: res.data.list[i].vCategory,
@@ -114,7 +119,7 @@ export default function AddProduct() {
                   label="vCategory"
                   style={{ flex: "1" }}
                   onChange={(event, newInputValue) => {
-                    console.log(newInputValue.id)
+                    console.log(newInputValue.id);
                     setServiceGroup(newInputValue.id);
                   }}
                   renderInput={(params) => (
