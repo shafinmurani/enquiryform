@@ -26,7 +26,13 @@ export default function BreadcrumbsComponent() {
             {toTitleCase(value)}
           </Typography>
         ) : (
-          <Link style={{ color: "black" }} color="inherit" component={RouterLink} to="/" key={to}>
+          <Link
+            style={{ color: "black" }}
+            color="inherit"
+            component={RouterLink}
+            to={to}
+            key={to}
+          >
             {toTitleCase(value)}
           </Link>
         );
