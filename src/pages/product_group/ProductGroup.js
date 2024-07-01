@@ -62,14 +62,15 @@ export default function ProductGroup() {
       .then(async (res) => {
         console.log(res.data);
         if (res.data.result) {
-          await setAlertMessage(res.data.message);
-          await setResult("success");
-          await setRows([]);
-          await getData();
-          await handleClose();
+          setAlertMessage(res.data.message);
+          setResult("success");
+          setRows([]);
+          getData();
+          handleClose();
         } else {
           setAlertMessage(res.data.message);
           setResult("error");
+          handleClose();
         }
       });
   };
@@ -197,7 +198,7 @@ export default function ProductGroup() {
                             handleClickOpen(
                               "Are you sure?",
                               `You want to delete "${row.vCategory}" product group?`,
-                              row.iCategoryID
+                              row.iCategoryID,
                             );
                           }}
                         >

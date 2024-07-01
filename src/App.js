@@ -8,6 +8,7 @@ import Party from "./pages/party/Party";
 import AddProduct from "./pages/product/AddProduct";
 import AddProductGroup from "./pages/product_group/AddProductGroup";
 import EditProductGroup from "./pages/product_group/EditProductGroup";
+import EditProduct from "./pages/product/EditProduct";
 function App() {
   console.log(localStorage.getItem("jwt-token"));
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/service-group/edit" Component={EditProductGroup} />
         <Route path="/service" Component={Product} />
         <Route path="/service/add" Component={AddProduct} />
+        <Route path="/service/edit" Component={EditProduct} />
         <Route path="/party" Component={Party} />
       </Routes>
     </Router>

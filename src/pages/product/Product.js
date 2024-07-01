@@ -1,6 +1,12 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { Alert, Button, TextField, Typography, CircularProgress } from "@mui/material";
+import {
+  Alert,
+  Button,
+  TextField,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
@@ -32,11 +38,10 @@ export default function ProductGroup() {
         var array = [];
         for (var i = 0; i < res.data.list.length; i++) {
           console.log(res.data.list[i]);
-            array.push({
-              label: res.data.list[i].vCategory,
-              id: res.data.list[i].iCategoryID,
-            });
-          
+          array.push({
+            label: res.data.list[i].vCategory,
+            id: res.data.list[i].iCategoryID,
+          });
         }
         console.log(array);
         console.log(res.data.list);
@@ -97,15 +102,23 @@ export default function ProductGroup() {
         }
       });
   };
-  if(serviceGroupList===null){
+  if (serviceGroupList === null) {
     return (
       <>
         <DrawerComponent>
-          <div style={{width:"100%", display:"flex", alignItems:"center", justifyContent:"center"}}>
-            <CircularProgress/>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CircularProgress />
           </div>
         </DrawerComponent>
-      </>);
+      </>
+    );
   }
   return (
     <>
@@ -179,7 +192,12 @@ export default function ProductGroup() {
                       <TableCell component="th" scope="row">
                         {row.iProductID}
                       </TableCell>
-                      <TableCell align="right">{serviceGroupList.find(x => x.id==row.iCategoryID).label}</TableCell>
+                      <TableCell align="right">
+                        {
+                          serviceGroupList.find((x) => x.id == row.iCategoryID)
+                            .label
+                        }
+                      </TableCell>
                       <TableCell align="right">{row.vProduct}</TableCell>
                       {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
                       <TableCell align="right">{row.dtCreated}</TableCell>
@@ -240,8 +258,11 @@ export default function ProductGroup() {
                           <Delete />
                         </Button>
                         <Link
-                          to={`/service-group/edit/`}
-                          state={{ id: row.iCategoryID }}
+                          to={`/service/edit/`}
+                          state={{
+                            id: row.iProductID,
+                            serviceGroupID: row.iCategoryID,
+                          }}
                         >
                           <Button size="small" variant="contained" color="info">
                             <Edit />
