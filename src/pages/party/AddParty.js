@@ -21,9 +21,16 @@ export default function AddParty() {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const submit = () => {
-    if (2 === 0) {
+    if (
+      partyName === 0 ||
+      address.length === 0 ||
+      city.length === 0 ||
+      mobileNo.length === 0 ||
+      email.length === 0 ||
+      name.length === 0
+    ) {
       setResult("warning");
-      setMessage("Cannot insert blank service group");
+      setMessage("Cannot insert blank party information ");
     } else {
       setIsLoading(true);
       axios

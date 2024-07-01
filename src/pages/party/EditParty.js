@@ -70,31 +70,43 @@ export default function EditParty() {
   }
 
   const submit = () => {
-    setIsLoading(true);
-    axios
-      .post("http://localhost:3001/api/party/edit", {
-        id: id,
-        partyName,
-        address,
-        city,
-        mobileNo,
-        email,
-        name,
-      })
-      .then(async (res) => {
-        if (res.data.result) {
-          setResult("success");
-          setMessage(res.data.message);
-          setIsLoading(false);
-          await timeout(1500);
-          setResult("");
-          setResult("");
-        } else {
-          setResult("error");
-          setMessage(res.data.message);
-          setIsLoading(false);
-        }
-      });
+    if (
+      partyName === 0 ||
+      address.length === 0 ||
+      city.length === 0 ||
+      mobileNo.length === 0 ||
+      email.length === 0 ||
+      name.length === 0
+    ) {
+      setResult("warning");
+      setMessage("Cannot insert blank party information ");
+    } else {
+      setIsLoading(true);
+      axios
+        .post("http://localhost:3001/api/party/edit", {
+          id: id,
+          partyName,
+          address,
+          city,
+          mobileNo,
+          email,
+          name,
+        })
+        .then(async (res) => {
+          if (res.data.result) {
+            setResult("success");
+            setMessage(res.data.message);
+            setIsLoading(false);
+            await timeout(1500);
+            setResult("");
+            setResult("");
+          } else {
+            setResult("error");
+            setMessage(res.data.message);
+            setIsLoading(false);
+          }
+        });
+    }
   };
 
   return (

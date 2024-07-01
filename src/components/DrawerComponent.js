@@ -18,6 +18,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import ListTile from "./ListTile.js";
 import LogoutIcon from "@mui/icons-material/Logout";
 import BreadcrumbsComponent from "./BreadcrumbsComponent.js";
+import WarehouseIcon from "@mui/icons-material/Warehouse";
 
 const drawerWidth = 240;
 
@@ -167,6 +168,14 @@ export default function DrawerComponent(props) {
             title="Party"
             icon={<PersonIcon />}
             page={"/party"}
+          />
+        </List>
+        <List>
+          <ListTile
+            open={open}
+            title="Company"
+            icon={<WarehouseIcon />}
+            page={"/company"}
           />
         </List>
         <Divider />

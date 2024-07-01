@@ -13,11 +13,11 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
 
-export default function ProductGroup() {
+export default function Company() {
   const [rows, setRows] = React.useState([]);
   const getData = async () => {
     await axios
-      .post("http://localhost:3001/api/service-group/get", {})
+      .post("http://localhost:3001/api/company/get", {})
       .then((res) => {
         setRows(res.data.list);
       });
@@ -39,6 +39,7 @@ export default function ProductGroup() {
     setMessage(message);
     setTitle(title);
     setDeleteId(id);
+    console.log(id);
   };
 
   const handleClose = () => {
@@ -51,17 +52,17 @@ export default function ProductGroup() {
       return rows;
     } else {
       return rows.filter((row) =>
-        row.vCategory.toLowerCase().includes(keyword),
+        row.vCompanyName.toLowerCase().includes(keyword),
       );
     }
   }
-  const handleDelete = async () => {
+  const handleDelete = () => {
     //TODO : IMPLEMENT BACK END LOGIC
     axios
-      .post("http://localhost:3001/api/service-group/delete", {
+      .post("http://localhost:3001/api/company/delete", {
         id: deleteId,
       })
-      .then(async (res) => {
+      .then((res) => {
         if (res.data.result) {
           setAlertMessage(res.data.message);
           setResult("success");
@@ -77,7 +78,7 @@ export default function ProductGroup() {
   };
   return (
     <>
-      <DrawerComponent title="Service Group List">
+      <DrawerComponent title="Company List">
         <div
           style={{
             display: "flex",
@@ -86,7 +87,7 @@ export default function ProductGroup() {
             alignItems: "center",
           }}
         >
-          <h1>Service Group</h1>
+          <h1>Company</h1>
         </div>
         <Alert
           style={{
@@ -108,7 +109,7 @@ export default function ProductGroup() {
             marginBottom: "1rem",
           }}
         >
-          <Link to="/service-group/add">
+          <Link to="/company/add">
             <Button startIcon={<Add />} variant="contained">
               Add
             </Button>
@@ -117,7 +118,7 @@ export default function ProductGroup() {
             style={{ minWidth: "20rem" }}
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
-            label="Search by Service Group"
+            label="Search by Company"
             variant="outlined"
           />
         </div>
@@ -125,7 +126,7 @@ export default function ProductGroup() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="right">Service Group</TableCell>
+                <TableCell align="right">Company</TableCell>
                 {/* <TableCell align="right">Is Deleted</TableCell> */}
                 <TableCell align="right">Date Created</TableCell>
                 <TableCell align="right">Date Modified</TableCell>
@@ -134,7 +135,7 @@ export default function ProductGroup() {
             </TableHead>
             <TableBody>
               {filter(search).map((row) => {
-                if (row.isDeleted === "Yes") {
+                if (row.isDelete === "Yes") {
                   return null;
                 } else {
                   return (
@@ -142,7 +143,7 @@ export default function ProductGroup() {
                       key={row.name}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="right">{row.vCategory}</TableCell>
+                      <TableCell align="right">{row.vCompanyName}</TableCell>
                       {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
                       <TableCell align="right">{row.dtCreated}</TableCell>
                       <TableCell align="right">{row.dtModified}</TableCell>
@@ -192,17 +193,18 @@ export default function ProductGroup() {
                           variant="contained"
                           color="error"
                           onClick={() => {
+                            console.log(row);
                             handleClickOpen(
                               "Are you sure?",
-                              `You want to delete "${row.vCategory}" product group?`,
-                              row.iCategoryID,
+                              `You want to delete "${row.vCompanyName}" Company?`,
+                              row.iCompanyID,
                             );
                           }}
                         >
                           <Delete />
                         </Button>
                         <Link
-                          to={`/service-group/edit/`}
+                          to={`/company/edit/`}
                           state={{ id: row.iCategoryID }}
                         >
                           <Button size="small" variant="contained" color="info">
