@@ -19,6 +19,7 @@ import ListTile from "./ListTile.js";
 import LogoutIcon from "@mui/icons-material/Logout";
 import BreadcrumbsComponent from "./BreadcrumbsComponent.js";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
+import ContactEmergencyIcon from "@mui/icons-material/ContactEmergency";
 
 const drawerWidth = 240;
 
@@ -176,6 +177,14 @@ export default function DrawerComponent(props) {
             title="Company"
             icon={<WarehouseIcon />}
             page={"/company"}
+          />
+        </List>
+        <List>
+          <ListTile
+            open={open}
+            title="Dealer"
+            icon={<ContactEmergencyIcon />}
+            page={"/dealer"}
           />
         </List>
         <Divider />
