@@ -24,7 +24,6 @@ export default function AddProductGroup() {
           category: productGroupName,
         })
         .then(async (res) => {
-          console.log(res.data);
           if (res.data.result) {
             if (res.data.affectedRows === 0) {
               setResult("warning");

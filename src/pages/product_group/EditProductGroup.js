@@ -24,7 +24,6 @@ export default function EditProductGroup() {
     return await axios
       .post("http://localhost:3001/api/service-group/get-specific", { id: id })
       .then((res) => {
-        console.log(res.data);
         setRows(res.data.list);
         setValue(res.data.list[0].vCategory);
       });
@@ -56,8 +55,6 @@ export default function EditProductGroup() {
   if (increment === 0) {
     getData(id);
     setIncrement(1);
-    console.log(rows);
-    console.log(increment);
   }
 
   const submit = () => {
@@ -68,7 +65,6 @@ export default function EditProductGroup() {
         id: id,
       })
       .then(async (res) => {
-        console.log(res.data);
         if (res.data.result) {
           setResult("success");
           setMessage(res.data.message);

@@ -32,7 +32,6 @@ export default function AddProduct() {
   };
 
   const submit = () => {
-    console.log(id);
     if (serviceGroup.length === 0 || service.length === 0) {
       setResult("warning");
       setMessage("Cannot insert blank service group and service name");

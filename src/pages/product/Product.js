@@ -37,14 +37,12 @@ export default function ProductGroup() {
       .then((res) => {
         var array = [];
         for (var i = 0; i < res.data.list.length; i++) {
-          console.log(res.data.list[i]);
           array.push({
             label: res.data.list[i].vCategory,
             id: res.data.list[i].iCategoryID,
           });
         }
-        console.log(array);
-        console.log(res.data.list);
+
         setServiceGroupList(array);
       });
   };
@@ -77,18 +75,16 @@ export default function ProductGroup() {
     if (keyword.length === 0) {
       return rows;
     } else {
-      return rows.filter((row) => row.vProduct.includes(keyword));
+      return rows.filter((row) => row.vProduct.toLowerCase().includes(keyword));
     }
   }
   const handleDelete = async () => {
-    console.log(deleteId);
     //TODO : IMPLEMENT BACK END LOGIC
     axios
       .post("http://localhost:3001/api/service/delete", {
         id: deleteId,
       })
       .then(async (res) => {
-        console.log(res.data);
         if (res.data.result) {
           await setAlertMessage(res.data.message);
           await setResult("success");
@@ -250,7 +246,7 @@ export default function ProductGroup() {
                           onClick={() => {
                             handleClickOpen(
                               "Are you sure?",
-                              `You want to delete "${row.vProduct}" product group?`,
+                              `You want to delete "${row.vProduct}" service?`,
                               row.iProductID,
                             );
                           }}

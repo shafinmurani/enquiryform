@@ -50,7 +50,9 @@ export default function ProductGroup() {
     if (keyword.length === 0) {
       return rows;
     } else {
-      return rows.filter((row) => row.vCategory.includes(keyword));
+      return rows.filter((row) =>
+        row.vCategory.toLowerCase().includes(keyword),
+      );
     }
   }
   const handleDelete = async () => {
@@ -60,7 +62,6 @@ export default function ProductGroup() {
         id: deleteId,
       })
       .then(async (res) => {
-        console.log(res.data);
         if (res.data.result) {
           setAlertMessage(res.data.message);
           setResult("success");

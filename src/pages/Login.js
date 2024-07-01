@@ -42,7 +42,6 @@ export default function Login() {
           password: password,
         })
         .then((res) => {
-          console.log(res.data);
           if (res.data.result) {
             localStorage.setItem("jwt-token", res.data.token);
             navigate("/service-group");
