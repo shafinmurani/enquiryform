@@ -13,7 +13,7 @@ function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
 }
 
-export default function EditProductGroup() {
+export default function EditCompany() {
   const [rows, setRows] = React.useState([]);
   const [increment, setIncrement] = React.useState(0);
   const [value, setValue] = React.useState("");
@@ -22,17 +22,17 @@ export default function EditProductGroup() {
   const [isLoading, setIsLoading] = React.useState(false);
   const getData = async (id) => {
     return await axios
-      .post("http://localhost:3001/api/service-group/get-specific", { id: id })
+      .post("http://localhost:3001/api/company/get-specific", { id: id })
       .then((res) => {
         setRows(res.data.list);
-        setValue(res.data.list[0].vCategory);
+        setValue(res.data.list[0].vCompanyName);
       });
   };
   const location = useLocation();
   if (location.state === null) {
     return (
       <>
-        <DrawerComponent title="Add Service Group">
+        <DrawerComponent title="Edit Company">
           <div
             style={{
               display: "flex",
@@ -60,11 +60,11 @@ export default function EditProductGroup() {
   const submit = () => {
     if (value.length === 0) {
       setResult("warning");
-      setMessage("Cannot insert blank product group Name");
+      setMessage("Cannot insert blank company Name");
     } else {
       setIsLoading(true);
       axios
-        .post("http://localhost:3001/api/service-group/edit", {
+        .post("http://localhost:3001/api/company/edit", {
           category: value,
           id: id,
         })
@@ -87,7 +87,7 @@ export default function EditProductGroup() {
 
   return (
     <>
-      <DrawerComponent title="Add Service Group">
+      <DrawerComponent title="Edit Company">
         <div
           style={{
             backgroundColor: "white",
@@ -105,7 +105,7 @@ export default function EditProductGroup() {
               alignItems: "center",
             }}
           >
-            <h1>Edit Services</h1>
+            <h1>Edit Company</h1>
             <br />
             <Alert
               style={{
@@ -131,7 +131,7 @@ export default function EditProductGroup() {
             >
               <TextField
                 style={{ width: "100%" }}
-                label="Name"
+                label="Company Name"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
               />
@@ -153,7 +153,7 @@ export default function EditProductGroup() {
                 </Button>
                 <Button
                   onClick={() => {
-                    setValue(row.vCategory);
+                    setValue(row.Company);
                   }}
                   disabled={isLoading}
                   size="large"

@@ -205,7 +205,7 @@ export default function Company() {
                         </Button>
                         <Link
                           to={`/company/edit/`}
-                          state={{ id: row.iCategoryID }}
+                          state={{ id: row.iCompanyID }}
                         >
                           <Button size="small" variant="contained" color="info">
                             <Edit />
