@@ -111,7 +111,14 @@ export default function DrawerComponent(props) {
   };
 
   return (
-    <Box sx={{ display: "flex", backgroundColor: "#eceff4", height: "100vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        height: "100vh",
+        // width: "100",
+        backgroundColor: "#eceff4",
+      }}
+    >
       <CssBaseline />
       <AppBar
         style={{
