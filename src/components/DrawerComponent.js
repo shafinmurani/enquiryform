@@ -173,7 +173,7 @@ export default function DrawerComponent(props) {
           <ListTile
             open={open}
             title="Dashboard"
-            page={"/dashboard"}
+            page={"/"}
             icon={<DashboardIcon />}
           />
           <ListItemButton onClick={handleClick}>
@@ -258,7 +258,7 @@ export default function DrawerComponent(props) {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <BreadcrumbsComponent />
+        {props.isHome == "true" ? null : <BreadcrumbsComponent />}
 
         {props.children}
       </Box>
