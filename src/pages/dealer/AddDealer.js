@@ -17,47 +17,76 @@ export default function AddDealer() {
   const [result, setResult] = React.useState("0");
   const [message, setMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  async function clearMessage() {
+    await timeout(1500);
+    setResult("");
+    setResult("");
+  }
 
-  const submit = () => {
-    if (
-      dealerName === 0 ||
-      gstNumber.length === 0 ||
-      city.length === 0 ||
-      mobileNo.length === 0 ||
-      email.length === 0 ||
-      dealerName.length === 0
-    ) {
-      setResult("warning");
-      setMessage("Cannot insert blank Dealer information ");
+  const [isValidEmail, setIsValidEmail] = React.useState(false);
+
+  const validateEmail = (e) => {
+    /**
+     * Validates an email address.
+     *
+     * @param {Event} e - The event object containing the email value.
+     * @return {void} This function does not return a value.
+     */
+    const isValidEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    if (e.target?.value && e.target.value.match(isValidEmail)) {
+      setIsValidEmail(true);
+      setEmail(e.target.value);
     } else {
-      setIsLoading(true);
-      axios
-        .post("http://localhost:3001/api/dealer/add", {
-          dealerName,
-          gstNumber,
-          city,
-          mobileNo,
-          email,
-        })
-        .then(async (res) => {
-          if (res.data.result) {
-            if (res.data.affectedRows === 0) {
-              setResult("warning");
-              setMessage("No Dealer added, Data already exists");
+      setIsValidEmail(false);
+    }
+  };
+  const submit = () => {
+    if (isValidEmail) {
+      if (
+        dealerName === 0 ||
+        gstNumber.length === 0 ||
+        city.length === 0 ||
+        mobileNo.length === 0 ||
+        email.length === 0 ||
+        dealerName.length === 0
+      ) {
+        setResult("warning");
+        setMessage("Cannot insert blank Dealer information ");
+      } else {
+        setIsLoading(true);
+        axios
+          .post("http://localhost:3001/api/dealer/add", {
+            dealerName,
+            gstNumber,
+            city,
+            mobileNo,
+            email,
+          })
+          .then(async (res) => {
+            if (res.data.result) {
+              if (res.data.affectedRows === 0) {
+                setResult("warning");
+                setMessage("No Dealer added, Data already exists");
+              } else {
+                setResult("success");
+                setMessage(res.data.message);
+              }
+              setIsLoading(false);
+              await timeout(1500);
+              setResult("");
+              setResult("");
             } else {
-              setResult("success");
+              setResult("error");
               setMessage(res.data.message);
+              setIsLoading(false);
             }
-            setIsLoading(false);
-            await timeout(1500);
-            setResult("");
-            setResult("");
-          } else {
-            setResult("error");
-            setMessage(res.data.message);
-            setIsLoading(false);
-          }
-        });
+          });
+      }
+    } else {
+      setResult("error");
+      setMessage("Invalid Email");
+      setIsLoading(false);
+      clearMessage();
     }
   };
   return (
@@ -134,14 +163,18 @@ export default function AddDealer() {
                   }}
                 >
                   <TextField
-                    type="number"
                     onChange={(e) => setMobileNo(e.target.value)}
                     style={{ width: "100%" }}
+                    inputProps={{ maxLength: 10 }}
+                    helperText={`${mobileNo.length}/${10}`}
                     label="Mobile Number"
                     value={mobileNo}
                   />
                   <TextField
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      validateEmail(e);
+                      setEmail(e.target.value);
+                    }}
                     style={{ width: "100%" }}
                     label="Email address"
                     value={email}

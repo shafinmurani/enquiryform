@@ -27,6 +27,28 @@ export default function EditParty() {
   const [result, setResult] = React.useState("0");
   const [message, setMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isValidEmail, setIsValidEmail] = React.useState(true);
+
+  async function clearMessage() {
+    await timeout(1500);
+    setResult("");
+    setResult("");
+  }
+  const validateEmail = (e) => {
+    /**
+     * Validates an email address.
+     *
+     * @param {Event} e - The event object containing the email value.
+     * @return {void} This function does not return a value.
+     */
+    const isValidEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    if (e && e.match(isValidEmail)) {
+      setIsValidEmail(true);
+      setEmail(e);
+    } else {
+      setIsValidEmail(false);
+    }
+  };
   const getData = async (id) => {
     return await axios
       .post("http://localhost:3001/api/party/get-specific", { id: id })
@@ -39,6 +61,7 @@ export default function EditParty() {
         setMobileNo(res.data.list[0].vCMobileno);
         setEmail(res.data.list[0].vCEmail);
       });
+    validateEmail(email);
   };
   const location = useLocation();
   if (location.state === null) {
@@ -70,42 +93,47 @@ export default function EditParty() {
   }
 
   const submit = () => {
-    if (
-      partyName === 0 ||
-      address.length === 0 ||
-      city.length === 0 ||
-      mobileNo.length === 0 ||
-      email.length === 0 ||
-      name.length === 0
-    ) {
-      setResult("warning");
-      setMessage("Cannot insert blank party information ");
+    if (isValidEmail) {
+      if (
+        partyName === 0 ||
+        address.length === 0 ||
+        city.length === 0 ||
+        mobileNo.length === 0 ||
+        email.length === 0 ||
+        name.length === 0
+      ) {
+        setResult("warning");
+        setMessage("Cannot insert blank party information ");
+      } else {
+        setIsLoading(true);
+        axios
+          .post("http://localhost:3001/api/party/edit", {
+            id: id,
+            partyName,
+            address,
+            city,
+            mobileNo,
+            email,
+            name,
+          })
+          .then(async (res) => {
+            if (res.data.result) {
+              setResult("success");
+              setMessage(res.data.message);
+              setIsLoading(false);
+              clearMessage();
+            } else {
+              setResult("error");
+              setMessage(res.data.message);
+              setIsLoading(false);
+              clearMessage();
+            }
+          });
+      }
     } else {
-      setIsLoading(true);
-      axios
-        .post("http://localhost:3001/api/party/edit", {
-          id: id,
-          partyName,
-          address,
-          city,
-          mobileNo,
-          email,
-          name,
-        })
-        .then(async (res) => {
-          if (res.data.result) {
-            setResult("success");
-            setMessage(res.data.message);
-            setIsLoading(false);
-            await timeout(1500);
-            setResult("");
-            setResult("");
-          } else {
-            setResult("error");
-            setMessage(res.data.message);
-            setIsLoading(false);
-          }
-        });
+      setResult("error");
+      setMessage("Invalid Email");
+      clearMessage();
     }
   };
 
@@ -183,14 +211,20 @@ export default function EditParty() {
                   }}
                 >
                   <TextField
-                    type="number"
                     onChange={(e) => setMobileNo(e.target.value)}
                     style={{ width: "100%" }}
                     label="Mobile Number"
+                    inputProps={{
+                      maxlength: 10,
+                    }}
+                    helperText={`${mobileNo.length}/${10}`}
                     value={mobileNo}
                   />
                   <TextField
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      validateEmail(e.target.value);
+                      setEmail(e.target.value);
+                    }}
                     style={{ width: "100%" }}
                     label="Email address"
                     value={email}

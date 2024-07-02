@@ -16,8 +16,8 @@ export default function Login() {
   const [isPasswordVIsible, setIsPasswordVisible] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [isValidEmail, setIsValidEmail] = React.useState(false);
   const [errorField, setErrorField] = React.useState("");
+  const [isValidEmail, setIsValidEmail] = React.useState(false);
 
   const validateEmail = (e) => {
     /**
