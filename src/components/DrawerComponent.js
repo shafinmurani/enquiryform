@@ -20,9 +20,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import BreadcrumbsComponent from "./BreadcrumbsComponent.js";
 import WarehouseIcon from "@mui/icons-material/Warehouse";
 import ContactEmergencyIcon from "@mui/icons-material/ContactEmergency";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Collapse from "@mui/material/Collapse";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import TopicIcon from "@mui/icons-material/Topic";
 
 const drawerWidth = 240;
-
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -91,7 +97,11 @@ const Drawer = styled(MuiDrawer, {
 export default function DrawerComponent(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [dropdownOpen, setDropdownOpen] = React.useState(true);
 
+  const handleClick = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -149,43 +159,50 @@ export default function DrawerComponent(props) {
         </DrawerHeader>
         <Divider />
         <List>
-          <ListTile
-            open={open}
-            title="Service Group"
-            page={"/service-group"}
-            icon={<CategoryIcon />}
-          />
-          <ListTile
-            open={open}
-            title="Service"
-            page={"/service"}
-            icon={<InventoryIcon />}
-          />
-        </List>
-        <Divider />
-        <List>
-          <ListTile
-            open={open}
-            title="Party"
-            icon={<PersonIcon />}
-            page={"/party"}
-          />
-        </List>
-        <List>
-          <ListTile
-            open={open}
-            title="Company"
-            icon={<WarehouseIcon />}
-            page={"/company"}
-          />
-        </List>
-        <List>
-          <ListTile
-            open={open}
-            title="Dealer"
-            icon={<ContactEmergencyIcon />}
-            page={"/dealer"}
-          />
+          <ListItemButton onClick={handleClick}>
+            <ListItemIcon>
+              <TopicIcon />
+            </ListItemIcon>
+            <ListItemText primary="Masters" />
+            {dropdownOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={dropdownOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListTile
+                open={open}
+                title="Service Group "
+                page={"/service-group"}
+                icon={<CategoryIcon />}
+              />
+              <ListTile
+                open={open}
+                title="Service"
+                page={"/service"}
+                icon={<InventoryIcon />}
+              />
+
+              <ListTile
+                open={open}
+                title="Party"
+                icon={<PersonIcon />}
+                page={"/party"}
+              />
+
+              <ListTile
+                open={open}
+                title="Company"
+                icon={<WarehouseIcon />}
+                page={"/company"}
+              />
+
+              <ListTile
+                open={open}
+                title="Dealer"
+                icon={<ContactEmergencyIcon />}
+                page={"/dealer"}
+              />
+            </List>
+          </Collapse>
         </List>
         <Divider />
         <List>
