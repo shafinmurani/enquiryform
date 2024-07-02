@@ -16,6 +16,7 @@ import AddCompany from "./pages/company/AddCompany";
 import EditCompany from "./pages/company/EditCompany";
 import Dealer from "./pages/dealer/Dealer";
 import AddDealer from "./pages/dealer/AddDealer";
+import EditDealer from "./pages/dealer/EditDealer";
 function App() {
   return (
     <Router>
@@ -37,6 +38,7 @@ function App() {
         <Route path="/company/edit" Component={EditCompany} />
         <Route path="/dealer" Component={Dealer} />
         <Route path="/dealer/add" Component={AddDealer} />
+        <Route path="/dealer/edit" Component={EditDealer} />
       </Routes>
     </Router>
   );

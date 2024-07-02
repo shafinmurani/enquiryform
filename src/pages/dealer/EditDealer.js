@@ -1,22 +1,71 @@
 import React from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { Alert, Button, CircularProgress, TextField } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
-import "../../styles/AddProductGroup.css";
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
 }
 
-export default function AddDealer() {
-  //Text Editing controllers
+export default function EditDealer() {
   const [dealerName, setDealerName] = React.useState("");
   const [city, setCity] = React.useState("");
   const [mobileNo, setMobileNo] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [gstNumber, setGstNumber] = React.useState("");
+
+  const [rows, setRows] = React.useState([]);
+  const [increment, setIncrement] = React.useState(0);
+
   const [result, setResult] = React.useState("0");
   const [message, setMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const getData = async (id) => {
+    return await axios
+      .post("http://localhost:3001/api/dealer/get-specific", { id: id })
+      .then((res) => {
+        setRows(res.data.list);
+        setDealerName(res.data.list[0].vDName);
+        setMobileNo(res.data.list[0].vDMobileno);
+        setEmail(res.data.list[0].vDEmail);
+        setGstNumber(res.data.list[0].vDGSTno);
+        setCity(res.data.list[0].vDCity);
+      });
+  };
+  const location = useLocation();
+  if (location.state === null) {
+    return (
+      <>
+        <DrawerComponent title="Edit Dealer">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            <h1>Edit Party</h1>
+            <Typography paragraph>
+              There was an error recieving the data. Please try again
+            </Typography>
+          </div>
+        </DrawerComponent>
+      </>
+    );
+  }
+  const { id } = location.state;
+  if (increment === 0) {
+    getData(id);
+    setIncrement(1);
+  }
 
   const submit = () => {
     if (
@@ -28,26 +77,22 @@ export default function AddDealer() {
       dealerName.length === 0
     ) {
       setResult("warning");
-      setMessage("Cannot insert blank Dealer information ");
+      setMessage("Cannot insert blank party information ");
     } else {
       setIsLoading(true);
       axios
-        .post("http://localhost:3001/api/dealer/add", {
+        .post("http://localhost:3001/api/dealer/edit", {
           dealerName,
           gstNumber,
           city,
           mobileNo,
           email,
+          id,
         })
         .then(async (res) => {
           if (res.data.result) {
-            if (res.data.affectedRows === 0) {
-              setResult("warning");
-              setMessage("No Dealer added, Data already exists");
-            } else {
-              setResult("success");
-              setMessage(res.data.message);
-            }
+            setResult("success");
+            setMessage(res.data.message);
             setIsLoading(false);
             await timeout(1500);
             setResult("");
@@ -60,9 +105,10 @@ export default function AddDealer() {
         });
     }
   };
+
   return (
     <>
-      <DrawerComponent title="Add Dealer">
+      <DrawerComponent title="Edit Dealer">
         <div>
           <div
             className="add-product-container"
@@ -75,7 +121,7 @@ export default function AddDealer() {
               paddingInline: "2rem",
             }}
           >
-            <h1>Add Dealer</h1>
+            <h1>Edit Dealer</h1>
 
             <div
               style={{

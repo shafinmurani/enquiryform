@@ -207,7 +207,10 @@ export default function Dealer() {
                         >
                           <Delete />
                         </Button>
-                        <Link to={`/party/edit/`} state={{ id: row.iPartyID }}>
+                        <Link
+                          to={`/dealer/edit/`}
+                          state={{ id: row.iDealerID }}
+                        >
                           <Button size="small" variant="contained" color="info">
                             <Edit />
                           </Button>
