@@ -27,6 +27,8 @@ import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import TopicIcon from "@mui/icons-material/Topic";
+import logoLg from "../asstes/logo_lg.jpg";
+import logo from "../asstes/logo.jpg";
 
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
@@ -220,6 +222,19 @@ export default function DrawerComponent(props) {
             page="/logout"
           />
         </List>
+        {open ? (
+          <List style={{ alignSelf: "center", marginTop: "12rem" }}>
+            <a href="http://yeshasoftware.com/" target="_blank">
+              <img src={logoLg} style={{ maxWidth: "10rem" }} />
+            </a>
+          </List>
+        ) : (
+          <List style={{ alignSelf: "center", marginTop: "13rem" }}>
+            <a href="http://yeshasoftware.com/" target="_blank">
+              <img src={logo} style={{ maxWidth: "3rem" }} />
+            </a>
+          </List>
+        )}
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
