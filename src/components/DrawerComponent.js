@@ -223,13 +223,25 @@ export default function DrawerComponent(props) {
           />
         </List>
         {open ? (
-          <List style={{ alignSelf: "center", marginTop: "12rem" }}>
+          <List
+            style={{
+              alignSelf: "center",
+              top: "87%",
+              position: "fixed",
+            }}
+          >
             <a href="http://yeshasoftware.com/" target="_blank">
               <img src={logoLg} style={{ maxWidth: "10rem" }} />
             </a>
           </List>
         ) : (
-          <List style={{ alignSelf: "center", marginTop: "13rem" }}>
+          <List
+            style={{
+              alignSelf: "center",
+              top: "90%",
+              position: "fixed",
+            }}
+          >
             <a href="http://yeshasoftware.com/" target="_blank">
               <img src={logo} style={{ maxWidth: "3rem" }} />
             </a>
