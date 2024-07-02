@@ -8,9 +8,10 @@ function toTitleCase(str) {
   });
 }
 
-export default function BreadcrumbsComponent() {
+export default function BreadcrumbsComponent(props) {
   let location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+  const [isHome, setIsHome] = React.useState(true);
 
   return (
     <Breadcrumbs separator=">" aria-label="Breadcrumb">

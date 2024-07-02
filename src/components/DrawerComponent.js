@@ -29,6 +29,8 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import TopicIcon from "@mui/icons-material/Topic";
 import logoLg from "../asstes/logo_lg.jpg";
 import logo from "../asstes/logo.jpg";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import Dashboard from "@mui/icons-material/Dashboard";
 
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
@@ -99,7 +101,7 @@ const Drawer = styled(MuiDrawer, {
 export default function DrawerComponent(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [dropdownOpen, setDropdownOpen] = React.useState(true);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   const handleClick = () => {
     setDropdownOpen(!dropdownOpen);
@@ -168,6 +170,12 @@ export default function DrawerComponent(props) {
         </DrawerHeader>
         <Divider />
         <List>
+          <ListTile
+            open={open}
+            title="Dashboard"
+            page={"/dashboard"}
+            icon={<DashboardIcon />}
+          />
           <ListItemButton onClick={handleClick}>
             <ListItemIcon>
               <TopicIcon />

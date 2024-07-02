@@ -44,7 +44,7 @@ export default function Login() {
         .then((res) => {
           if (res.data.result) {
             localStorage.setItem("jwt-token", res.data.token);
-            navigate("/service-group");
+            navigate("/");
           } else {
             setErrorField("Invalid Email or Password");
           }

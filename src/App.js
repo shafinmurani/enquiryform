@@ -17,11 +17,11 @@ import EditCompany from "./pages/company/EditCompany";
 import Dealer from "./pages/dealer/Dealer";
 import AddDealer from "./pages/dealer/AddDealer";
 import EditDealer from "./pages/dealer/EditDealer";
+import Dashboard from "./pages/dashboard/Dashboard";
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" Component={AuthManager} />
         <Route path="/login" Component={Login} />{" "}
         <Route path="/logout" Component={Logout} />
         <Route path="/service-group" Component={ProductGroup} />
@@ -39,6 +39,7 @@ function App() {
         <Route path="/dealer" Component={Dealer} />
         <Route path="/dealer/add" Component={AddDealer} />
         <Route path="/dealer/edit" Component={EditDealer} />
+        <Route path="/" Component={Dashboard} />
       </Routes>
     </Router>
   );
