@@ -1,19 +1,18 @@
 .wrapper {
-    background-image: linear-gradient(
-        to left top,
-        #da65a8,
-        #cb6bb9,
-        #b872c8,
-        #a17ad4,
-        #8681dc,
-        #6c90ea,
-        #4a9df3,
-        #00aaf8,
-        #00c1ff,
-        #00d7ff,
-        #00ecfc,
-        #3dfff2
-    );
+    /* background-image: linear-gradient(to left top,
+            #da65a8,
+            #cb6bb9,
+            #b872c8,
+            #a17ad4,
+            #8681dc,
+            #6c90ea,
+            #4a9df3,
+            #00aaf8,
+            #00c1ff,
+            #00d7ff,
+            #00ecfc,
+            #3dfff2); */
+    background-image: url(./background.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     display: flex;
@@ -27,7 +26,7 @@
     background-color: #f4f9fa;
     border-radius: 1px 80px;
     outline: 2px solid #6918ac69;
-    outline-width: 5px;
+    outline-width: 4px;
     padding-inline: 4rem;
     padding-block-end: 3rem;
     padding-block-start: 1rem;
