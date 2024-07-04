@@ -29,9 +29,11 @@ export default function AddRenewals() {
 
   const [productGroup, setProductGroup] = React.useState("");
   const [product, setProduct] = React.useState("");
+  const [company, setCompany] = React.useState("");
 
   const [productGroupID, setProductGroupID] = React.useState("");
   const [productID, setProductID] = React.useState("");
+  const [companyID, setCompanyID] = React.useState("");
 
   const getProductGroupData = () => {
     axios
@@ -65,6 +67,20 @@ export default function AddRenewals() {
         setProductRows(array);
       });
   };
+  const getCompanyData = () => {
+    axios.post("http://localhost:3001/api/company/get", {}).then((res) => {
+      var array = [];
+      for (var i = 0; i < res.data.list.length; i++) {
+        if (res.data.list[i].isDelete == "No") {
+          array.push({
+            label: res.data.list[i].vCompanyName,
+            id: res.data.list[i].iCompanyID,
+          });
+        }
+      }
+      setCompanyRows(array);
+    });
+  };
 
   async function clearMessage() {
     await timeout(1500);
@@ -78,6 +94,7 @@ export default function AddRenewals() {
 
   useEffect(() => {
     getProductGroupData();
+    getCompanyData();
   }, []);
   return (
     <>
@@ -155,6 +172,24 @@ export default function AddRenewals() {
                     }}
                     renderInput={(params) => (
                       <TextField {...params} label="Services" />
+                    )}
+                  />
+                </div>
+                <div
+                  style={{ display: "flex", flexDirection: "row", gap: "1rem" }}
+                >
+                  <Autocomplete
+                    disablePortal
+                    disableClearable
+                    options={companyRows}
+                    label="vCompanyName"
+                    style={{ flex: "1" }}
+                    onChange={(event, newInputValue) => {
+                      setCompanyID(newInputValue.id);
+                      setCompany(newInputValue.label);
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Company" />
                     )}
                   />
                 </div>
