@@ -31,6 +31,8 @@ import logoLg from "../asstes/logo_lg.jpg";
 import logo from "../asstes/logo.jpg";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import Dashboard from "@mui/icons-material/Dashboard";
+import RestoreIcon from "@mui/icons-material/Restore";
+import { AccountCircle } from "@mui/icons-material";
 
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
@@ -102,9 +104,12 @@ export default function DrawerComponent(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
-
+  const [renewOpen, setRenewOpen] = React.useState(false);
   const handleClick = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+  const handleRenewClick = () => {
+    setRenewOpen(!renewOpen);
   };
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -218,9 +223,25 @@ export default function DrawerComponent(props) {
                 icon={<ContactEmergencyIcon />}
                 page={"/dealer"}
               />
+              <ListTile
+                open={open}
+                title="Admin"
+                icon={<AccountCircle />}
+                page={"/admin"}
+              />
             </List>
           </Collapse>
         </List>
+        <Divider />
+        <List>
+          <ListTile
+            open={open}
+            title="Renewals"
+            icon={<RestoreIcon />}
+            page={"/renewals"}
+          />
+        </List>
+
         <Divider />
         <List>
           <ListTile

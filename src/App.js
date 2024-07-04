@@ -18,6 +18,9 @@ import Dealer from "./pages/dealer/Dealer";
 import AddDealer from "./pages/dealer/AddDealer";
 import EditDealer from "./pages/dealer/EditDealer";
 import Dashboard from "./pages/dashboard/Dashboard";
+import Renewals from "./pages/renewals/Renewals";
+import Admin from "./pages/admin/Admin";
+import AddRenewals from "./pages/renewals/AddRenewals";
 function App() {
   return (
     <Router>
@@ -39,6 +42,9 @@ function App() {
         <Route path="/dealer" Component={Dealer} />
         <Route path="/dealer/add" Component={AddDealer} />
         <Route path="/dealer/edit" Component={EditDealer} />
+        <Route path="/renewals" Component={Renewals} />
+        <Route path="/renewals/add" Component={AddRenewals} />
+        <Route path="/admin" Component={Admin} />
         <Route path="/" Component={Dashboard} />
       </Routes>
     </Router>

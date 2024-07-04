@@ -85,7 +85,7 @@ export default function Login() {
           severity="error"
           variant="standard"
         >
-          Enter a valid {errorField}
+          {errorField}
         </Alert>
         <div
           style={{
