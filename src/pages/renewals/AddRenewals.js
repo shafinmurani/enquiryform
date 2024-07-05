@@ -1,17 +1,19 @@
-import React, { useEffect } from "react";
-import DrawerComponent from "../../components/DrawerComponent";
 import { Alert, Button, CircularProgress, TextField } from "@mui/material";
-import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import dayjs from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import axios from "axios";
+import dayjs from "dayjs";
+import React, { useEffect } from "react";
+import DrawerComponent from "../../components/DrawerComponent";
 import "../../styles/AddProductGroup.css";
+import useWindowDimensions from "../../components/UseWindowDimensions";
+
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
 }
@@ -19,14 +21,14 @@ function timeout(delay) {
 export default function AddRenewals() {
   //Text Editing controllers
   const [productType, setProductType] = React.useState("");
-  const [quantity, setQuantity] = React.useState("0");
-  const [tax, setTax] = React.useState("0");
+  const [quantity, setQuantity] = React.useState("");
+  const [tax, setTax] = React.useState("");
   const [taxPercent, setTaxPercent] = React.useState("");
-  const [rate, setRate] = React.useState("0");
+  const [rate, setRate] = React.useState("");
   const [amount, setAmount] = React.useState("");
-  const [totalAmt, setTotalAmt] = React.useState("0");
+  const [totalAmt, setTotalAmt] = React.useState("");
 
-  const [result, setResult] = React.useState("0");
+  const [result, setResult] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -49,6 +51,11 @@ export default function AddRenewals() {
   const [dealerID, setDealerID] = React.useState("");
 
   const [isInclusive, setIsInclusive] = React.useState(false);
+
+  const [registrationDate, setRegistrationDate] = React.useState(
+    dayjs(new Date()),
+  );
+  const [expiryDate, setExpiryDate] = React.useState(dayjs(new Date()));
 
   const getProductGroupData = () => {
     axios
@@ -133,8 +140,65 @@ export default function AddRenewals() {
     setResult("");
   }
 
-  const submit = () => {
-    //TODO: Add submission logic
+  const submit = async () => {
+    var adminId = -1;
+    axios
+      .post("http://localhost:3001/api/login/decode", {
+        token: localStorage.getItem("jwt-token"),
+      })
+      .then((res) => {
+        adminId = res.data.decodedToken.id;
+      });
+    var taxType = isInclusive ? "Inclusive" : "Exclusive";
+    if (
+      productGroupID.length == 0 ||
+      productID.length == 0 ||
+      companyID.length == 0 ||
+      partyID.length == 0 ||
+      !registrationDate.isValid ||
+      expiryDate.isBefore(registrationDate) ||
+      dealerID.length == 0 ||
+      rate.length == 0 ||
+      quantity.length == 0 ||
+      tax.length == 0 ||
+      taxPercent.length == 0 ||
+      totalAmt.length == 0
+    ) {
+      setResult("error");
+      setMessage("Invalid data");
+      await clearMessage();
+    } else {
+      var data = {
+        adminId,
+        productGroupID,
+        productID,
+        companyID,
+        partyID,
+        registrationDate: new Date(registrationDate),
+        expiryDate: new Date(expiryDate),
+        dealerID,
+        rate,
+        quantity,
+        amount: quantity * rate,
+        tax,
+        taxPercent,
+        taxType,
+        totalAmt,
+      };
+      axios
+        .post("http://localhost:3001/api/renewals/add", data)
+        .then(async (res) => {
+          if (res.data.affectedRows > 0) {
+            setResult("success");
+            setMessage("Data added successfully");
+            await clearMessage();
+          } else {
+            setResult("error");
+            setMessage("There was some error adding data to the table");
+            await clearMessage();
+          }
+        });
+    }
   };
 
   useEffect(() => {
@@ -143,6 +207,8 @@ export default function AddRenewals() {
     getPartyData();
     getDealerData();
   }, []);
+  const { height, width } = useWindowDimensions();
+
   return (
     <>
       <DrawerComponent title="Add Renewal Details">
@@ -151,7 +217,7 @@ export default function AddRenewals() {
             className="add-product-container"
             style={{
               marginTop: "1rem",
-              width: "80%",
+              width: "90%",
               marginInline: "auto",
               backgroundColor: "#FFFFFF",
               padding: "2rem",
@@ -188,7 +254,11 @@ export default function AddRenewals() {
                 }}
               >
                 <div
-                  style={{ display: "flex", flexDirection: "row", gap: "1rem" }}
+                  style={{
+                    display: "flex",
+                    flexDirection: width > 1000 ? "row" : "column",
+                    gap: width > 1000 ? "2rem" : "1rem",
+                  }}
                 >
                   <Autocomplete
                     disablePortal
@@ -203,7 +273,7 @@ export default function AddRenewals() {
                       getProductData(newInputValue.id);
                     }}
                     renderInput={(params) => (
-                      <TextField {...params} label="Service Group" />
+                      <TextField {...params} label="Group" />
                     )}
                   />
                   <Autocomplete
@@ -221,10 +291,6 @@ export default function AddRenewals() {
                       <TextField {...params} label="Services" />
                     )}
                   />
-                </div>
-                <div
-                  style={{ display: "flex", flexDirection: "row", gap: "1rem" }}
-                >
                   <Autocomplete
                     disablePortal
                     disableClearable
@@ -239,6 +305,73 @@ export default function AddRenewals() {
                       <TextField {...params} label="Company" />
                     )}
                   />
+                  <TextField
+                    label="Product Type"
+                    style={{ flex: 1 }}
+                    onChange={(e) => {
+                      setProductType(e.target.value);
+                    }}
+                  />
+                </div>
+                {/* <div
+                  style={{ display: "flex", flexDirection: "row", gap: "1rem" }}
+                >
+
+                </div> */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: width > 1000 ? "row" : "column",
+                    gap: width > 1000 ? "2rem" : "1rem",
+                  }}
+                >
+                  <LocalizationProvider
+                    // style={{ flex: "1", width: "100%" }}
+                    dateAdapter={AdapterDayjs}
+                  >
+                    <DatePicker
+                      format="DD/MM/YYYY"
+                      label="Registration"
+                      defaultValue={dayjs(new Date())}
+                      value={registrationDate}
+                      slotProps={{
+                        textField: {
+                          style: {
+                            minWidth: width > 1000 ? "10rem" : "100%",
+                            flex: "1",
+                          },
+                        },
+                      }}
+                      onChange={(val) => {
+                        setRegistrationDate(val);
+                        if (val.isAfter(expiryDate) || val.isSame(expiryDate)) {
+                          setExpiryDate(val.add(1, "day"));
+                        }
+                      }}
+                    />
+                  </LocalizationProvider>
+                  <LocalizationProvider
+                    // style={{ flex: "1", width: "100%" }}
+                    dateAdapter={AdapterDayjs}
+                  >
+                    <DatePicker
+                      label="Expiry"
+                      format="DD/MM/YYYY"
+                      slotProps={{
+                        textField: {
+                          style: {
+                            minWidth: width > 1000 ? "10rem" : "100%",
+                            flex: "1",
+                          },
+                        },
+                      }}
+                      value={expiryDate}
+                      minDate={registrationDate}
+                      onChange={(val) => {
+                        setExpiryDate(val);
+                      }}
+                    />
+                  </LocalizationProvider>{" "}
                   <Autocomplete
                     disablePortal
                     disableClearable
@@ -253,39 +386,6 @@ export default function AddRenewals() {
                       <TextField {...params} label="Party" />
                     )}
                   />
-                </div>
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "1rem",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  <LocalizationProvider
-                    style={{ flex: "1", width: "100%" }}
-                    dateAdapter={AdapterDayjs}
-                  >
-                    <DesktopDatePicker
-                      format="DD/MM/YYYY"
-                      label="Registration Date"
-                      defaultValue={dayjs(new Date())}
-                    />
-                  </LocalizationProvider>
-                  <LocalizationProvider
-                    style={{ flex: "1", width: "100%" }}
-                    dateAdapter={AdapterDayjs}
-                  >
-                    <DesktopDatePicker
-                      label="Expiry Date"
-                      format="DD/MM/YYYY"
-                    />
-                  </LocalizationProvider>
-                </div>
-                <div
-                  style={{ display: "flex", flexDirection: "row", gap: "1rem" }}
-                >
                   <Autocomplete
                     disablePortal
                     disableClearable
@@ -300,13 +400,21 @@ export default function AddRenewals() {
                       <TextField {...params} label="Dealer" />
                     )}
                   />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: width > 1000 ? "row" : "column",
+                    gap: width > 1000 ? "2rem" : "1rem",
+                  }}
+                >
                   <TextField
                     style={{ flex: "1" }}
-                    label="Product Rate"
+                    label="Rate"
                     onChange={(e) => {
                       setRate(e.target.value);
                     }}
-                  />
+                  />{" "}
                   <TextField
                     style={{ flex: "1" }}
                     label="Quantity"
@@ -315,10 +423,6 @@ export default function AddRenewals() {
                       setAmount(rate * quantity);
                     }}
                   />{" "}
-                </div>
-                <div
-                  style={{ display: "flex", flexDirection: "row", gap: "1rem" }}
-                >
                   <TextField
                     style={{ flex: "1" }}
                     value={quantity * rate}
@@ -352,16 +456,28 @@ export default function AddRenewals() {
                     }}
                     value={taxPercent}
                     disabled={isInclusive}
-                  />
-                </div>
-                <div
-                  style={{ display: "flex", flexDirection: "row", gap: "1rem" }}
-                >
+                  />{" "}
                   <TextField
                     style={{ flex: "1" }}
                     label="Final Amount"
                     value={totalAmt}
                     disabled
+                  />{" "}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "1rem",
+                    width: width > 1000 ? "50%" : "100%",
+                  }}
+                >
+                  <TextField
+                    style={{ flex: "3" }}
+                    label="Remarks"
+                    multiline
+                    minRows={2}
+                    maxRows={5}
                   />
                 </div>
               </div>

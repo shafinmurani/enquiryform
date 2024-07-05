@@ -12,9 +12,14 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
+import dayjs from "dayjs";
 
 export default function Renewals() {
   const [renewalRows, setRenewalRows] = React.useState([]);
+  const [productGroupRows, setProductGroupRows] = React.useState([]);
+  const [productRows, setProductRows] = React.useState([]);
+  const [partyRows, setPartyRows] = React.useState([]);
+
   const getData = async () => {
     await axios
       .post("http://localhost:3001/api/renewals/get", {})
@@ -22,7 +27,55 @@ export default function Renewals() {
         setRenewalRows(res.data.list);
       });
   };
+  const getProductGroupData = () => {
+    axios
+      .post("http://localhost:3001/api/service-group/get", {})
+      .then((res) => {
+        var array = [];
+        for (var i = 0; i < res.data.list.length; i++) {
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              label: res.data.list[i].vCategory,
+              id: res.data.list[i].iCategoryID,
+            });
+          }
+        }
+        setProductGroupRows(array);
+      });
+  };
+  const getProductData = () => {
+    axios.post("http://localhost:3001/api/service/get").then((res) => {
+      var array = [];
+      for (var i = 0; i < res.data.list.length; i++) {
+        if (res.data.list[i].isDeleted == "No") {
+          array.push({
+            label: res.data.list[i].vProduct,
+            id: res.data.list[i].iProductID,
+            groupId: res.data.list[i].iCategoryID,
+          });
+        }
+      }
+      setProductRows(array);
+    });
+  };
+  const getPartyData = () => {
+    axios.post("http://localhost:3001/api/party/get", {}).then((res) => {
+      var array = [];
+      for (var i = 0; i < res.data.list.length; i++) {
+        if (res.data.list[i].isDeleted == "No") {
+          array.push({
+            label: res.data.list[i].vParty,
+            id: res.data.list[i].iPartyID,
+          });
+        }
+      }
+      setPartyRows(array);
+    });
+  };
   useEffect(() => {
+    getProductData();
+    getProductGroupData();
+    getPartyData();
     getData();
   }, []);
   const [open, setOpen] = React.useState(false);
@@ -59,7 +112,7 @@ export default function Renewals() {
   const handleDelete = () => {
     //TODO : IMPLEMENT BACK END LOGIC
     axios
-      .post("http://localhost:3001/api/company/delete", {
+      .post("http://localhost:3001/api/renewals/delete", {
         id: deleteId,
       })
       .then((res) => {
@@ -76,6 +129,7 @@ export default function Renewals() {
         }
       });
   };
+
   return (
     <>
       <DrawerComponent title="Renewals">
@@ -143,10 +197,27 @@ export default function Renewals() {
                       key={row.name}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="right">{row.vCompanyName}</TableCell>
+                      <TableCell align="right">
+                        {
+                          productGroupRows.find(
+                            (x) =>
+                              x.id ==
+                              productRows.find((x) => x.id == row.iProductID)
+                                .groupId,
+                          ).label
+                        }
+
+                        {productRows.find((x) => x.id == row.iProductID).label}
+                      </TableCell>
                       {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
-                      <TableCell align="right">{row.dtCreated}</TableCell>
-                      <TableCell align="right">{row.dtModified}</TableCell>
+                      <TableCell align="right">
+                        {Date(Date.parse(row.dtRegister))}
+                      </TableCell>
+                      <TableCell align="right">
+                        {Date(Date.parse(row.dtExpiry))}
+                      </TableCell>
+                      <TableCell align="right">{row.iPartyID}</TableCell>
+
                       <TableCell
                         style={{ display: "flex", gap: "1rem" }}
                         align="right"
@@ -169,7 +240,7 @@ export default function Renewals() {
                           >
                             <Button
                               onClick={() => {
-                                handleDelete(row.iCategoryID);
+                                handleDelete(row.iRenewalID);
                               }}
                               size="small"
                               variant="contained"
