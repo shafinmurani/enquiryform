@@ -87,6 +87,9 @@ export default function Renewals() {
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
 
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const months = [1, 2, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12];
+
   const handleClickOpen = (title, message, id) => {
     setOpen(true);
     setMessage(message);
@@ -206,15 +209,26 @@ export default function Renewals() {
                                 .groupId,
                           ).label
                         }
-
+                        {" by "}
                         {productRows.find((x) => x.id == row.iProductID).label}
                       </TableCell>
                       {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
                       <TableCell align="right">
-                        {Date(Date.parse(row.dtRegister))}
+                        {days[new Date(Date.parse(row.dtRegister)).getDay()]}{" "}
+                        {new Date(Date.parse(row.dtRegister)).getDate()}/
+                        {
+                          months[
+                            new Date(Date.parse(row.dtRegister)).getMonth()
+                          ]
+                        }
+                        /{new Date(Date.parse(row.dtRegister)).getFullYear()}
                       </TableCell>
                       <TableCell align="right">
-                        {Date(Date.parse(row.dtExpiry))}
+                        {/* {Date.parse(row.dtExpiry)} */}{" "}
+                        {days[new Date(Date.parse(row.dtExpiry)).getDay()]}{" "}
+                        {new Date(Date.parse(row.dtExpiry)).getDate()}/
+                        {months[new Date(Date.parse(row.dtExpiry)).getMonth()]}/
+                        {new Date(Date.parse(row.dtExpiry)).getFullYear()}
                       </TableCell>
                       <TableCell align="right">{row.iPartyID}</TableCell>
 
