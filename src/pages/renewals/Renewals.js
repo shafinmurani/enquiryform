@@ -13,13 +13,24 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
 import dayjs from "dayjs";
+import TablePagination from "@mui/material/TablePagination";
 
 export default function Renewals() {
   const [renewalRows, setRenewalRows] = React.useState([]);
   const [productGroupRows, setProductGroupRows] = React.useState([]);
   const [productRows, setProductRows] = React.useState([]);
   const [partyRows, setPartyRows] = React.useState([]);
+  const [pg, setpg] = React.useState(0);
+  const [rpg, setrpg] = React.useState(5);
 
+  function handleChangePage(event, newpage) {
+    setpg(newpage);
+  }
+
+  function handleChangeRowsPerPage(event) {
+    setrpg(parseInt(event.target.value, 10));
+    setpg(0);
+  }
   const getData = async () => {
     await axios
       .post("http://localhost:3001/api/renewals/get", {})
@@ -66,6 +77,9 @@ export default function Renewals() {
           array.push({
             label: res.data.list[i].vParty,
             id: res.data.list[i].iPartyID,
+            phone: res.data.list[i].vCMobileno,
+            email: res.data.list[i].vCEmail,
+            name: res.data.list[i].vCName,
           });
         }
       }
@@ -180,6 +194,15 @@ export default function Renewals() {
           />
         </div>
         <TableContainer component={Paper}>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={renewalRows.length}
+            rowsPerPage={rpg}
+            page={pg}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -230,12 +253,18 @@ export default function Renewals() {
                         {months[new Date(Date.parse(row.dtExpiry)).getMonth()]}/
                         {new Date(Date.parse(row.dtExpiry)).getFullYear()}
                       </TableCell>
-                      <TableCell align="right">{row.iPartyID}</TableCell>
+                      <TableCell align="right">
+                        {partyRows.find((x) => x.id == row.iPartyID).label}
+                        <br />
+                        {partyRows.find((x) => x.id == row.iPartyID).name}
+                        <br />
+                        {partyRows.find((x) => x.id == row.iPartyID).phone}
+                        <br />
+                        {partyRows.find((x) => x.id == row.iPartyID).email}
+                        <br />
+                      </TableCell>
 
-                      <TableCell
-                        style={{ display: "flex", gap: "1rem" }}
-                        align="right"
-                      >
+                      <TableCell align="right">
                         <DialogBoxComponent
                           open={open}
                           onClose={handleClose}
@@ -273,29 +302,37 @@ export default function Renewals() {
                             </Button>
                           </div>
                         </DialogBoxComponent>
-                        <Button
-                          size="small"
-                          variant="contained"
-                          color="error"
-                          onClick={() => {
-                            console.log(row);
-                            handleClickOpen(
-                              "Are you sure?",
-                              `You want to delete "${row.iRenewalID}" for ${row.iPartyID}?`,
-                              row.iRenewalID,
-                            );
-                          }}
-                        >
-                          <Delete />
-                        </Button>
-                        <Link
-                          to={`/company/edit/`}
-                          state={{ id: row.iRenewalID }}
-                        >
-                          <Button size="small" variant="contained" color="info">
-                            <Edit />
+                        <div>
+                          <Button
+                            style={{ marginInline: "1rem" }}
+                            size="small"
+                            variant="contained"
+                            color="error"
+                            onClick={() => {
+                              console.log(row);
+                              handleClickOpen(
+                                "Are you sure?",
+                                `You want to delete "${row.iRenewalID}" for ${row.iPartyID}?`,
+                                row.iRenewalID,
+                              );
+                            }}
+                          >
+                            <Delete />
                           </Button>
-                        </Link>
+
+                          <Link
+                            to={`/party/edit/`}
+                            state={{ id: row.iRenewalID }}
+                          >
+                            <Button
+                              size="small"
+                              variant="contained"
+                              color="info"
+                            >
+                              <Edit />
+                            </Button>
+                          </Link>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );

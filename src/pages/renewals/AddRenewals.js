@@ -21,6 +21,10 @@ import AddProductComponent from "../product/AddProductComponent";
 import AddCompanyComponent from "../company/AddCompanyComponent";
 import AddPartyComponent from "../party/AddPartyComponent";
 import AddDealerComponent from "../dealer/AddDealerComponent";
+import {
+  TablePagination,
+  tablePaginationClasses as classes,
+} from "@mui/base/TablePagination";
 
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
