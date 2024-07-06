@@ -13,6 +13,14 @@ import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import "../../styles/AddProductGroup.css";
 import useWindowDimensions from "../../components/UseWindowDimensions";
+import DialogBoxComponent from "../../components/DialogBoxComponent";
+import AddGroupComponent from "../product_group/AddGroupComponent";
+import DialogComponent from "../../components/DialogComponent";
+import Box from "@mui/material/Box";
+import AddProductComponent from "../product/AddProductComponent";
+import AddCompanyComponent from "../company/AddCompanyComponent";
+import AddPartyComponent from "../party/AddPartyComponent";
+import AddDealerComponent from "../dealer/AddDealerComponent";
 
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
@@ -21,6 +29,7 @@ function timeout(delay) {
 export default function AddRenewals() {
   //Text Editing controllers
   const [productType, setProductType] = React.useState("");
+  const [remarks, setRemarks] = React.useState("");
   const [quantity, setQuantity] = React.useState("");
   const [tax, setTax] = React.useState("");
   const [taxPercent, setTaxPercent] = React.useState("");
@@ -177,6 +186,8 @@ export default function AddRenewals() {
         registrationDate: new Date(registrationDate),
         expiryDate: new Date(expiryDate),
         dealerID,
+        productType,
+        remarks,
         rate,
         quantity,
         amount: quantity * rate,
@@ -273,38 +284,97 @@ export default function AddRenewals() {
                       getProductData(newInputValue.id);
                     }}
                     renderInput={(params) => (
-                      <TextField {...params} label="Group" />
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flex: 1,
+                          alignItems: "center",
+                        }}
+                      >
+                        <TextField
+                          {...params}
+                          label="Group"
+                          id="input-with-sx"
+                          variant="outlined"
+                        />
+                        <DialogComponent
+                          title="Service Group"
+                          onClose={() => {
+                            getProductGroupData();
+                            getCompanyData();
+                            getPartyData();
+                            getDealerData();
+                          }}
+                          component={<AddGroupComponent />}
+                        />
+                      </Box>
                     )}
                   />
-                  <Autocomplete
-                    key={productRows}
-                    disablePortal
-                    disableClearable
-                    options={productRows}
-                    label="vProduct"
-                    style={{ flex: "1" }}
-                    onChange={(event, newInputValue) => {
-                      setProductID(newInputValue.id);
-                      setProduct(newInputValue.label);
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flex: 1,
+                      alignItems: "center",
                     }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Services" />
-                    )}
-                  />
-                  <Autocomplete
-                    disablePortal
-                    disableClearable
-                    options={companyRows}
-                    label="vCompanyName"
-                    style={{ flex: "1" }}
-                    onChange={(event, newInputValue) => {
-                      setCompanyID(newInputValue.id);
-                      setCompany(newInputValue.label);
+                  >
+                    <Autocomplete
+                      key={productRows}
+                      disablePortal
+                      disableClearable
+                      options={productRows}
+                      label="vProduct"
+                      style={{ flex: "1" }}
+                      onChange={(event, newInputValue) => {
+                        setProductID(newInputValue.id);
+                        setProduct(newInputValue.label);
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Services" />
+                      )}
+                    />
+                    <DialogComponent
+                      title="Services"
+                      onClose={() => {
+                        getProductGroupData();
+                        getCompanyData();
+                        getPartyData();
+                        getDealerData();
+                      }}
+                      component={<AddProductComponent />}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flex: 1,
+                      alignItems: "center",
                     }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Company" />
-                    )}
-                  />
+                  >
+                    <Autocomplete
+                      disablePortal
+                      disableClearable
+                      options={companyRows}
+                      label="vCompanyName"
+                      style={{ flex: "1" }}
+                      onChange={(event, newInputValue) => {
+                        setCompanyID(newInputValue.id);
+                        setCompany(newInputValue.label);
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Company" />
+                      )}
+                    />
+                    <DialogComponent
+                      title="Company"
+                      onClose={() => {
+                        getProductGroupData();
+                        getCompanyData();
+                        getPartyData();
+                        getDealerData();
+                      }}
+                      component={<AddCompanyComponent />}
+                    />
+                  </Box>
                   <TextField
                     label="Product Type"
                     style={{ flex: 1 }}
@@ -372,34 +442,70 @@ export default function AddRenewals() {
                       }}
                     />
                   </LocalizationProvider>{" "}
-                  <Autocomplete
-                    disablePortal
-                    disableClearable
-                    options={partyRows}
-                    label="vParty"
-                    style={{ flex: "1" }}
-                    onChange={(event, newInputValue) => {
-                      setPartyID(newInputValue.id);
-                      setParty(newInputValue.label);
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flex: 1,
+                      alignItems: "center",
                     }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Party" />
-                    )}
-                  />
-                  <Autocomplete
-                    disablePortal
-                    disableClearable
-                    options={dealerRows}
-                    label="vDName"
-                    style={{ flex: "1" }}
-                    onChange={(event, newInputValue) => {
-                      setDealerID(newInputValue.id);
-                      setDealer(newInputValue.label);
+                  >
+                    <Autocomplete
+                      disablePortal
+                      disableClearable
+                      options={partyRows}
+                      label="vParty"
+                      style={{ flex: "1" }}
+                      onChange={(event, newInputValue) => {
+                        setPartyID(newInputValue.id);
+                        setParty(newInputValue.label);
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Party" />
+                      )}
+                    />
+                    <DialogComponent
+                      title="Party"
+                      onClose={() => {
+                        getProductGroupData();
+                        getCompanyData();
+                        getPartyData();
+                        getDealerData();
+                      }}
+                      component={<AddPartyComponent />}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flex: 1,
+                      alignItems: "center",
                     }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Dealer" />
-                    )}
-                  />
+                  >
+                    <Autocomplete
+                      disablePortal
+                      disableClearable
+                      options={dealerRows}
+                      label="vDName"
+                      style={{ flex: "1" }}
+                      onChange={(event, newInputValue) => {
+                        setDealerID(newInputValue.id);
+                        setDealer(newInputValue.label);
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Dealer" />
+                      )}
+                    />
+                    <DialogComponent
+                      title="Dealer"
+                      onClose={() => {
+                        getProductGroupData();
+                        getCompanyData();
+                        getPartyData();
+                        getDealerData();
+                      }}
+                      component={<AddDealerComponent />}
+                    />
+                  </Box>
                 </div>
                 <div
                   style={{
@@ -475,6 +581,9 @@ export default function AddRenewals() {
                   <TextField
                     style={{ flex: "3" }}
                     label="Remarks"
+                    onChange={(e) => {
+                      setRemarks(e.target.value);
+                    }}
                     multiline
                     minRows={2}
                     maxRows={5}

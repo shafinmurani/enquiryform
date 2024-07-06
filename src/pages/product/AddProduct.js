@@ -4,6 +4,7 @@ import { Alert, Button, CircularProgress, TextField } from "@mui/material";
 import axios from "axios";
 import "../../styles/AddProductGroup.css";
 import Autocomplete from "@mui/material/Autocomplete";
+import AddProductComponent from "./AddProductComponent";
 
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
@@ -70,107 +71,7 @@ export default function AddProduct() {
   return (
     <>
       <DrawerComponent title="Add Service">
-        <div>
-          <div
-            className="add-product-container"
-            style={{
-              marginTop: "1rem",
-              width: "80%",
-              marginInline: "auto",
-              backgroundColor: "#FFFFFF",
-              padding: "2rem",
-              paddingInline: "2rem",
-            }}
-          >
-            <h1>Add Service</h1>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-start",
-                marginTop: "1rem",
-                gap: "1rem",
-                alignItems: "flex-end",
-              }}
-            >
-              <Alert
-                style={{
-                  width: "100%",
-                  display: result.length === 0 ? "none" : "",
-                }}
-                severity={result}
-              >
-                {message}
-              </Alert>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: "1rem",
-                  width: "100%",
-                }}
-              >
-                <Autocomplete
-                  disablePortal
-                  options={serviceGroupList}
-                  label="vCategory"
-                  style={{ flex: "1" }}
-                  onChange={(event, newInputValue) => {
-                    setServiceGroup(newInputValue.id);
-                  }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Service Group" />
-                  )}
-                />
-                <TextField
-                  style={{ flex: "2" }}
-                  onChange={(e) => setService(e.target.value)}
-                  label="Service Name"
-                  value={service}
-                />
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Button
-                  onClick={submit}
-                  disabled={isLoading}
-                  size="large"
-                  variant="contained"
-                  // style={{ flex: "2" }}
-                >
-                  {isLoading ? (
-                    <CircularProgress style={{ color: "white" }} />
-                  ) : (
-                    "Save"
-                  )}
-                </Button>
-                <Button
-                  onClick={() => {
-                    setService("");
-                  }}
-                  disabled={isLoading}
-                  size="large"
-                  variant="contained"
-                  color="warning"
-                  // style={{ flex: "2" }}
-                >
-                  {isLoading ? (
-                    <CircularProgress style={{ color: "white" }} />
-                  ) : (
-                    "Reset"
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AddProductComponent />
       </DrawerComponent>
     </>
   );

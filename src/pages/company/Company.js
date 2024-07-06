@@ -135,7 +135,7 @@ export default function Company() {
             </TableHead>
             <TableBody>
               {filter(search).map((row) => {
-                if (row.isDelete === "Yes") {
+                if (row.isDeleted === "Yes") {
                   return null;
                 } else {
                   return (
@@ -143,7 +143,7 @@ export default function Company() {
                       key={row.name}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="right">{row.vCompanyName}</TableCell>
+                      <TableCell align="right">{row.vAccount}</TableCell>
                       {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
                       <TableCell align="right">{row.dtCreated}</TableCell>
                       <TableCell align="right">{row.dtModified}</TableCell>
@@ -169,7 +169,7 @@ export default function Company() {
                           >
                             <Button
                               onClick={() => {
-                                handleDelete(row.iCategoryID);
+                                handleDelete(row.iAccountID);
                               }}
                               size="small"
                               variant="contained"
@@ -196,8 +196,8 @@ export default function Company() {
                             console.log(row);
                             handleClickOpen(
                               "Are you sure?",
-                              `You want to delete "${row.vCompanyName}" Company?`,
-                              row.iCompanyID,
+                              `You want to delete "${row.vAccount}" Company?`,
+                              row.iAccountID,
                             );
                           }}
                         >
@@ -205,7 +205,7 @@ export default function Company() {
                         </Button>
                         <Link
                           to={`/company/edit/`}
-                          state={{ id: row.iCompanyID }}
+                          state={{ id: row.iAccountID }}
                         >
                           <Button size="small" variant="contained" color="info">
                             <Edit />
