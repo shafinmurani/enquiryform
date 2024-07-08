@@ -138,6 +138,7 @@ export default function Renewals() {
   };
   const handleDelete = () => {
     //TODO : IMPLEMENT BACK END LOGIC
+    console.log(deleteId);
     axios
       .post("http://localhost:3001/api/renewals/delete", {
         id: deleteId,
@@ -300,7 +301,7 @@ export default function Renewals() {
                       >
                         <Button
                           onClick={() => {
-                            handleDelete(row.iRenewalID);
+                            handleDelete(row.id);
                           }}
                           size="small"
                           variant="contained"
@@ -326,18 +327,20 @@ export default function Renewals() {
                         variant="contained"
                         color="error"
                         onClick={() => {
-                          console.log(row);
                           handleClickOpen(
                             "Are you sure?",
-                            `You want to delete "${row.iRenewalID}" for ${row.iPartyID}?`,
-                            row.iRenewalID,
+                            `You want to delete "${row.productData.label}" for ${row.partyData.label}?`,
+                            row.id,
                           );
                         }}
                       >
                         <Delete />
                       </Button>
 
-                      <Link to={`/party/edit/`} state={{ id: row.iRenewalID }}>
+                      <Link
+                        to={`/renewal/edit/`}
+                        state={{ id: row.iRenewalID }}
+                      >
                         <Button size="small" variant="contained" color="info">
                           <Edit />
                         </Button>
