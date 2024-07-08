@@ -12,6 +12,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
+import TablePagination from "@mui/material/TablePagination";
 
 export default function ProductGroup() {
   const [rows, setRows] = React.useState([]);
@@ -19,7 +20,18 @@ export default function ProductGroup() {
     await axios
       .post("http://localhost:3001/api/service-group/get", {})
       .then((res) => {
-        setRows(res.data.list);
+        var array = [];
+        for (var i = 0; i < res.data.list.length; i++) {
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              label: res.data.list[i].vCategory,
+              id: res.data.list[i].iCategoryID,
+              dtCreated: res.data.list[i].dtCreated,
+              dtModified: res.data.list[i].dtModified,
+            });
+          }
+        }
+        setRows(array);
       });
   };
   useEffect(() => {
@@ -75,6 +87,23 @@ export default function ProductGroup() {
         }
       });
   };
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <>
       <DrawerComponent title="Service Group List">
@@ -122,6 +151,15 @@ export default function ProductGroup() {
           />
         </div>
         <TableContainer component={Paper}>
+          <TablePagination
+            rowsPerPageOptions={[2, 5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -133,87 +171,87 @@ export default function ProductGroup() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filter(search).map((row) => {
-                if (row.isDeleted === "Yes") {
-                  return null;
-                } else {
-                  return (
-                    <TableRow
-                      key={row.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              {(rowsPerPage > 0
+                ? rows.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage,
+                  )
+                : rows
+              ).map((row) => (
+                <TableRow
+                  key={row.name}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell align="right">{row.label}</TableCell>
+                  {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
+                  <TableCell align="right">{row.dtCreated}</TableCell>
+                  <TableCell align="right">{row.dtModified}</TableCell>
+                  <TableCell
+                    style={{ display: "flex", gap: "1rem" }}
+                    align="right"
+                  >
+                    <DialogBoxComponent
+                      open={open}
+                      onClose={handleClose}
+                      title={title}
+                      content={message}
+                      style={{ padding: "1rem" }}
                     >
-                      <TableCell align="right">{row.vCategory}</TableCell>
-                      {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
-                      <TableCell align="right">{row.dtCreated}</TableCell>
-                      <TableCell align="right">{row.dtModified}</TableCell>
-                      <TableCell
-                        style={{ display: "flex", gap: "1rem" }}
-                        align="right"
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          margin: "1rem",
+                          flexDirection: "row",
+                          gap: "1rem",
+                        }}
                       >
-                        <DialogBoxComponent
-                          open={open}
-                          onClose={handleClose}
-                          title={title}
-                          content={message}
-                          style={{ padding: "1rem" }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-end",
-                              margin: "1rem",
-                              flexDirection: "row",
-                              gap: "1rem",
-                            }}
-                          >
-                            <Button
-                              onClick={() => {
-                                handleDelete(row.iCategoryID);
-                              }}
-                              size="small"
-                              variant="contained"
-                              color="error"
-                            >
-                              <Typography>Yes</Typography>
-                            </Button>
-
-                            <Button
-                              onClick={handleClose}
-                              size="small"
-                              variant="contained"
-                              color="info"
-                            >
-                              <Typography>No</Typography>
-                            </Button>
-                          </div>
-                        </DialogBoxComponent>
                         <Button
+                          onClick={() => {
+                            handleDelete(row.iCategoryID);
+                          }}
                           size="small"
                           variant="contained"
                           color="error"
-                          onClick={() => {
-                            handleClickOpen(
-                              "Are you sure?",
-                              `You want to delete "${row.vCategory}" product group?`,
-                              row.iCategoryID,
-                            );
-                          }}
                         >
-                          <Delete />
+                          <Typography>Yes</Typography>
                         </Button>
-                        <Link
-                          to={`/service-group/edit/`}
-                          state={{ id: row.iCategoryID }}
+
+                        <Button
+                          onClick={handleClose}
+                          size="small"
+                          variant="contained"
+                          color="info"
                         >
-                          <Button size="small" variant="contained" color="info">
-                            <Edit />
-                          </Button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  );
-                }
-              })}
+                          <Typography>No</Typography>
+                        </Button>
+                      </div>
+                    </DialogBoxComponent>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="error"
+                      onClick={() => {
+                        handleClickOpen(
+                          "Are you sure?",
+                          `You want to delete "${row.vCategory}" product group?`,
+                          row.iCategoryID,
+                        );
+                      }}
+                    >
+                      <Delete />
+                    </Button>
+                    <Link
+                      to={`/service-group/edit/`}
+                      state={{ id: row.iCategoryID }}
+                    >
+                      <Button size="small" variant="contained" color="info">
+                        <Edit />
+                      </Button>
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

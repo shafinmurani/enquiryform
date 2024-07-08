@@ -14,8 +14,11 @@ import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
 import dayjs from "dayjs";
 import TablePagination from "@mui/material/TablePagination";
+import useWindowDimensions from "../../components/UseWindowDimensions";
 
 export default function Renewals() {
+  const { height, width } = useWindowDimensions();
+
   const [renewalRows, setRenewalRows] = React.useState([]);
   const [productGroupRows, setProductGroupRows] = React.useState([]);
   const [productRows, setProductRows] = React.useState([]);
@@ -326,7 +329,11 @@ export default function Renewals() {
                     </DialogBoxComponent>
                     <div>
                       <Button
-                        style={{ marginInline: "1rem" }}
+                        style={
+                          width >= 840
+                            ? { marginInline: "1rem" }
+                            : { marginInline: "0rem" }
+                        }
                         size="small"
                         variant="contained"
                         color="error"
