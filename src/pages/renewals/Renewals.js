@@ -60,9 +60,9 @@ export default function Renewals() {
         setRenewalRows(array);
       });
   };
-  const getProductGroupData = () => {
+  const getProductGroupData = async () => {
     var array = [];
-    axios
+    await axios
       .post("http://localhost:3001/api/service-group/get", {})
       .then((res) => {
         for (var i = 0; i < res.data.list.length; i++) {
@@ -76,9 +76,9 @@ export default function Renewals() {
       });
     return array;
   };
-  const getProductData = () => {
+  const getProductData = async () => {
     var array = [];
-    axios.post("http://localhost:3001/api/service/get").then((res) => {
+    await axios.post("http://localhost:3001/api/service/get").then((res) => {
       for (var i = 0; i < res.data.list.length; i++) {
         if (res.data.list[i].isDeleted == "No") {
           array.push({
@@ -91,9 +91,9 @@ export default function Renewals() {
     });
     return array;
   };
-  const getPartyData = () => {
+  const getPartyData = async () => {
     var array = [];
-    axios.post("http://localhost:3001/api/party/get", {}).then((res) => {
+    await axios.post("http://localhost:3001/api/party/get", {}).then((res) => {
       for (var i = 0; i < res.data.list.length; i++) {
         if (res.data.list[i].isDeleted == "No") {
           array.push({
@@ -254,8 +254,12 @@ export default function Renewals() {
                   <TableCell align="right">
                     {console.log(row)}
                     {row.productGroupData.label}
-                    {" by "}
+                    <br />
                     {row.productData.label}
+                    <br />
+                    {row.productType}
+                    <br />
+                    {row.remarks}
                   </TableCell>
                   {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
                   <TableCell align="right">
