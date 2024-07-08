@@ -20,29 +20,51 @@ export default function Renewals() {
   const [productGroupRows, setProductGroupRows] = React.useState([]);
   const [productRows, setProductRows] = React.useState([]);
   const [partyRows, setPartyRows] = React.useState([]);
-  const [pg, setpg] = React.useState(0);
-  const [rpg, setrpg] = React.useState(5);
 
-  function handleChangePage(event, newpage) {
-    setpg(newpage);
-  }
-
-  function handleChangeRowsPerPage(event) {
-    setrpg(parseInt(event.target.value, 10));
-    setpg(0);
-  }
   const getData = async () => {
+    var productDataRows = await getProductData();
+    var prodcutGroupDataRows = await getProductGroupData();
+    var partyDataRows = await getPartyData();
+    console.log(productDataRows);
     await axios
       .post("http://localhost:3001/api/renewals/get", {})
       .then((res) => {
-        setRenewalRows(res.data.list);
+        var array = [];
+        for (var i = 0; i < res.data.list.length; i++) {
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              partyData: partyDataRows.find(
+                (x) => x.id == res.data.list[i].iPartyID,
+              ),
+              productData: productDataRows.find(
+                (x) => x.id == res.data.list[i].iProductID,
+              ),
+              productGroupData: prodcutGroupDataRows.find(
+                (x) =>
+                  x.id ==
+                  productDataRows.find(
+                    (x) => x.id == res.data.list[i].iProductID,
+                  ).groupId,
+              ),
+              iProductID: res.data.list[i].iProductID,
+              dtRegister: res.data.list[i].dtRegister,
+              dtExpiry: res.data.list[i].dtExpiry,
+
+              productType: res.data.list[i].vType,
+              remarks: res.data.list[i].tRemarks,
+              quantity: res.data.list[i].iQty,
+              id: res.data.list[i].iRenewalID,
+            });
+          }
+        }
+        setRenewalRows(array);
       });
   };
   const getProductGroupData = () => {
+    var array = [];
     axios
       .post("http://localhost:3001/api/service-group/get", {})
       .then((res) => {
-        var array = [];
         for (var i = 0; i < res.data.list.length; i++) {
           if (res.data.list[i].isDeleted == "No") {
             array.push({
@@ -51,12 +73,12 @@ export default function Renewals() {
             });
           }
         }
-        setProductGroupRows(array);
       });
+    return array;
   };
   const getProductData = () => {
+    var array = [];
     axios.post("http://localhost:3001/api/service/get").then((res) => {
-      var array = [];
       for (var i = 0; i < res.data.list.length; i++) {
         if (res.data.list[i].isDeleted == "No") {
           array.push({
@@ -66,12 +88,12 @@ export default function Renewals() {
           });
         }
       }
-      setProductRows(array);
     });
+    return array;
   };
   const getPartyData = () => {
+    var array = [];
     axios.post("http://localhost:3001/api/party/get", {}).then((res) => {
-      var array = [];
       for (var i = 0; i < res.data.list.length; i++) {
         if (res.data.list[i].isDeleted == "No") {
           array.push({
@@ -83,13 +105,10 @@ export default function Renewals() {
           });
         }
       }
-      setPartyRows(array);
     });
+    return array;
   };
   useEffect(() => {
-    getProductData();
-    getProductGroupData();
-    getPartyData();
     getData();
   }, []);
   const [open, setOpen] = React.useState(false);
@@ -97,7 +116,7 @@ export default function Renewals() {
   const [message, setMessage] = React.useState("");
   const [deleteId, setDeleteId] = React.useState();
   const [search, setSearch] = React.useState("");
-
+  const [filteredRows, setFilteredRows] = React.useState([]);
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
 
@@ -117,15 +136,6 @@ export default function Renewals() {
     setTitle("");
     setMessage("");
   };
-  function filter(keyword) {
-    if (keyword.length === 0) {
-      return renewalRows;
-    } else {
-      return renewalRows.filter((row) =>
-        row.vCompanyName.toLowerCase().includes(keyword),
-      );
-    }
-  }
   const handleDelete = () => {
     //TODO : IMPLEMENT BACK END LOGIC
     axios
@@ -145,6 +155,22 @@ export default function Renewals() {
           handleClose();
         }
       });
+  };
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - renewalRows.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   return (
@@ -187,7 +213,9 @@ export default function Renewals() {
           </Link>
           <TextField
             style={{ minWidth: "20rem" }}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
             id="outlined-basic"
             label="Search by Product Name"
             variant="outlined"
@@ -195,11 +223,11 @@ export default function Renewals() {
         </div>
         <TableContainer component={Paper}>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[2, 5, 10, 25]}
             component="div"
             count={renewalRows.length}
-            rowsPerPage={rpg}
-            page={pg}
+            rowsPerPage={rowsPerPage}
+            page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
@@ -214,130 +242,110 @@ export default function Renewals() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filter(search).map((row) => {
-                if (row.isDelete === "Yes") {
-                  return null;
-                } else {
-                  return (
-                    <TableRow
-                      key={row.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              {(rowsPerPage > 0
+                ? renewalRows.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage,
+                  )
+                : renewalRows
+              ).map((row) => (
+                <TableRow>
+                  <TableCell align="right">
+                    {console.log(row)}
+                    {row.productGroupData.label}
+                    {" by "}
+                    {row.productData.label}
+                  </TableCell>
+                  {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
+                  <TableCell align="right">
+                    {days[new Date(Date.parse(row.dtRegister)).getDay()]}{" "}
+                    {new Date(Date.parse(row.dtRegister)).getDate()}/
+                    {months[new Date(Date.parse(row.dtRegister)).getMonth()]}/
+                    {new Date(Date.parse(row.dtRegister)).getFullYear()}
+                  </TableCell>
+                  <TableCell align="right">
+                    {/* {Date.parse(row.dtExpiry)} */}{" "}
+                    {days[new Date(Date.parse(row.dtExpiry)).getDay()]}{" "}
+                    {new Date(Date.parse(row.dtExpiry)).getDate()}/
+                    {months[new Date(Date.parse(row.dtExpiry)).getMonth()]}/
+                    {new Date(Date.parse(row.dtExpiry)).getFullYear()}
+                  </TableCell>
+                  <TableCell align="right">
+                    {row.partyData.label}
+                    <br />
+                    {row.partyData.name}
+                    <br />
+                    {row.partyData.phone}
+                    <br />
+                    {row.partyData.email}
+                    <br />
+                  </TableCell>
+
+                  <TableCell align="right">
+                    <DialogBoxComponent
+                      open={open}
+                      onClose={handleClose}
+                      title={title}
+                      content={message}
+                      style={{ padding: "1rem" }}
                     >
-                      <TableCell align="right">
-                        {
-                          productGroupRows.find(
-                            (x) =>
-                              x.id ==
-                              productRows.find((x) => x.id == row.iProductID)
-                                .groupId,
-                          ).label
-                        }
-                        {" by "}
-                        {productRows.find((x) => x.id == row.iProductID).label}
-                      </TableCell>
-                      {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
-                      <TableCell align="right">
-                        {days[new Date(Date.parse(row.dtRegister)).getDay()]}{" "}
-                        {new Date(Date.parse(row.dtRegister)).getDate()}/
-                        {
-                          months[
-                            new Date(Date.parse(row.dtRegister)).getMonth()
-                          ]
-                        }
-                        /{new Date(Date.parse(row.dtRegister)).getFullYear()}
-                      </TableCell>
-                      <TableCell align="right">
-                        {/* {Date.parse(row.dtExpiry)} */}{" "}
-                        {days[new Date(Date.parse(row.dtExpiry)).getDay()]}{" "}
-                        {new Date(Date.parse(row.dtExpiry)).getDate()}/
-                        {months[new Date(Date.parse(row.dtExpiry)).getMonth()]}/
-                        {new Date(Date.parse(row.dtExpiry)).getFullYear()}
-                      </TableCell>
-                      <TableCell align="right">
-                        {partyRows.find((x) => x.id == row.iPartyID).label}
-                        <br />
-                        {partyRows.find((x) => x.id == row.iPartyID).name}
-                        <br />
-                        {partyRows.find((x) => x.id == row.iPartyID).phone}
-                        <br />
-                        {partyRows.find((x) => x.id == row.iPartyID).email}
-                        <br />
-                      </TableCell>
-
-                      <TableCell align="right">
-                        <DialogBoxComponent
-                          open={open}
-                          onClose={handleClose}
-                          title={title}
-                          content={message}
-                          style={{ padding: "1rem" }}
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-end",
+                          margin: "1rem",
+                          flexDirection: "row",
+                          gap: "1rem",
+                        }}
+                      >
+                        <Button
+                          onClick={() => {
+                            handleDelete(row.iRenewalID);
+                          }}
+                          size="small"
+                          variant="contained"
+                          color="error"
                         >
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-end",
-                              margin: "1rem",
-                              flexDirection: "row",
-                              gap: "1rem",
-                            }}
-                          >
-                            <Button
-                              onClick={() => {
-                                handleDelete(row.iRenewalID);
-                              }}
-                              size="small"
-                              variant="contained"
-                              color="error"
-                            >
-                              <Typography>Yes</Typography>
-                            </Button>
+                          <Typography>Yes</Typography>
+                        </Button>
 
-                            <Button
-                              onClick={handleClose}
-                              size="small"
-                              variant="contained"
-                              color="info"
-                            >
-                              <Typography>No</Typography>
-                            </Button>
-                          </div>
-                        </DialogBoxComponent>
-                        <div>
-                          <Button
-                            style={{ marginInline: "1rem" }}
-                            size="small"
-                            variant="contained"
-                            color="error"
-                            onClick={() => {
-                              console.log(row);
-                              handleClickOpen(
-                                "Are you sure?",
-                                `You want to delete "${row.iRenewalID}" for ${row.iPartyID}?`,
-                                row.iRenewalID,
-                              );
-                            }}
-                          >
-                            <Delete />
-                          </Button>
+                        <Button
+                          onClick={handleClose}
+                          size="small"
+                          variant="contained"
+                          color="info"
+                        >
+                          <Typography>No</Typography>
+                        </Button>
+                      </div>
+                    </DialogBoxComponent>
+                    <div>
+                      <Button
+                        style={{ marginInline: "1rem" }}
+                        size="small"
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                          console.log(row);
+                          handleClickOpen(
+                            "Are you sure?",
+                            `You want to delete "${row.iRenewalID}" for ${row.iPartyID}?`,
+                            row.iRenewalID,
+                          );
+                        }}
+                      >
+                        <Delete />
+                      </Button>
 
-                          <Link
-                            to={`/party/edit/`}
-                            state={{ id: row.iRenewalID }}
-                          >
-                            <Button
-                              size="small"
-                              variant="contained"
-                              color="info"
-                            >
-                              <Edit />
-                            </Button>
-                          </Link>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                }
-              })}
+                      <Link to={`/party/edit/`} state={{ id: row.iRenewalID }}>
+                        <Button size="small" variant="contained" color="info">
+                          <Edit />
+                        </Button>
+                      </Link>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

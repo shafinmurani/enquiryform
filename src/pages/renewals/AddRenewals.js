@@ -106,10 +106,10 @@ export default function AddRenewals() {
     axios.post("http://localhost:3001/api/company/get", {}).then((res) => {
       var array = [];
       for (var i = 0; i < res.data.list.length; i++) {
-        if (res.data.list[i].isDelete == "No") {
+        if (res.data.list[i].isDeleted == "No") {
           array.push({
-            label: res.data.list[i].vCompanyName,
-            id: res.data.list[i].iCompanyID,
+            label: res.data.list[i].vAccount,
+            id: res.data.list[i].iAccountID,
           });
         }
       }
