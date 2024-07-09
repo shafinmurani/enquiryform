@@ -1,7 +1,15 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import { Alert, Button, TextField, Tooltip, Typography } from "@mui/material";
-import { Add, Check, Clear, Delete, Edit } from "@mui/icons-material";
+import {
+  Add,
+  Check,
+  Clear,
+  Delete,
+  Download,
+  Edit,
+  ImportExport,
+} from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -250,11 +258,20 @@ export default function Renewals() {
             marginBottom: "1rem",
           }}
         >
-          <Link to="/renewals/add">
-            <Button startIcon={<Add />} variant="contained">
-              Add
-            </Button>
-          </Link>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <Tooltip title="Export to CSV" arrow>
+              <a href="http://localhost:3001/api/database/export/renewals">
+                <Button variant="contained">
+                  <Download />
+                </Button>
+              </a>
+            </Tooltip>
+            <Link to="/renewals/add">
+              <Button startIcon={<Add />} variant="contained">
+                Add
+              </Button>
+            </Link>
+          </div>
           <TextField
             style={{ minWidth: "20rem" }}
             onChange={(e) => {
@@ -371,7 +388,7 @@ export default function Renewals() {
                     <Button
                       style={
                         width >= 840
-                          ? { marginInline: "0.2rem" }
+                          ? { marginInline: "0rem" }
                           : { marginInline: "0rem" }
                       }
                       size="small"
@@ -388,16 +405,17 @@ export default function Renewals() {
                       <Delete />
                     </Button>
 
-                    <Link
-                      style={
-                        width >= 840
-                          ? { marginInline: "0.2rem" }
-                          : { marginInline: "0rem" }
-                      }
-                      to={`/renewals/edit/`}
-                      state={{ id: row.id }}
-                    >
-                      <Button size="small" variant="contained" color="info">
+                    <Link to={`/renewals/edit/`} state={{ id: row.id }}>
+                      <Button
+                        style={
+                          width >= 840
+                            ? { marginInline: "0.1rem" }
+                            : { marginInline: "0rem" }
+                        }
+                        size="small"
+                        variant="contained"
+                        color="info"
+                      >
                         <Edit />
                       </Button>
                     </Link>
