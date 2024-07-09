@@ -86,12 +86,12 @@ export default function ProductGroup() {
       })
       .then(async (res) => {
         if (res.data.result) {
-          await setAlertMessage(res.data.message);
-          await setResult("success");
-          await setRows([]);
-          await getData();
+          setAlertMessage(res.data.message);
+          setResult("success");
+          setRows([]);
+          getData();
           getGroupList();
-          await handleClose();
+          handleClose();
         } else {
           setAlertMessage(res.data.message);
           setResult("error");

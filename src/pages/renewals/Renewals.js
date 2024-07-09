@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { Alert, Button, TextField, Typography } from "@mui/material";
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Alert, Button, TextField, Tooltip, Typography } from "@mui/material";
+import { Add, Check, Clear, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -52,7 +52,7 @@ export default function Renewals() {
               iProductID: res.data.list[i].iProductID,
               dtRegister: res.data.list[i].dtRegister,
               dtExpiry: res.data.list[i].dtExpiry,
-
+              isActive: res.data.list[i].eStatus == "Active" ? true : false,
               productType: res.data.list[i].vType,
               remarks: res.data.list[i].tRemarks,
               quantity: res.data.list[i].iQty,
@@ -145,6 +145,46 @@ export default function Renewals() {
     axios
       .post("http://localhost:3001/api/renewals/delete", {
         id: deleteId,
+      })
+      .then((res) => {
+        if (res.data.result) {
+          setAlertMessage(res.data.message);
+          setResult("success");
+          setRenewalRows([]);
+          getData();
+          handleClose();
+        } else {
+          setAlertMessage(res.data.message);
+          setResult("error");
+          handleClose();
+        }
+      });
+  };
+
+  const handleSetInactive = (id) => {
+    axios
+      .post("http://localhost:3001/api/renewals/set-inactive", {
+        id: id,
+      })
+      .then((res) => {
+        if (res.data.result) {
+          setAlertMessage(res.data.message);
+          setResult("success");
+          setRenewalRows([]);
+          getData();
+          handleClose();
+        } else {
+          setAlertMessage(res.data.message);
+          setResult("error");
+          handleClose();
+        }
+      });
+  };
+
+  const handleSetActive = (id) => {
+    axios
+      .post("http://localhost:3001/api/renewals/set-active", {
+        id: id,
       })
       .then((res) => {
         if (res.data.result) {
@@ -289,7 +329,7 @@ export default function Renewals() {
                     <br />
                   </TableCell>
 
-                  <TableCell align="right">
+                  <TableCell style={{ maxWidth: "8rem" }} align="right">
                     <DialogBoxComponent
                       open={open}
                       onClose={handleClose}
@@ -327,36 +367,74 @@ export default function Renewals() {
                         </Button>
                       </div>
                     </DialogBoxComponent>
-                    <div>
-                      <Button
-                        style={
-                          width >= 840
-                            ? { marginInline: "1rem" }
-                            : { marginInline: "0rem" }
-                        }
-                        size="small"
-                        variant="contained"
-                        color="error"
-                        onClick={() => {
-                          handleClickOpen(
-                            "Are you sure?",
-                            `You want to delete "${row.productData.label}" for ${row.partyData.label}?`,
-                            row.id,
-                          );
-                        }}
-                      >
-                        <Delete />
-                      </Button>
 
-                      <Link
-                        to={`/renewal/edit/`}
-                        state={{ id: row.iRenewalID }}
+                    <Button
+                      style={
+                        width >= 840
+                          ? { marginInline: "0.2rem" }
+                          : { marginInline: "0rem" }
+                      }
+                      size="small"
+                      variant="contained"
+                      color="error"
+                      onClick={() => {
+                        handleClickOpen(
+                          "Are you sure?",
+                          `You want to delete "${row.productData.label}" for ${row.partyData.label}?`,
+                          row.id,
+                        );
+                      }}
+                    >
+                      <Delete />
+                    </Button>
+
+                    <Link
+                      style={
+                        width >= 840
+                          ? { marginInline: "0.2rem" }
+                          : { marginInline: "0rem" }
+                      }
+                      to={`/renewals/edit/`}
+                      state={{ id: row.id }}
+                    >
+                      <Button size="small" variant="contained" color="info">
+                        <Edit />
+                      </Button>
+                    </Link>
+                    {row.isActive ? (
+                      <Tooltip
+                        onClick={() => {
+                          handleSetInactive(row.id);
+                        }}
+                        title="Set Inactive"
+                        variant="soft"
                       >
-                        <Button size="small" variant="contained" color="info">
-                          <Edit />
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="warning"
+                        >
+                          <Clear />
                         </Button>
-                      </Link>
-                    </div>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip
+                        onClick={() => {
+                          handleSetActive(row.id);
+                        }}
+                        title="Set Active"
+                        variant="soft"
+                      >
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="success"
+                        >
+                          <Check />
+                        </Button>
+                      </Tooltip>
+                    )}
+                    {/* </div> */}
                   </TableCell>
                 </TableRow>
               ))}

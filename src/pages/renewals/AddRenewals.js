@@ -155,7 +155,7 @@ export default function AddRenewals() {
 
   const submit = async () => {
     var adminId = -1;
-    axios
+    await axios
       .post("http://localhost:3001/api/login/decode", {
         token: localStorage.getItem("jwt-token"),
       })
@@ -170,11 +170,8 @@ export default function AddRenewals() {
       partyID.length == 0 ||
       !registrationDate.isValid ||
       expiryDate.isBefore(registrationDate) ||
-      dealerID.length == 0 ||
       rate.length == 0 ||
       quantity.length == 0 ||
-      tax.length == 0 ||
-      taxPercent.length == 0 ||
       totalAmt.length == 0
     ) {
       setResult("error");
