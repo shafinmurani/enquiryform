@@ -116,7 +116,25 @@ export default function AddRenewals() {
       setCompanyRows(array);
     });
   };
-
+  const reset = () => {
+    setProductType("");
+    setRemarks("");
+    setQuantity("");
+    setTax("");
+    setTaxPercent("");
+    setRate("");
+    setAmount("");
+    setTotalAmt("");
+    setProductGroup("");
+    setProductID("");
+    setProductGroupID("");
+    setDealer("");
+    setDealerID("");
+    setParty("");
+    setPartyID("");
+    setTotalAmt("");
+    setCompany("");
+  };
   const getPartyData = () => {
     axios.post("http://localhost:3001/api/party/get", {}).then((res) => {
       var array = [];
@@ -203,6 +221,7 @@ export default function AddRenewals() {
           if (res.data.affectedRows > 0) {
             setResult("success");
             setMessage("Data added successfully");
+            reset();
             await clearMessage();
           } else {
             setResult("error");
@@ -275,6 +294,7 @@ export default function AddRenewals() {
                   <Autocomplete
                     disablePortal
                     disableClearable
+                    value={productGroup}
                     options={productGroupRows}
                     label="vCategory"
                     style={{ flex: "1" }}
@@ -319,6 +339,7 @@ export default function AddRenewals() {
                     }}
                   >
                     <Autocomplete
+                      value={product}
                       key={productRows}
                       disablePortal
                       disableClearable
@@ -353,6 +374,7 @@ export default function AddRenewals() {
                   >
                     <Autocomplete
                       disablePortal
+                      value={company}
                       disableClearable
                       options={companyRows}
                       label="vCompanyName"
@@ -377,6 +399,7 @@ export default function AddRenewals() {
                     />
                   </Box>
                   <TextField
+                    value={productType}
                     label="Product Type"
                     style={{ flex: 1 }}
                     onChange={(e) => {
@@ -455,6 +478,7 @@ export default function AddRenewals() {
                       disableClearable
                       options={partyRows}
                       label="vParty"
+                      value={party}
                       style={{ flex: "1" }}
                       onChange={(event, newInputValue) => {
                         setPartyID(newInputValue.id);
@@ -487,6 +511,7 @@ export default function AddRenewals() {
                       disableClearable
                       options={dealerRows}
                       label="vDName"
+                      value={dealer}
                       style={{ flex: "1" }}
                       onChange={(event, newInputValue) => {
                         setDealerID(newInputValue.id);
@@ -518,6 +543,7 @@ export default function AddRenewals() {
                   <TextField
                     style={{ flex: "1" }}
                     label="Rate"
+                    value={rate}
                     onChange={(e) => {
                       setRate(e.target.value);
                     }}
@@ -525,6 +551,7 @@ export default function AddRenewals() {
                   <TextField
                     style={{ flex: "1" }}
                     label="Quantity"
+                    value={quantity}
                     onChange={(e) => {
                       setQuantity(e.target.value);
                       setAmount(rate * quantity);
@@ -582,6 +609,7 @@ export default function AddRenewals() {
                   <TextField
                     style={{ flex: "3" }}
                     label="Remarks"
+                    value={remarks}
                     onChange={(e) => {
                       setRemarks(e.target.value);
                     }}
@@ -613,7 +641,9 @@ export default function AddRenewals() {
                   )}
                 </Button>
                 <Button
-                  onClick={() => {}}
+                  onClick={() => {
+                    reset();
+                  }}
                   disabled={isLoading}
                   size="large"
                   variant="contained"
