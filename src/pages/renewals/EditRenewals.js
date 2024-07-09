@@ -21,6 +21,7 @@ import AddProductComponent from "../product/AddProductComponent";
 import AddCompanyComponent from "../company/AddCompanyComponent";
 import AddPartyComponent from "../party/AddPartyComponent";
 import AddDealerComponent from "../dealer/AddDealerComponent";
+import { useNavigate } from "react-router-dom";
 import {
   TablePagination,
   tablePaginationClasses as classes,
@@ -32,6 +33,8 @@ function timeout(delay) {
 }
 
 export default function EditRenewals() {
+  let navigate = useNavigate();
+
   //Text Editing controllers
   const [productType, setProductType] = React.useState("");
   const [remarks, setRemarks] = React.useState("");
@@ -310,6 +313,7 @@ export default function EditRenewals() {
           setResult("success");
           setMessage("Data added successfully");
           await clearMessage();
+          navigate("/renewals/");
         } else {
           setResult("error");
           setMessage("There was some error adding data to the table");
@@ -698,6 +702,7 @@ export default function EditRenewals() {
                   <TextField
                     style={{ flex: "3" }}
                     label="Remarks"
+                    value={remarks}
                     onChange={(e) => {
                       setRemarks(e.target.value);
                     }}
@@ -729,7 +734,9 @@ export default function EditRenewals() {
                   )}
                 </Button>
                 <Button
-                  onClick={() => {}}
+                  onClick={() => {
+                    getRenewalData();
+                  }}
                   disabled={isLoading}
                   size="large"
                   variant="contained"
@@ -739,7 +746,7 @@ export default function EditRenewals() {
                   {isLoading ? (
                     <CircularProgress style={{ color: "white" }} />
                   ) : (
-                    "Reset"
+                    "Undo"
                   )}
                 </Button>
               </div>
