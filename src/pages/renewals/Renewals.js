@@ -25,8 +25,27 @@ import TablePagination from "@mui/material/TablePagination";
 import useWindowDimensions from "../../components/UseWindowDimensions";
 import FileUploadDialog from "../../components/FileUploadDialog.js";
 import format from "../../asstes/renewal_upload_format.png";
+import { makeStyles } from "@mui/styles";
+import Divider from "@mui/material/Divider";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import IconButton from "@mui/material/IconButton";
+
+const useStyles = makeStyles({
+  tableRow: {
+    height: 30,
+  },
+  tableCell: {
+    padding: "8px 16px",
+  },
+  tableHeadingCell: {
+    padding: "20px 16px",
+    fontWeight: "600",
+  },
+});
 
 export default function Renewals() {
+  const classes = useStyles();
+
   const { height, width } = useWindowDimensions();
 
   const [renewalRows, setRenewalRows] = React.useState([]);
@@ -230,16 +249,6 @@ export default function Renewals() {
   return (
     <>
       <DrawerComponent title="Renewals">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <h1>Renewals</h1>
-        </div>
         <Alert
           style={{
             width: "80%",
@@ -260,23 +269,6 @@ export default function Renewals() {
             marginBottom: "1rem",
           }}
         >
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <Tooltip title="Export to CSV" arrow>
-              <a href="http://localhost:3001/api/database/export/renewals">
-                <Button variant="contained">
-                  <Download />
-                </Button>
-              </a>
-            </Tooltip>
-            <Tooltip title="Import from .xlsx" arrow>
-              <FileUploadDialog image={format} />
-            </Tooltip>
-            <Link to="/renewals/add">
-              <Button startIcon={<Add />} variant="contained">
-                Add
-              </Button>
-            </Link>
-          </div>
           <TextField
             style={{ minWidth: "20rem" }}
             onChange={(e) => {
@@ -288,23 +280,68 @@ export default function Renewals() {
           />
         </div>
         <TableContainer component={Paper}>
-          <TablePagination
-            rowsPerPageOptions={[2, 5, 10, 25]}
-            component="div"
-            count={renewalRows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingBlock: "0.8rem",
+              paddingInline: "1rem",
+            }}
+          >
+            <TablePagination
+              rowsPerPageOptions={[2, 5, 10, 25]}
+              component="div"
+              count={renewalRows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <Tooltip title="Export to CSV" arrow>
+                <a href="http://localhost:3001/api/database/export/renewals">
+                  <IconButton color="primary" variant="outlined">
+                    <FileUploadIcon />
+                  </IconButton>
+                </a>
+              </Tooltip>
+              <Tooltip title="Import from Excel Sheet" arrow>
+                <a>
+                  <FileUploadDialog image={format} />
+                </a>
+              </Tooltip>
+              <Tooltip title="Add Renewal" arrow>
+                <Link to="/renewals/add">
+                  <IconButton
+                    style={{ backgroundColor: "#00a9d1", color: "white" }}
+                    variant="contained"
+                  >
+                    <Add />
+                  </IconButton>
+                </Link>
+              </Tooltip>
+            </div>
+          </div>
+          <Divider />
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
-              <TableRow>
-                <TableCell align="right">Product</TableCell>
-                <TableCell align="right">Register</TableCell>
-                <TableCell align="right">Expiry</TableCell>
-                <TableCell align="right">Party Details</TableCell>
-                <TableCell align="right">Actions</TableCell>
+              <TableRow className={classes.tableRow}>
+                <TableCell className={classes.tableHeadingCell} align="center">
+                  Product
+                </TableCell>
+                <TableCell className={classes.tableHeadingCell} align="center">
+                  Register
+                </TableCell>
+                <TableCell className={classes.tableHeadingCell} align="center">
+                  Expiry
+                </TableCell>
+                <TableCell className={classes.tableHeadingCell} align="center">
+                  Party Details
+                </TableCell>
+                <TableCell className={classes.tableHeadingCell} align="center">
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -315,35 +352,29 @@ export default function Renewals() {
                   )
                 : renewalRows
               ).map((row) => (
-                <TableRow>
-                  <TableCell align="right">
+                <TableRow className={classes.tableRow}>
+                  <TableCell className={classes.tableCell} align="center">
                     {console.log(row)}
-                    {row.productGroupData.label}
+                    Category: {row.productGroupData.label}
                     <br />
-                    {row.productData.label}
-                    <br />
-                    {row.productType}
-                    <br />
-                    {row.remarks}
+                    {row.productData.label} for {row.productType}
                   </TableCell>
-                  {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
-                  <TableCell align="right">
+                  <TableCell className={classes.tableCell} align="center">
                     {days[new Date(Date.parse(row.dtRegister)).getDay()]}{" "}
                     {new Date(Date.parse(row.dtRegister)).getDate()}/
                     {months[new Date(Date.parse(row.dtRegister)).getMonth()]}/
                     {new Date(Date.parse(row.dtRegister)).getFullYear()}
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell className={classes.tableCell} align="center">
                     {/* {Date.parse(row.dtExpiry)} */}{" "}
                     {days[new Date(Date.parse(row.dtExpiry)).getDay()]}{" "}
                     {new Date(Date.parse(row.dtExpiry)).getDate()}/
                     {months[new Date(Date.parse(row.dtExpiry)).getMonth()]}/
                     {new Date(Date.parse(row.dtExpiry)).getFullYear()}
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell className={classes.tableCell} align="center">
                     {row.partyData.label}
-                    <br />
-                    {row.partyData.name}
+
                     <br />
                     {row.partyData.phone}
                     <br />
@@ -351,7 +382,11 @@ export default function Renewals() {
                     <br />
                   </TableCell>
 
-                  <TableCell style={{ maxWidth: "8rem" }} align="right">
+                  <TableCell
+                    className={classes.tableCell}
+                    style={{ maxWidth: "8rem" }}
+                    align="center"
+                  >
                     <DialogBoxComponent
                       open={open}
                       onClose={handleClose}

@@ -14,8 +14,12 @@ export default function BreadcrumbsComponent(props) {
   const [isHome, setIsHome] = React.useState(true);
 
   return (
-    <Breadcrumbs separator=">" aria-label="Breadcrumb">
-      <Link style={{ color: "black" }} component={RouterLink} to="/">
+    <Breadcrumbs
+      style={{ color: "white" }}
+      separator=">"
+      aria-label="Breadcrumb"
+    >
+      <Link style={{ color: "white" }} component={RouterLink} to="/">
         Home
       </Link>
       {pathnames.map((value, index) => {
@@ -23,12 +27,12 @@ export default function BreadcrumbsComponent(props) {
         const to = `/${pathnames.slice(0, index + 1).join("/")}`;
 
         return last ? (
-          <Typography style={{ color: "black" }} color="textPrimary" key={to}>
+          <Typography style={{ color: "white" }} color="textPrimary" key={to}>
             {toTitleCase(value)}
           </Typography>
         ) : (
           <Link
-            style={{ color: "black" }}
+            style={{ color: "white" }}
             color="inherit"
             component={RouterLink}
             to={to}

@@ -1,5 +1,7 @@
 import * as React from "react";
+import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
+
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -8,6 +10,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { Box } from "@mui/material";
+import { Download } from "@mui/icons-material";
 export default function FileUploadDialog(props) {
   const [open, setOpen] = React.useState(false);
 
@@ -21,9 +24,14 @@ export default function FileUploadDialog(props) {
 
   return (
     <React.Fragment>
-      <Button variant="contained" onClick={handleClickOpen}>
-        <FileUploadIcon />
-      </Button>
+      <IconButton
+        color="primary"
+        style={{ height: "2.6rem" }}
+        variant="outlined"
+        onClick={handleClickOpen}
+      >
+        <Download />
+      </IconButton>
       <Dialog
         fullScreen
         open={open}

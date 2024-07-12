@@ -137,7 +137,13 @@ export default function DrawerComponent(props) {
         position="fixed"
         open={open}
       >
-        <Toolbar>
+        <Toolbar
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -153,6 +159,8 @@ export default function DrawerComponent(props) {
           <Typography variant="h6" noWrap component="div">
             {props.title}
           </Typography>
+
+          <BreadcrumbsComponent />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -279,7 +287,6 @@ export default function DrawerComponent(props) {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {props.isHome == "true" ? null : <BreadcrumbsComponent />}
 
         {props.children}
       </Box>
