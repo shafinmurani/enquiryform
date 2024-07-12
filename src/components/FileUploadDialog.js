@@ -26,7 +26,7 @@ export default function FileUploadDialog(props) {
     <React.Fragment>
       <IconButton
         color="primary"
-        style={{ height: "2.6rem" }}
+        // style={{ height: "2.6rem" }}
         variant="outlined"
         onClick={handleClickOpen}
       >
