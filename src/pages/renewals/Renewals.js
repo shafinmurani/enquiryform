@@ -23,6 +23,8 @@ import DialogBoxComponent from "../../components/DialogBoxComponent";
 import dayjs from "dayjs";
 import TablePagination from "@mui/material/TablePagination";
 import useWindowDimensions from "../../components/UseWindowDimensions";
+import FileUploadDialog from "../../components/FileUploadDialog.js";
+import format from "../../asstes/renewal_upload_format.png";
 
 export default function Renewals() {
   const { height, width } = useWindowDimensions();
@@ -265,6 +267,9 @@ export default function Renewals() {
                   <Download />
                 </Button>
               </a>
+            </Tooltip>
+            <Tooltip title="Import from .xlsx" arrow>
+              <FileUploadDialog image={format} />
             </Tooltip>
             <Link to="/renewals/add">
               <Button startIcon={<Add />} variant="contained">
