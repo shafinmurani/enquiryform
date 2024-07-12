@@ -425,7 +425,7 @@ export default function Renewals() {
                       </div>
                     </DialogBoxComponent>
 
-                    <Button
+                    <IconButton
                       style={
                         width >= 840
                           ? { marginInline: "0rem" }
@@ -443,10 +443,10 @@ export default function Renewals() {
                       }}
                     >
                       <Delete />
-                    </Button>
+                    </IconButton>
 
                     <Link to={`/renewals/edit/`} state={{ id: row.id }}>
-                      <Button
+                      <IconButton
                         style={
                           width >= 840
                             ? { marginInline: "0.1rem" }
@@ -457,7 +457,7 @@ export default function Renewals() {
                         color="info"
                       >
                         <Edit />
-                      </Button>
+                      </IconButton>
                     </Link>
                     {row.isActive ? (
                       <Tooltip
@@ -467,13 +467,14 @@ export default function Renewals() {
                         title="Set Inactive"
                         variant="soft"
                       >
-                        <Button
+                        <IconButton
                           size="small"
                           variant="contained"
                           color="warning"
+                          style={{ backgroundColor: "#418944" }}
                         >
-                          <Clear />
-                        </Button>
+                          <Clear style={{ color: "white" }} />
+                        </IconButton>
                       </Tooltip>
                     ) : (
                       <Tooltip
@@ -483,13 +484,13 @@ export default function Renewals() {
                         title="Set Active"
                         variant="soft"
                       >
-                        <Button
+                        <IconButton
+                          style={{ backgroundColor: "#ed6c02" }}
                           size="small"
                           variant="contained"
-                          color="success"
                         >
-                          <Check />
-                        </Button>
+                          <Check style={{ color: "white" }} />
+                        </IconButton>
                       </Tooltip>
                     )}
                     {/* </div> */}

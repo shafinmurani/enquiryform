@@ -208,7 +208,7 @@ export default function ProductGroup() {
                       >
                         <Button
                           onClick={() => {
-                            handleDelete(row.iCategoryID);
+                            handleDelete(row.id);
                           }}
                           size="small"
                           variant="contained"
@@ -234,17 +234,14 @@ export default function ProductGroup() {
                       onClick={() => {
                         handleClickOpen(
                           "Are you sure?",
-                          `You want to delete "${row.vCategory}" product group?`,
-                          row.iCategoryID,
+                          `You want to delete "${row.label}" product group?`,
+                          row.id,
                         );
                       }}
                     >
                       <Delete />
                     </Button>
-                    <Link
-                      to={`/service-group/edit/`}
-                      state={{ id: row.iCategoryID }}
-                    >
+                    <Link to={`/service-group/edit/`} state={{ id: row.id }}>
                       <Button size="small" variant="contained" color="info">
                         <Edit />
                       </Button>
