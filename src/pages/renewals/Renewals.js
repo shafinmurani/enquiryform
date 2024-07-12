@@ -29,6 +29,7 @@ import { makeStyles } from "@mui/styles";
 import Divider from "@mui/material/Divider";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import IconButton from "@mui/material/IconButton";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const useStyles = makeStyles({
   tableRow: {
@@ -92,6 +93,7 @@ export default function Renewals() {
           }
         }
         setRenewalRows(array);
+        setFilteredRows(array);
       });
   };
   const getProductGroupData = async () => {
@@ -153,6 +155,8 @@ export default function Renewals() {
   const [filteredRows, setFilteredRows] = React.useState([]);
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
+
+  const [statusFilter, setStatusFilter] = React.useState(null);
 
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const months = [1, 2, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -248,6 +252,10 @@ export default function Renewals() {
     setPage(0);
   };
 
+  //Filter Functions
+  const filterStatus = (e) => {
+    setFilteredRows(renewalRows.filter((x) => x.isActive == e.isActive));
+  };
   return (
     <>
       <DrawerComponent title="Renewals">
@@ -264,13 +272,31 @@ export default function Renewals() {
         <div
           style={{
             display: "flex",
-            flexDirection: "row-reverse",
+            flexDirection: "row",
             justifyContent: "space-between",
             gap: "1rem",
             alignItems: "center",
             marginBottom: "1rem",
           }}
         >
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            onChange={(e, newVal) => {
+              if (newVal != null) {
+                setStatusFilter(newVal);
+                filterStatus(newVal);
+              } else {
+                getData();
+              }
+            }}
+            options={[
+              { label: "Inactive", isActive: false },
+              { label: "Active", isActive: true },
+            ]}
+            sx={{ width: 135 }}
+            renderInput={(params) => <TextField {...params} label="Status" />}
+          />
           <TextField
             style={{ minWidth: "20rem" }}
             onChange={(e) => {
@@ -281,6 +307,7 @@ export default function Renewals() {
             variant="outlined"
           />
         </div>
+
         <TableContainer component={Paper}>
           <div
             style={{
@@ -294,7 +321,7 @@ export default function Renewals() {
             <TablePagination
               rowsPerPageOptions={[2, 5, 10, 25]}
               component="div"
-              count={renewalRows.length}
+              count={filteredRows.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -351,11 +378,11 @@ export default function Renewals() {
             </TableHead>
             <TableBody>
               {(rowsPerPage > 0
-                ? renewalRows.slice(
+                ? filteredRows.slice(
                     page * rowsPerPage,
                     page * rowsPerPage + rowsPerPage,
                   )
-                : renewalRows
+                : filteredRows
               ).map((row) => (
                 <TableRow className={classes.tableRow}>
                   <TableCell className={classes.tableCell} align="center">
