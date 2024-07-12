@@ -52,7 +52,6 @@ export default function Renewals() {
   const [productGroupRows, setProductGroupRows] = React.useState([]);
   const [productRows, setProductRows] = React.useState([]);
   const [partyRows, setPartyRows] = React.useState([]);
-
   const getData = async () => {
     var productDataRows = await getProductData();
     var prodcutGroupDataRows = await getProductGroupData();
@@ -62,9 +61,11 @@ export default function Renewals() {
       .post("http://localhost:3001/api/renewals/get", {})
       .then((res) => {
         var array = [];
+        var srNo = 1;
         for (var i = 0; i < res.data.list.length; i++) {
           if (res.data.list[i].isDeleted == "No") {
             array.push({
+              srNo,
               partyData: partyDataRows.find(
                 (x) => x.id == res.data.list[i].iPartyID,
               ),
@@ -87,6 +88,7 @@ export default function Renewals() {
               quantity: res.data.list[i].iQty,
               id: res.data.list[i].iRenewalID,
             });
+            srNo = srNo + 1;
           }
         }
         setRenewalRows(array);
@@ -152,7 +154,7 @@ export default function Renewals() {
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
 
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const months = [1, 2, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12];
 
   const handleClickOpen = (title, message, id) => {
@@ -328,6 +330,9 @@ export default function Renewals() {
             <TableHead>
               <TableRow className={classes.tableRow}>
                 <TableCell className={classes.tableHeadingCell} align="center">
+                  Sr. No.
+                </TableCell>
+                <TableCell className={classes.tableHeadingCell} align="center">
                   Product
                 </TableCell>
                 <TableCell className={classes.tableHeadingCell} align="center">
@@ -353,6 +358,9 @@ export default function Renewals() {
                 : renewalRows
               ).map((row) => (
                 <TableRow className={classes.tableRow}>
+                  <TableCell className={classes.tableCell} align="center">
+                    {row.srNo}
+                  </TableCell>
                   <TableCell className={classes.tableCell} align="center">
                     {console.log(row)}
                     Category: {row.productGroupData.label}
@@ -473,7 +481,7 @@ export default function Renewals() {
                           color="warning"
                           style={{ backgroundColor: "#418944" }}
                         >
-                          <Clear style={{ color: "white" }} />
+                          <Check style={{ color: "white" }} />
                         </IconButton>
                       </Tooltip>
                     ) : (
@@ -489,7 +497,7 @@ export default function Renewals() {
                           size="small"
                           variant="contained"
                         >
-                          <Check style={{ color: "white" }} />
+                          <Clear style={{ color: "white" }} />
                         </IconButton>
                       </Tooltip>
                     )}
