@@ -30,13 +30,15 @@ import Divider from "@mui/material/Divider";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import IconButton from "@mui/material/IconButton";
 import Autocomplete from "@mui/material/Autocomplete";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const useStyles = makeStyles({
   tableRow: {
     height: 30,
   },
   tableCell: {
-    padding: "8px 16px",
+    padding: "5px 16px",
   },
   tableHeadingCell: {
     padding: "20px 16px",
@@ -46,17 +48,21 @@ const useStyles = makeStyles({
 
 export default function Renewals() {
   const classes = useStyles();
-
   const { height, width } = useWindowDimensions();
 
   const [renewalRows, setRenewalRows] = React.useState([]);
   const [productGroupRows, setProductGroupRows] = React.useState([]);
   const [productRows, setProductRows] = React.useState([]);
   const [partyRows, setPartyRows] = React.useState([]);
+  const [companyRows, setCompanyRows] = React.useState([]);
+  const [dealerRows, setDealerRows] = React.useState([]);
   const getData = async () => {
     var productDataRows = await getProductData();
     var prodcutGroupDataRows = await getProductGroupData();
     var partyDataRows = await getPartyData();
+    var companyDataRows = await getCompanyData();
+    var dealerDataRows = await getDealerData();
+    console.log(dealerDataRows);
     console.log(productDataRows);
     await axios
       .post("http://localhost:3001/api/renewals/get", {})
@@ -70,6 +76,12 @@ export default function Renewals() {
               partyData: partyDataRows.find(
                 (x) => x.id == res.data.list[i].iPartyID,
               ),
+              companyData: companyDataRows.find(
+                (x) => x.id == res.data.list[i].iAccountID,
+              ),
+              dealerData: dealerDataRows.find(
+                (x) => x.id == res.data.list[i].iDealerID,
+              ),
               productData: productDataRows.find(
                 (x) => x.id == res.data.list[i].iProductID,
               ),
@@ -81,6 +93,7 @@ export default function Renewals() {
                   ).groupId,
               ),
               iProductID: res.data.list[i].iProductID,
+              iCompanyID: res.data.list[i].iAccountID,
               dtRegister: res.data.list[i].dtRegister,
               dtExpiry: res.data.list[i].dtExpiry,
               isActive: res.data.list[i].eStatus == "Active" ? true : false,
@@ -92,9 +105,45 @@ export default function Renewals() {
             srNo = srNo + 1;
           }
         }
+        console.log(array);
         setRenewalRows(array);
         setFilteredRows(array);
       });
+  };
+  const getCompanyData = async () => {
+    var array = [];
+    await axios
+      .post("http://localhost:3001/api/company/get", {})
+      .then((res) => {
+        for (var i = 0; i < res.data.list.length; i++) {
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              label: res.data.list[i].vAccount,
+              id: res.data.list[i].iAccountID,
+              type: "company",
+            });
+          }
+        }
+      });
+    setCompanyRows(array);
+    return array;
+  };
+
+  const getDealerData = async () => {
+    var array = [];
+    await axios.post("http://localhost:3001/api/dealer/get", {}).then((res) => {
+      for (var i = 0; i < res.data.list.length; i++) {
+        if (res.data.list[i].isDeleted == "No") {
+          array.push({
+            label: res.data.list[i].vDName,
+            id: res.data.list[i].iDealerID,
+            type: "dealer",
+          });
+        }
+      }
+    });
+    setDealerRows(array);
+    return array;
   };
   const getProductGroupData = async () => {
     var array = [];
@@ -106,10 +155,12 @@ export default function Renewals() {
             array.push({
               label: res.data.list[i].vCategory,
               id: res.data.list[i].iCategoryID,
+              type: "productGroup",
             });
           }
         }
       });
+    setProductGroupRows(array);
     return array;
   };
   const getProductData = async () => {
@@ -121,9 +172,11 @@ export default function Renewals() {
             label: res.data.list[i].vProduct,
             id: res.data.list[i].iProductID,
             groupId: res.data.list[i].iCategoryID,
+            type: "product",
           });
         }
       }
+      setProductRows(array);
     });
     return array;
   };
@@ -138,10 +191,12 @@ export default function Renewals() {
             phone: res.data.list[i].vCMobileno,
             email: res.data.list[i].vCEmail,
             name: res.data.list[i].vCName,
+            type: "party",
           });
         }
       }
     });
+    setPartyRows(array);
     return array;
   };
   useEffect(() => {
@@ -238,7 +293,14 @@ export default function Renewals() {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const [filters, setFilters] = React.useState({
+    status: { label: "" },
+    party: { label: "" },
+    productGroup: { label: "" },
+    product: { label: "" },
+    company: { label: "" },
+    dealer: { label: "" },
+  });
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - renewalRows.length) : 0;
@@ -252,10 +314,57 @@ export default function Renewals() {
     setPage(0);
   };
 
-  //Filter Functions
-  const filterStatus = (e) => {
-    setFilteredRows(renewalRows.filter((x) => x.isActive == e.isActive));
+  const handleChange = (e, newVal) => {
+    setFilters({
+      ...filters,
+      [newVal.type]: newVal,
+    });
   };
+
+  const filterData = () => {
+    console.log(filters.dealer);
+    console.log(renewalRows);
+    const filteredArray = renewalRows.filter((row) => {
+      let isValid = true;
+
+      // Filter by Status
+      if (filters.status.label !== "") {
+        isValid = isValid && row.isActive === filters.status.isActive;
+      }
+
+      // Filter by Party
+      if (filters.party.label !== "") {
+        isValid = isValid && row.partyData.id === filters.party.id;
+      }
+
+      // Filter by Product Group
+      if (filters.productGroup.label !== "") {
+        isValid =
+          isValid && row.productGroupData.id === filters.productGroup.id;
+      }
+
+      // Filter by Product
+      if (filters.product.label !== "") {
+        isValid = isValid && row.productData.id === filters.product.id;
+      }
+
+      // Filter by Company
+      if (filters.company.label !== "") {
+        isValid = isValid && row.companyData.id === filters.company.id;
+      }
+
+      // Filter by Dealer
+      if (filters.dealer.label !== "") {
+        isValid =
+          isValid && row.dealerData && row.dealerData.id === filters.dealer.id;
+      }
+
+      return isValid;
+    });
+
+    setFilteredRows(filteredArray);
+  };
+
   return (
     <>
       <DrawerComponent title="Renewals">
@@ -273,7 +382,7 @@ export default function Renewals() {
           style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "space-between",
+            // justifyContent: "space-between",
             gap: "1rem",
             alignItems: "center",
             marginBottom: "1rem",
@@ -281,23 +390,135 @@ export default function Renewals() {
         >
           <Autocomplete
             disablePortal
-            id="combo-box-demo"
+            disableClearable
+            id="status"
+            value={filters.status.label}
             onChange={(e, newVal) => {
-              if (newVal != null) {
-                setStatusFilter(newVal);
-                filterStatus(newVal);
-              } else {
-                getData();
-              }
+              handleChange(e, newVal);
+              console.log(filters);
             }}
             options={[
-              { label: "Inactive", isActive: false },
-              { label: "Active", isActive: true },
+              { label: "Inactive", isActive: false, type: "status" },
+              { label: "Active", isActive: true, type: "status" },
             ]}
             sx={{ width: 135 }}
-            renderInput={(params) => <TextField {...params} label="Status" />}
+            renderInput={(params) => (
+              <TextField {...params} name="status" label="Status" />
+            )}
           />
-          <TextField
+          <Autocomplete
+            disablePortal
+            disableClearable
+            id="party"
+            value={filters.party.label}
+            onChange={(e, newVal) => {
+              console.log(e);
+              handleChange(e, newVal);
+              console.log(filters);
+            }}
+            options={partyRows}
+            sx={{ width: 135 }}
+            renderInput={(params) => <TextField {...params} label="Party" />}
+          />
+          <Autocomplete
+            disablePortal
+            disableClearable
+            id="productGroup"
+            value={filters.productGroup.label}
+            onChange={(e, newVal) => {
+              console.log(e);
+              handleChange(e, newVal);
+              console.log(filters);
+            }}
+            options={productGroupRows}
+            sx={{ width: 135 }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                name="productGroup"
+                label="Product Groups"
+              />
+            )}
+          />
+          <Autocomplete
+            disablePortal
+            disableClearable
+            id="productGroup"
+            value={filters.product.label}
+            onChange={(e, newVal) => {
+              console.log(e);
+              handleChange(e, newVal);
+              console.log(filters);
+            }}
+            options={productRows.filter(
+              (x) => x.groupId == filters.productGroup.id,
+            )}
+            sx={{ width: 135 }}
+            renderInput={(params) => (
+              <TextField {...params} name="product" label="Product" />
+            )}
+          />
+          <Autocomplete
+            disablePortal
+            disableClearable
+            id="company"
+            value={filters.company.label}
+            onChange={(e, newVal) => {
+              console.log(e);
+              handleChange(e, newVal);
+              console.log(filters);
+            }}
+            options={companyRows}
+            sx={{ width: 135 }}
+            renderInput={(params) => (
+              <TextField {...params} name="company" label="Company Account" />
+            )}
+          />
+          <Autocomplete
+            disablePortal
+            disableClearable
+            id="dealer"
+            value={filters.dealer.label}
+            onChange={(e, newVal) => {
+              console.log(e);
+              handleChange(e, newVal);
+              console.log(filters);
+            }}
+            options={dealerRows}
+            sx={{ width: 135 }}
+            renderInput={(params) => (
+              <TextField {...params} name="Dealer" label="Dealer" />
+            )}
+          />
+
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <IconButton
+              style={{ backgroundColor: "#1976d2", color: "white" }}
+              onClick={(e) => {
+                console.log(filters);
+                filterData();
+              }}
+            >
+              <FilterAltIcon />
+            </IconButton>
+            <IconButton
+              style={{ backgroundColor: "#d32f2f", color: "white" }}
+              onClick={(e) => {
+                setFilters({
+                  status: { label: "" },
+                  party: { label: "" },
+                  productGroup: { label: "" },
+                  product: { label: "" },
+                  company: { label: "" },
+                  dealer: { label: "" },
+                });
+                getData();
+              }}
+            >
+              <ClearIcon />
+            </IconButton>
+          </div>
+          {/* <TextField
             style={{ minWidth: "20rem" }}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -305,7 +526,7 @@ export default function Renewals() {
             id="outlined-basic"
             label="Search by Product Name"
             variant="outlined"
-          />
+          /> */}
         </div>
 
         <TableContainer component={Paper}>
