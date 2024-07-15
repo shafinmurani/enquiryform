@@ -123,16 +123,17 @@ export default function DrawerComponent(props) {
 
   const verifyJwtToken = async () => {
     let token = localStorage.getItem("jwt-token");
-    console.log(token);
-    await axios
-      .post("http://localhost:3001/api/login/verify", { token })
-      .then((res) => {
-        console.log(res);
-        if (!res.tokenStatus) {
-          localStorage.removeItem("jwt-token");
-          return <Navigate to="/" />;
-        }
-      });
+    if (token != null) {
+      console.log(token);
+      await axios
+        .post("http://localhost:3001/api/login/verify", { token })
+        .then((res) => {
+          if (res.tokenStatus) {
+            localStorage.removeItem("jwt-token");
+            return <Navigate to="/" />;
+          }
+        });
+    }
   };
 
   React.useEffect(() => {
