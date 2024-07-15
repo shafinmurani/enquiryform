@@ -102,8 +102,8 @@ const Drawer = styled(MuiDrawer, {
 
 export default function DrawerComponent(props) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
+  const [dropdownOpen, setDropdownOpen] = React.useState(true);
   const [renewOpen, setRenewOpen] = React.useState(false);
   const handleClick = () => {
     setDropdownOpen(!dropdownOpen);

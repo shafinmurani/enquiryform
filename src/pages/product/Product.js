@@ -21,30 +21,40 @@ import DialogBoxComponent from "../../components/DialogBoxComponent";
 
 export default function ProductGroup() {
   const [rows, setRows] = React.useState([]);
-  const [serviceGroupList, setServiceGroupList] = React.useState(null);
+  const [serviceGroupList, setServiceGroupList] = React.useState([]);
 
   const getData = async () => {
+    await getGroupList();
+    var array = [];
     //TOOD : IMPLEMENT SERVICE BACK END LOGIC HERE
     await axios
       .post("http://localhost:3001/api/service/get", {})
       .then((res) => {
-        setRows(res.data.list);
+        for (var i = 0; i < res.data.list.length; i++) {
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              label: res.data.list[i].vProduct,
+              id: res.data.list[i].iProductID,
+              categoryID: res.data.list[i].iCategoryID,
+            });
+          }
+        }
+        setRows(array);
       });
   };
   const getGroupList = async () => {
+    var array = [];
     await axios
       .post("http://localhost:3001/api/service-group/get", {})
       .then((res) => {
-        var array = [];
         for (var i = 0; i < res.data.list.length; i++) {
           array.push({
             label: res.data.list[i].vCategory,
             id: res.data.list[i].iCategoryID,
           });
         }
-
-        setServiceGroupList(array);
       });
+    setServiceGroupList(array);
   };
   useEffect(() => {
     getData();
@@ -75,7 +85,7 @@ export default function ProductGroup() {
     if (keyword.length === 0) {
       return rows;
     } else {
-      return rows.filter((row) => row.vProduct.toLowerCase().includes(keyword));
+      return rows.filter((row) => row.label.toLowerCase().includes(keyword));
     }
   }
   const handleDelete = async () => {
@@ -169,105 +179,98 @@ export default function ProductGroup() {
                 <TableCell>ID</TableCell>
                 <TableCell align="right">Service Group</TableCell>
                 <TableCell align="right">Service</TableCell>
-                {/* <TableCell align="right">Is Deleted</TableCell> */}
-                <TableCell align="right">Date Created</TableCell>
-                <TableCell align="right">Date Modified</TableCell>
+
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filter(search).map((row) => {
-                if (row.isDeleted === "Yes") {
-                  return null;
-                } else {
-                  return (
-                    <TableRow
-                      key={row.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {row.iProductID}
-                      </TableCell>
-                      <TableCell align="right">
-                        {
-                          serviceGroupList.find((x) => x.id == row.iCategoryID)
-                            .label
-                        }
-                      </TableCell>
-                      <TableCell align="right">{row.vProduct}</TableCell>
-                      {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
-                      <TableCell align="right">{row.dtCreated}</TableCell>
-                      <TableCell align="right">{row.dtModified}</TableCell>
-                      <TableCell
-                        style={{ display: "flex", gap: "1rem" }}
-                        align="right"
-                      >
-                        <DialogBoxComponent
-                          open={open}
-                          onClose={handleClose}
-                          title={title}
-                          content={message}
-                          style={{ padding: "1rem" }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-end",
-                              margin: "1rem",
-                              flexDirection: "row",
-                              gap: "1rem",
-                            }}
-                          >
-                            <Button
-                              onClick={() => {
-                                handleDelete(row.iCategoryID);
-                              }}
-                              size="small"
-                              variant="contained"
-                              color="error"
-                            >
-                              <Typography>Yes</Typography>
-                            </Button>
+                return (
+                  <TableRow
+                    key={row.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {row.id}
+                    </TableCell>
+                    <TableCell align="right">
+                      {
+                        serviceGroupList.find((x) => x.id === row.categoryID)
+                          .label
+                      }
+                    </TableCell>
+                    <TableCell align="right">{row.label}</TableCell>
+                    {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
 
-                            <Button
-                              onClick={handleClose}
-                              size="small"
-                              variant="contained"
-                              color="info"
-                            >
-                              <Typography>No</Typography>
-                            </Button>
-                          </div>
-                        </DialogBoxComponent>
-                        <Button
-                          size="small"
-                          variant="contained"
-                          color="error"
-                          onClick={() => {
-                            handleClickOpen(
-                              "Are you sure?",
-                              `You want to delete "${row.vProduct}" service?`,
-                              row.iProductID,
-                            );
+                    <TableCell
+                      style={{ display: "flex", gap: "1rem" }}
+                      align="right"
+                    >
+                      <DialogBoxComponent
+                        open={open}
+                        onClose={handleClose}
+                        title={title}
+                        content={message}
+                        style={{ padding: "1rem" }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            margin: "1rem",
+                            flexDirection: "row",
+                            gap: "1rem",
                           }}
                         >
-                          <Delete />
-                        </Button>
-                        <Link
-                          to={`/service/edit/`}
-                          state={{
-                            id: row.iProductID,
-                            serviceGroupID: row.iCategoryID,
-                          }}
-                        >
-                          <Button size="small" variant="contained" color="info">
-                            <Edit />
+                          <Button
+                            onClick={() => {
+                              handleDelete(row.iCategoryID);
+                            }}
+                            size="small"
+                            variant="contained"
+                            color="error"
+                          >
+                            <Typography>Yes</Typography>
                           </Button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  );
-                }
+
+                          <Button
+                            onClick={handleClose}
+                            size="small"
+                            variant="contained"
+                            color="info"
+                          >
+                            <Typography>No</Typography>
+                          </Button>
+                        </div>
+                      </DialogBoxComponent>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                          handleClickOpen(
+                            "Are you sure?",
+                            `You want to delete "${row.label}" service?`,
+                            row.iProductID,
+                          );
+                        }}
+                      >
+                        <Delete />
+                      </Button>
+                      <Link
+                        to={`/service/edit/`}
+                        state={{
+                          id: row.id,
+                          serviceGroupID: row.categoryID,
+                        }}
+                      >
+                        <Button size="small" variant="contained" color="info">
+                          <Edit />
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                );
               })}
             </TableBody>
           </Table>

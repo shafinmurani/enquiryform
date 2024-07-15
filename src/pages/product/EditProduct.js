@@ -79,6 +79,7 @@ export default function AddProduct() {
           }
         }
         setServiceGroup(array.find((x) => x.id == serviceGroupID));
+        setServiceGID(array.find((x) => x.id == serviceGroupID).id);
         setServiceGroupList(array);
       });
   };

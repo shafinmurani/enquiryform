@@ -610,10 +610,20 @@ export default function Renewals() {
                     {row.srNo}
                   </TableCell>
                   <TableCell className={classes.tableCell} align="center">
-                    {console.log(row)}
-                    Category: {row.productGroupData.label}
+                    <span>{row.productData.label}</span> <br />
+                    <span style={{ fontWeight: 600 }}>
+                      {row.productGroupData.label}
+                    </span>{" "}
+                    <span style={{ fontWeight: 600, color: "blue" }}>
+                      {row.quantity}
+                    </span>{" "}
+                    <span style={{ fontWeight: 600, color: "red" }}>
+                      for {row.productType}
+                    </span>
                     <br />
-                    {row.productData.label} for {row.productType}
+                    <span style={{ fontWeight: 200 }}>
+                      {row.companyData.label}
+                    </span>
                   </TableCell>
                   <TableCell className={classes.tableCell} align="center">
                     {days[new Date(Date.parse(row.dtRegister)).getDay()]}{" "}
