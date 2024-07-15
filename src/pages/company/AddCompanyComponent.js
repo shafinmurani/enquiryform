@@ -50,16 +50,13 @@ export default function AddCompanyComponent() {
       <div
         className="add-product-container"
         style={{
-          marginTop: "1rem",
-          width: "80%",
+          width: "100%",
           marginInline: "auto",
           backgroundColor: "#FFFFFF",
-          padding: "2rem",
+          paddingBlockEnd: "2rem",
           paddingInline: "2rem",
         }}
       >
-        <h1>Add Company</h1>
-
         <div
           style={{
             display: "flex",

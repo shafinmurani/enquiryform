@@ -95,22 +95,19 @@ export default function AddDealerComponent() {
       <div
         className="add-product-container"
         style={{
-          marginTop: "1rem",
-          width: "80%",
+          // marginTop: "1rem",
+          width: "100%",
           marginInline: "auto",
           backgroundColor: "#FFFFFF",
-          padding: "2rem",
+          paddingBlockEnd: "2rem",
           paddingInline: "2rem",
         }}
       >
-        <h1>Add Dealer</h1>
-
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-start",
-            marginTop: "1rem",
             gap: "1rem",
             alignItems: "flex-end",
           }}
@@ -127,16 +124,16 @@ export default function AddDealerComponent() {
           <div
             style={{
               display: "flex",
-              gap: "1rem",
               flexDirection: "column",
+              gap: "1rem",
               width: "100%",
             }}
           >
             <div
               style={{
                 display: "flex",
+                flexDirection: "column",
                 gap: "1rem",
-                flexDirection: "row",
                 width: "100%",
               }}
             >
@@ -156,8 +153,8 @@ export default function AddDealerComponent() {
             <div
               style={{
                 display: "flex",
+                flexDirection: "column",
                 gap: "1rem",
-                flexDirection: "row",
                 width: "100%",
               }}
             >

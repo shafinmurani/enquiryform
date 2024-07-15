@@ -46,7 +46,7 @@ export default function DialogComponent(props) {
         open={open}
         onClose={handleClose}
         scroll={scroll}
-        fullWidth
+        // fullWidth
         // fullScreen
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
