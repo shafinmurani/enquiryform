@@ -313,7 +313,7 @@ export default function EditRenewals() {
           setResult("success");
           setMessage("Data added successfully");
           await clearMessage();
-          navigate("/renewals/");
+          navigate(location.state.redirect);
         } else {
           setResult("error");
           setMessage("There was some error adding data to the table");

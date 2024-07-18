@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { Alert, Button, TextField, Tooltip, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Grid,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import {
   Add,
   Check,
@@ -17,6 +24,9 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
@@ -37,6 +47,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+
 const useStyles = makeStyles({
   tableRow: {
     height: 30,
@@ -60,14 +72,13 @@ export default function Dashboard() {
   const [partyRows, setPartyRows] = React.useState([]);
   const [companyRows, setCompanyRows] = React.useState([]);
   const [dealerRows, setDealerRows] = React.useState([]);
+  const [expiringGroups, setExpiringGroups] = React.useState([]);
   const getData = async () => {
     var productDataRows = await getProductData();
     var prodcutGroupDataRows = await getProductGroupData();
     var partyDataRows = await getPartyData();
     var companyDataRows = await getCompanyData();
     var dealerDataRows = await getDealerData();
-    console.log(dealerDataRows);
-    console.log(productDataRows);
     await axios
       .post("http://localhost:3001/api/renewals/get", {})
       .then((res) => {
@@ -112,6 +123,27 @@ export default function Dashboard() {
         console.log(array);
         setRenewalRows(array);
         setExpiryMonthYearFilter(dayjs(new Date()));
+        const serviceGroupCounts = new Map();
+        array.forEach((row) => {
+          if (row.productGroupData?.label) {
+            const label = row.productGroupData.label;
+            if (serviceGroupCounts.has(label)) {
+              serviceGroupCounts.set(label, serviceGroupCounts.get(label) + 1);
+            } else {
+              serviceGroupCounts.set(label, 1);
+            }
+          }
+        });
+
+        const serviceGroupArray = Array.from(
+          serviceGroupCounts,
+          ([label, count]) => ({
+            label,
+            count,
+          }),
+        );
+
+        setExpiringGroups(serviceGroupArray);
       });
   };
   const getCompanyData = async () => {
@@ -212,7 +244,11 @@ export default function Dashboard() {
   const [filteredRows, setFilteredRows] = React.useState([]);
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
+  const [selectedServiceGroup, setSelectedServiceGroup] = React.useState(null);
 
+  const handleFilterByServiceGroup = (groupLabel) => {
+    setSelectedServiceGroup(groupLabel);
+  };
   const [statusFilter, setStatusFilter] = React.useState(null);
 
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -239,9 +275,10 @@ export default function Dashboard() {
       })
       .then((res) => {
         if (res.data.result) {
-          setAlertMessage(res.data.message);
-          setResult("success");
+          // setAlertMessage(res.data.message);
+          // setResult("success");
           setRenewalRows([]);
+          getData();
           filterData();
           handleClose();
         } else {
@@ -251,13 +288,6 @@ export default function Dashboard() {
         }
       });
   };
-
-  const clearFilter = () => {
-    setExpiryMonthYearFilter(dayjs(new Date()));
-    setSearch("");
-    setStatusFilter(null);
-  };
-
   const handleSetActive = (id) => {
     axios
       .post("http://localhost:3001/api/renewals/set-active", {
@@ -265,10 +295,11 @@ export default function Dashboard() {
       })
       .then((res) => {
         if (res.data.result) {
-          setAlertMessage(res.data.message);
-          setResult("success");
+          // setAlertMessage(res.data.message);
+          // setResult("success");
           setRenewalRows([]);
           getData();
+          filterData();
           handleClose();
         } else {
           setAlertMessage(res.data.message);
@@ -276,6 +307,14 @@ export default function Dashboard() {
           handleClose();
         }
       });
+    setExpiryMonthYearFilter(expiryMonthYearFilter);
+  };
+
+  const clearFilter = () => {
+    setExpiryMonthYearFilter(dayjs(new Date()));
+    setSearch("");
+    setStatusFilter(null);
+    setSelectedServiceGroup();
   };
 
   const [page, setPage] = React.useState(0);
@@ -320,7 +359,11 @@ export default function Dashboard() {
           expiryMonthYearFilter.format("MM-YYYY")
         : true;
 
-      return matchSearch && matchExpiryMonthYear;
+      const matchServiceGroup = selectedServiceGroup
+        ? row.productGroupData?.label === selectedServiceGroup
+        : true;
+
+      return matchSearch && matchExpiryMonthYear && matchServiceGroup;
     });
 
     setFilteredRows(filteredData);
@@ -330,7 +373,7 @@ export default function Dashboard() {
   }, []);
   useEffect(() => {
     filterData();
-  }, [search, statusFilter, expiryMonthYearFilter]);
+  }, [search, statusFilter, expiryMonthYearFilter, selectedServiceGroup]);
   return (
     <>
       <DrawerComponent isHome={true} title="Dashboard">
@@ -405,7 +448,45 @@ export default function Dashboard() {
             sx={{ marginRight: 2 }}
           />
         </div>
-
+        <Grid
+          container
+          style={{ marginBottom: "1rem", marginInline: "auto" }}
+          spacing={1}
+        >
+          {expiringGroups.map((card) => {
+            return (
+              <Grid item>
+                <Card style={{ width: "12rem" }}>
+                  <CardContent
+                    style={{ display: "flex", flexDirection: "column" }}
+                  >
+                    <Typography
+                      color="text.secondary"
+                      variant="h6"
+                      component="div"
+                    >
+                      {card.label} ({card.count})
+                    </Typography>
+                  </CardContent>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Button
+                      onClick={() => handleFilterByServiceGroup(card.label)}
+                      fullWidth
+                    >
+                      More Info <ArrowCircleRightIcon />
+                    </Button>
+                  </div>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
         <TableContainer component={Paper}>
           <div
             style={{
@@ -509,7 +590,10 @@ export default function Dashboard() {
                     style={{ maxWidth: "8rem" }}
                     align="center"
                   >
-                    <Link to={`/renew-product/`} state={{ id: row.id }}>
+                    <Link
+                      to={`/renew-product/`}
+                      state={{ id: row.id, redirect: "/" }}
+                    >
                       <IconButton
                         style={
                           width >= 840

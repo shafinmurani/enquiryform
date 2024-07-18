@@ -711,7 +711,10 @@ export default function Renewals() {
                       <Delete />
                     </IconButton>
 
-                    <Link to={`/renewals/edit/`} state={{ id: row.id }}>
+                    <Link
+                      to={`/renewals/edit/`}
+                      state={{ id: row.id, redirect: "/renewals" }}
+                    >
                       <IconButton
                         style={
                           width >= 840
