@@ -114,9 +114,7 @@ export default function ProductGroup() {
             justifyContent: "center",
             alignItems: "center",
           }}
-        >
-          <h1>Service Group</h1>
-        </div>
+        ></div>
         <Alert
           style={{
             width: "80%",

@@ -123,14 +123,14 @@ export default function DrawerComponent(props) {
 
   const verifyJwtToken = async () => {
     let token = localStorage.getItem("jwt-token");
+    console.log(token);
     if (token != null) {
-      console.log(token);
       await axios
         .post("http://localhost:3001/api/login/verify", { token })
         .then((res) => {
-          if (res.tokenStatus) {
-            localStorage.removeItem("jwt-token");
-            return <Navigate to="/" />;
+          console.log(res.tokenStatus);
+          if (!res.tokenStatus) {
+            return <Navigate to="/logout" />;
           }
         });
     }
@@ -180,8 +180,7 @@ export default function DrawerComponent(props) {
           <Typography variant="h6" noWrap component="div">
             {props.title}
           </Typography>
-
-          <BreadcrumbsComponent />
+          {props.isHome ? <div></div> : <BreadcrumbsComponent />}
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -254,7 +253,7 @@ export default function DrawerComponent(props) {
               />
               <ListTile
                 open={open}
-                title="Admin"
+                title="User"
                 icon={<AccountCircle />}
                 page={"/admin"}
               />

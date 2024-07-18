@@ -88,9 +88,7 @@ export default function Admin() {
             justifyContent: "center",
             alignItems: "center",
           }}
-        >
-          <h1>Admin</h1>
-        </div>
+        ></div>
         <Alert
           style={{
             width: "80%",
@@ -205,17 +203,14 @@ export default function Admin() {
                             console.log(row);
                             handleClickOpen(
                               "Are you sure?",
-                              `You want to delete "${row.vCompanyName}" Company?`,
-                              row.iCompanyID,
+                              `You want to delete "${row.vFirstName} ${row.vLastName}" User?`,
+                              row.iAdminID,
                             );
                           }}
                         >
                           <Delete />
                         </Button>
-                        <Link
-                          to={`/company/edit/`}
-                          state={{ id: row.iCompanyID }}
-                        >
+                        <Link to={`/admin/edit/`} state={{ id: row.iAdminID }}>
                           <Button size="small" variant="contained" color="info">
                             <Edit />
                           </Button>

@@ -86,9 +86,7 @@ export default function Company() {
             justifyContent: "center",
             alignItems: "center",
           }}
-        >
-          <h1>Company</h1>
-        </div>
+        ></div>
         <Alert
           style={{
             width: "80%",

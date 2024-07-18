@@ -81,9 +81,7 @@ export default function Dealer() {
             justifyContent: "center",
             alignItems: "center",
           }}
-        >
-          <h1>Dealer</h1>
-        </div>
+        ></div>
         <Alert
           style={{
             width: "80%",

@@ -29,7 +29,6 @@ import { makeStyles } from "@mui/styles";
 import Divider from "@mui/material/Divider";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import IconButton from "@mui/material/IconButton";
-import Autocomplete from "@mui/material/Autocomplete";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ClearIcon from "@mui/icons-material/Clear";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
@@ -112,7 +111,7 @@ export default function Dashboard() {
         }
         console.log(array);
         setRenewalRows(array);
-        // setFilteredRows(array);
+        setExpiryMonthYearFilter(dayjs(new Date()));
       });
   };
   const getCompanyData = async () => {
@@ -334,7 +333,7 @@ export default function Dashboard() {
   }, [search, statusFilter, expiryMonthYearFilter]);
   return (
     <>
-      <DrawerComponent title="Dashboard">
+      <DrawerComponent isHome={true} title="Dashboard">
         <Alert
           style={{
             width: "80%",
@@ -371,6 +370,7 @@ export default function Dashboard() {
                 label="Expiry Month-Year"
                 value={expiryMonthYearFilter}
                 onChange={(newValue) => {
+                  console.log(newValue);
                   setExpiryMonthYearFilter(newValue);
                 }}
                 renderInput={(params) => (
@@ -509,7 +509,7 @@ export default function Dashboard() {
                     style={{ maxWidth: "8rem" }}
                     align="center"
                   >
-                    <Link to={`/renewals/edit/`} state={{ id: row.id }}>
+                    <Link to={`/renew-product/`} state={{ id: row.id }}>
                       <IconButton
                         style={
                           width >= 840
