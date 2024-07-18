@@ -649,7 +649,15 @@ export default function Dashboard() {
                     align="center"
                   >
                     <a
-                      href={`https://api.whatsapp.com/send?phone=+91${row.partyData.phone}&text=${encodeURI("This is a test message")}`}
+                      href={`https://api.whatsapp.com/send?phone=+91${row.partyData.phone}&text=${encodeURI(
+                        `Dear ${row.partyData.label},
+Your ${row.productGroupData.label} ${row.productData.label} is going to expire on  ${new Date(Date.parse(row.dtExpiry)).getDate()}/${months[new Date(Date.parse(row.dtExpiry)).getMonth()]}/${new Date(Date.parse(row.dtExpiry)).getFullYear()}. So kindly renew service.
+YESHA SOFTWARE LLP
+9722220777
+8200438932
+web@yeshasoftware.com
+`,
+                      )}`}
                     >
                       <IconButton
                         style={
@@ -665,7 +673,15 @@ export default function Dashboard() {
                       </IconButton>
                     </a>{" "}
                     <a
-                      href={`mailto:${row.partyData.email}?subject=Testing out mailto!&body=This is only a test!`}
+                      href={`mailto:${row.partyData.email}?subject=${encodeURI(`Your ${row.productGroupData.label} ${row.productData.label} is going to expire`)}&body=${encodeURI(
+                        `Dear ${row.partyData.label},
+Your ${row.productGroupData.label} ${row.productData.label} is going to expire on  ${new Date(Date.parse(row.dtExpiry)).getDate()}/${months[new Date(Date.parse(row.dtExpiry)).getMonth()]}/${new Date(Date.parse(row.dtExpiry)).getFullYear()}. So kindly renew service.
+YESHA SOFTWARE LLP
+9722220777
+8200438932
+web@yeshasoftware.com
+                      `,
+                      )}`}
                     >
                       <IconButton
                         style={
