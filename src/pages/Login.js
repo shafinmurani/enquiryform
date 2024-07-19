@@ -41,9 +41,9 @@ export default function Login() {
           email: email,
           password: password,
         })
-        .then((res) => {
+        .then(async (res) => {
           if (res.data.result) {
-            localStorage.setItem("jwt-token", res.data.token);
+            sessionStorage.setItem("jwt-token", res.data.token);
             navigate("/");
           } else {
             setErrorField("Invalid Email or Password");

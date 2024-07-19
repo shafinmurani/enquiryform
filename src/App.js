@@ -24,6 +24,7 @@ import AddRenewals from "./pages/renewals/AddRenewals";
 import EditRenewals from "./pages/renewals/EditRenewals";
 import AddAdmin from "./pages/admin/AddAdmin";
 import EditAdmin from "./pages/admin/EditAdmin";
+import AuthVerify from "./components/AuthVerify";
 function App() {
   return (
     <Router>
@@ -56,6 +57,7 @@ function App() {
         <Route path="/dashboard" Component={Dashboard} />
         <Route path="/renew-product" Component={EditRenewals} />
       </Routes>
+      <AuthVerify />
     </Router>
   );
 }

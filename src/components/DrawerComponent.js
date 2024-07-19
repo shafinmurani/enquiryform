@@ -33,8 +33,6 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import Dashboard from "@mui/icons-material/Dashboard";
 import RestoreIcon from "@mui/icons-material/Restore";
 import { AccountCircle } from "@mui/icons-material";
-import axios from "axios";
-import { Navigate } from "react-router-dom";
 
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
@@ -120,25 +118,6 @@ export default function DrawerComponent(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  const verifyJwtToken = async () => {
-    let token = localStorage.getItem("jwt-token");
-    console.log(token);
-    if (token != null) {
-      await axios
-        .post("http://localhost:3001/api/login/verify", { token })
-        .then((res) => {
-          console.log(res.tokenStatus);
-          if (!res.tokenStatus) {
-            return <Navigate to="/logout" />;
-          }
-        });
-    }
-  };
-
-  React.useEffect(() => {
-    verifyJwtToken();
-  }, []);
 
   return (
     <Box
