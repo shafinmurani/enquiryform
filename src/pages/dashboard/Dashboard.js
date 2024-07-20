@@ -123,27 +123,6 @@ export default function Dashboard() {
         console.log(array);
         setRenewalRows(array);
         setExpiryMonthYearFilter(dayjs(new Date()));
-        const serviceGroupCounts = new Map();
-        array.forEach((row) => {
-          if (row.productGroupData?.label) {
-            const label = row.productGroupData.label;
-            if (serviceGroupCounts.has(label)) {
-              serviceGroupCounts.set(label, serviceGroupCounts.get(label) + 1);
-            } else {
-              serviceGroupCounts.set(label, 1);
-            }
-          }
-        });
-
-        const serviceGroupArray = Array.from(
-          serviceGroupCounts,
-          ([label, count]) => ({
-            label,
-            count,
-          }),
-        );
-
-        setExpiringGroups(serviceGroupArray);
       });
   };
   const getCompanyData = async () => {
@@ -367,6 +346,27 @@ export default function Dashboard() {
     });
 
     setFilteredRows(filteredData);
+    const serviceGroupCounts = new Map();
+    filteredData.forEach((row) => {
+      if (row.productGroupData?.label) {
+        const label = row.productGroupData.label;
+        if (serviceGroupCounts.has(label)) {
+          serviceGroupCounts.set(label, serviceGroupCounts.get(label) + 1);
+        } else {
+          serviceGroupCounts.set(label, 1);
+        }
+      }
+    });
+
+    const serviceGroupArray = Array.from(
+      serviceGroupCounts,
+      ([label, count]) => ({
+        label,
+        count,
+      }),
+    );
+
+    setExpiringGroups(serviceGroupArray);
   };
   useEffect(() => {
     getData();

@@ -121,10 +121,8 @@ export default function ProductGroup() {
               <TableRow>
                 <TableCell align="right">Party</TableCell>
                 {/* <TableCell align="right">Is Deleted</TableCell> */}
-                <TableCell align="right">Name</TableCell>
-                <TableCell align="right">City</TableCell>
-                <TableCell align="right">Mobile</TableCell>
-                <TableCell align="right">Email</TableCell>
+                <TableCell align="right">Contact Information</TableCell>
+
                 <TableCell align="right">Address</TableCell>
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
@@ -142,10 +140,17 @@ export default function ProductGroup() {
                     >
                       <TableCell align="right">{row.vParty}</TableCell>
                       {/* <TableCell align="right">Is Deleted</TableCell> */}
-                      <TableCell align="right">{row.vCName}</TableCell>
-                      <TableCell align="right">{row.vCity}</TableCell>
-                      <TableCell align="right">{row.vCMobileno}</TableCell>
-                      <TableCell align="right">{row.vCEmail}</TableCell>
+                      <TableCell align="right">
+                        {row.vCName}
+                        <br />
+                        {row.vCity}
+                        <br />
+                        {row.vCMobileno}
+                        <br />
+                        {row.vCEmail}
+                        <br />
+                      </TableCell>
+
                       <TableCell align="right">{row.tAddress}</TableCell>
                       <TableCell
                         style={{

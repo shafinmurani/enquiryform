@@ -252,6 +252,7 @@ export default function EditRenewals() {
 
     setProductGroup(object.productGroupData.label);
     setProductGroupID(object.productGroupData.id);
+    getProductData(object.productGroupData.id);
 
     setProductType(object.productType);
     setRemarks(object.remarks);

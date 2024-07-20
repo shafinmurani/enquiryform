@@ -57,59 +57,69 @@ export default function Renewals() {
   const [companyRows, setCompanyRows] = React.useState([]);
   const [dealerRows, setDealerRows] = React.useState([]);
   const getData = async () => {
-    var productDataRows = await getProductData();
-    var prodcutGroupDataRows = await getProductGroupData();
-    var partyDataRows = await getPartyData();
-    var companyDataRows = await getCompanyData();
-    var dealerDataRows = await getDealerData();
-    console.log(dealerDataRows);
-    console.log(productDataRows);
-    await axios
-      .post("http://localhost:3001/api/renewals/get", {})
-      .then((res) => {
-        var array = [];
-        var srNo = 1;
-        for (var i = 0; i < res.data.list.length; i++) {
-          if (res.data.list[i].isDeleted == "No") {
-            array.push({
-              srNo,
-              partyData: partyDataRows.find(
-                (x) => x.id == res.data.list[i].iPartyID,
-              ),
-              companyData: companyDataRows.find(
-                (x) => x.id == res.data.list[i].iAccountID,
-              ),
-              dealerData: dealerDataRows.find(
-                (x) => x.id == res.data.list[i].iDealerID,
-              ),
-              productData: productDataRows.find(
-                (x) => x.id == res.data.list[i].iProductID,
-              ),
-              productGroupData: prodcutGroupDataRows.find(
-                (x) =>
-                  x.id ==
-                  productDataRows.find(
-                    (x) => x.id == res.data.list[i].iProductID,
-                  ).groupId,
-              ),
-              iProductID: res.data.list[i].iProductID,
-              iCompanyID: res.data.list[i].iAccountID,
-              dtRegister: res.data.list[i].dtRegister,
-              dtExpiry: res.data.list[i].dtExpiry,
-              isActive: res.data.list[i].eStatus == "Active" ? true : false,
-              productType: res.data.list[i].vType,
-              remarks: res.data.list[i].tRemarks,
-              quantity: res.data.list[i].iQty,
-              id: res.data.list[i].iRenewalID,
-            });
-            srNo = srNo + 1;
-          }
+    try {
+      var productDataRows = await getProductData();
+      var productGroupDataRows = await getProductGroupData();
+      var partyDataRows = await getPartyData();
+      var companyDataRows = await getCompanyData();
+      var dealerDataRows = await getDealerData();
+
+      console.log(dealerDataRows);
+      console.log(productDataRows);
+
+      const response = await axios.post(
+        "http://localhost:3001/api/renewals/get",
+        {},
+      );
+      const resData = response.data.list;
+      const array = [];
+      let srNo = 1;
+
+      for (let i = 0; i < resData.length; i++) {
+        if (resData[i].isDeleted === "No") {
+          const partyData =
+            partyDataRows.find((x) => x.id === resData[i].iPartyID) || {};
+          const companyData =
+            companyDataRows.find((x) => x.id === resData[i].iAccountID) || {};
+          const dealerData =
+            dealerDataRows.find((x) => x.id === resData[i].iDealerID) || {};
+          const productData =
+            productDataRows.find((x) => x.id === resData[i].iProductID) || {};
+          const productGroupData =
+            productGroupDataRows.find(
+              (x) => x.id === (productData.groupId || -1),
+            ) || {};
+
+          array.push({
+            srNo,
+            partyData,
+            companyData,
+            dealerData,
+            productData,
+            productGroupData,
+            iProductID: resData[i].iProductID,
+            iCompanyID: resData[i].iAccountID,
+            dtRegister: resData[i].dtRegister,
+            dtExpiry: resData[i].dtExpiry,
+            isActive: resData[i].eStatus === "Active",
+            productType: resData[i].vType,
+            remarks: resData[i].tRemarks,
+            quantity: resData[i].iQty,
+            id: resData[i].iRenewalID,
+          });
+
+          srNo += 1;
         }
-        console.log(array);
-        setRenewalRows(array);
-        setFilteredRows(array);
-      });
+      }
+
+      console.log(array);
+      setRenewalRows(array);
+      setFilteredRows(array);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
+
   const getCompanyData = async () => {
     var array = [];
     await axios
@@ -322,8 +332,6 @@ export default function Renewals() {
   };
 
   const filterData = () => {
-    console.log(filters.dealer);
-    console.log(renewalRows);
     const filteredArray = renewalRows.filter((row) => {
       let isValid = true;
 
@@ -333,24 +341,33 @@ export default function Renewals() {
       }
 
       // Filter by Party
-      if (filters.party.label !== "") {
-        isValid = isValid && row.partyData.id === filters.party.id;
+      if (filters.party && filters.party.id) {
+        isValid =
+          isValid && row.partyData && row.partyData.id === filters.party.id;
       }
 
       // Filter by Product Group
       if (filters.productGroup.label !== "") {
         isValid =
-          isValid && row.productGroupData.id === filters.productGroup.id;
+          isValid &&
+          row.productGroupData &&
+          row.productGroupData.id === filters.productGroup.id;
       }
 
       // Filter by Product
       if (filters.product.label !== "") {
-        isValid = isValid && row.productData.id === filters.product.id;
+        isValid =
+          isValid &&
+          row.productData &&
+          row.productData.id === filters.product.id;
       }
 
       // Filter by Company
       if (filters.company.label !== "") {
-        isValid = isValid && row.companyData.id === filters.company.id;
+        isValid =
+          isValid &&
+          row.companyData &&
+          row.companyData.id === filters.company.id;
       }
 
       // Filter by Dealer

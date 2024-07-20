@@ -120,10 +120,8 @@ export default function Dealer() {
             <TableHead>
               <TableRow>
                 <TableCell align="right">Dealer</TableCell>
-                <TableCell align="right">Mobile</TableCell>
-                <TableCell align="right">Email Address</TableCell>
-                <TableCell align="right">GST Number</TableCell>
-                <TableCell align="right">City</TableCell>
+                <TableCell align="right">Contact Info</TableCell>
+                {/* <TableCell align="right">GST Number</TableCell> */}
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -140,17 +138,23 @@ export default function Dealer() {
                     >
                       <TableCell align="right">{row.vDName}</TableCell>
                       {/* <TableCell align="right">Is Deleted</TableCell> */}
-                      <TableCell align="right">{row.vDMobileno}</TableCell>
-                      <TableCell align="right">{row.vDEmail}</TableCell>
-                      <TableCell align="right">{row.vDGSTno}</TableCell>
-                      <TableCell align="right">{row.vDCity}</TableCell>
+                      <TableCell align="right">
+                        {row.vDMobileno}
+                        <br />
+                        {row.vDEmail}
+                        <br />
+                        {row.vDCity}
+                      </TableCell>
+
+                      {/* <TableCell align="right">{row.vDGSTno}</TableCell> */}
+
                       <TableCell
                         style={{
-                          display: "flex",
+                          // display: "flex",
                           // flexDirection: "column",
                           gap: "0.2rem",
                         }}
-                        align="right"
+                        align="center"
                       >
                         <DialogBoxComponent
                           open={open}
