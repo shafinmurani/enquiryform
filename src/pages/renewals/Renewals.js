@@ -303,14 +303,7 @@ export default function Renewals() {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [filters, setFilters] = React.useState({
-    status: { label: "" },
-    party: { label: "" },
-    productGroup: { label: "" },
-    product: { label: "" },
-    company: { label: "" },
-    dealer: { label: "" },
-  });
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - renewalRows.length) : 0;
@@ -330,6 +323,14 @@ export default function Renewals() {
       [newVal.type]: newVal,
     });
   };
+  const [filters, setFilters] = React.useState({
+    status: { label: "" },
+    party: { label: "" },
+    productGroup: { label: "" },
+    product: { label: "" },
+    company: { label: "" },
+    dealer: { label: "" },
+  });
 
   const filterData = () => {
     const filteredArray = renewalRows.filter((row) => {

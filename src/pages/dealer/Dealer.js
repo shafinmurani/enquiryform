@@ -1,6 +1,12 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { Alert, Button, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  TextField,
+  Typography,
+  TablePagination,
+} from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
@@ -15,14 +21,8 @@ import DialogBoxComponent from "../../components/DialogBoxComponent";
 
 export default function Dealer() {
   const [rows, setRows] = React.useState([]);
-  const getData = async () => {
-    await axios.post("http://localhost:3001/api/dealer/get", {}).then((res) => {
-      setRows(res.data.list);
-    });
-  };
-  useEffect(() => {
-    getData();
-  }, []);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -31,6 +31,25 @@ export default function Dealer() {
 
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
+
+  const getData = async () => {
+    await axios.post("http://localhost:3001/api/dealer/get", {}).then((res) => {
+      setRows(res.data.list);
+    });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const handleClickOpen = (title, message, id) => {
     setOpen(true);
@@ -44,15 +63,31 @@ export default function Dealer() {
     setTitle("");
     setMessage("");
   };
-  function filter(keyword) {
+
+  // Update filter function to handle null and undefined values
+  const filter = (keyword) => {
     if (keyword.length === 0) {
       return rows;
     } else {
-      return rows.filter((row) => row.vDName.toLowerCase().includes(keyword));
+      const lowercasedKeyword = keyword.toLowerCase();
+      return rows.filter((row) => {
+        const name = row.vDName ? row.vDName.toLowerCase() : "";
+        const mobileno = row.vDMobileno ? row.vDMobileno.toLowerCase() : "";
+        const email = row.vDEmail ? row.vDEmail.toLowerCase() : "";
+        const city = row.vDCity ? row.vDCity.toLowerCase() : "";
+
+        return (
+          name.includes(lowercasedKeyword) ||
+          mobileno.includes(lowercasedKeyword) ||
+          email.includes(lowercasedKeyword) ||
+          city.includes(lowercasedKeyword)
+        );
+      });
     }
-  }
+  };
+
   const handleDelete = async (id) => {
-    //TODO : IMPLEMENT BACK END LOGIC
+    // TODO: IMPLEMENT BACK END LOGIC
     axios
       .post("http://localhost:3001/api/dealer/delete", {
         id: id,
@@ -71,6 +106,7 @@ export default function Dealer() {
         }
       });
   };
+
   return (
     <>
       <DrawerComponent title="Dealer List">
@@ -111,47 +147,49 @@ export default function Dealer() {
             style={{ minWidth: "20rem" }}
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
-            label="Search by Dealer Name"
+            label="Search by Dealer Name or Contact Info"
             variant="outlined"
           />
         </div>
         <TableContainer component={Paper}>
+          <TablePagination
+            rowsPerPageOptions={[2, 5, 10, 25]}
+            component="div"
+            count={filter(search).length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell align="right">Dealer</TableCell>
                 <TableCell align="right">Contact Info</TableCell>
-                {/* <TableCell align="right">GST Number</TableCell> */}
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {filter(search).map((row) => {
+              {(rowsPerPage > 0
+                ? filter(search).slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage,
+                  )
+                : filter(search)
+              ).map((row) => {
                 if (row.isDeleted === "Yes") {
                   return null;
                 } else {
                   return (
                     <TableRow
                       align="right"
-                      key={row.name}
+                      key={row.iDealerID}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell align="right">{row.vDName}</TableCell>
-                      {/* <TableCell align="right">Is Deleted</TableCell> */}
-                      <TableCell align="right">
-                        {row.vDMobileno}
-                        <br />
-                        {row.vDEmail}
-                        <br />
-                        {row.vDCity}
-                      </TableCell>
-
-                      {/* <TableCell align="right">{row.vDGSTno}</TableCell> */}
-
+                      <TableCell align="right">{row.vDMobileno}</TableCell>
                       <TableCell
                         style={{
-                          // display: "flex",
-                          // flexDirection: "column",
                           gap: "0.2rem",
                         }}
                         align="center"
@@ -203,7 +241,7 @@ export default function Dealer() {
                             handleClickOpen(
                               "Are you sure?",
                               `You want to delete "${row.vDName}" Dealer?`,
-                              row.iCategoryID,
+                              row.iDealerID,
                             );
                           }}
                         >

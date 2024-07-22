@@ -34,7 +34,12 @@ export default function Login() {
       setIsValidEmail(false);
     }
   };
-  const submit = (props) => {
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      submit();
+    }
+  };
+  const submit = () => {
     if (isValidEmail && password.length !== 0) {
       axios
         .post("http://localhost:3001/api/login", {
@@ -115,6 +120,7 @@ export default function Login() {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
+            onKeyDown={handleKeyDown}
             InputProps={{
               sx: { borderRadius: "100px" },
               endAdornment: (

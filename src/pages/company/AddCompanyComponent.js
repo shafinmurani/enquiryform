@@ -3,10 +3,7 @@ import DrawerComponent from "../../components/DrawerComponent";
 import { Alert, Button, CircularProgress, TextField } from "@mui/material";
 import axios from "axios";
 import "../../styles/AddProductGroup.css";
-function timeout(delay) {
-  return new Promise((res) => setTimeout(res, delay));
-}
-
+import { company } from "../../services/services_export";
 export default function AddCompanyComponent() {
   const [companyName, setCompanyName] = React.useState("");
   const [result, setResult] = React.useState("0");
@@ -33,7 +30,7 @@ export default function AddCompanyComponent() {
               setMessage(res.data.message);
             }
             setIsLoading(false);
-            await timeout(1500);
+            await company.timeout(1500);
             setResult("");
             setResult("");
           } else {

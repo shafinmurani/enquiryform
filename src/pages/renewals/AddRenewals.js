@@ -25,12 +25,20 @@ import {
   TablePagination,
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
+const token = sessionStorage.getItem("jwt-token");
 
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
 }
 
 export default function AddRenewals() {
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+      return null;
+    }
+  };
   //Text Editing controllers
   const [productType, setProductType] = React.useState("");
   const [remarks, setRemarks] = React.useState("");
@@ -172,7 +180,7 @@ export default function AddRenewals() {
   }
 
   const submit = async () => {
-    var adminId = -1;
+    var adminId = parseJwt(token).id;
     await axios
       .post("http://localhost:3001/api/login/decode", {
         token: localStorage.getItem("jwt-token"),

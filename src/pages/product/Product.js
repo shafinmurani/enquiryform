@@ -6,6 +6,7 @@ import {
   TextField,
   Typography,
   CircularProgress,
+  TablePagination,
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -22,16 +23,34 @@ import DialogBoxComponent from "../../components/DialogBoxComponent";
 export default function ProductGroup() {
   const [rows, setRows] = React.useState([]);
   const [serviceGroupList, setServiceGroupList] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  // State for search input
+  const [search, setSearch] = React.useState("");
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const getData = async () => {
     await getGroupList();
     var array = [];
-    //TOOD : IMPLEMENT SERVICE BACK END LOGIC HERE
+    //TODO : IMPLEMENT SERVICE BACK END LOGIC HERE
     await axios
       .post("http://localhost:3001/api/service/get", {})
       .then((res) => {
         for (var i = 0; i < res.data.list.length; i++) {
-          if (res.data.list[i].isDeleted == "No") {
+          if (res.data.list[i].isDeleted === "No") {
             array.push({
               label: res.data.list[i].vProduct,
               id: res.data.list[i].iProductID,
@@ -42,6 +61,7 @@ export default function ProductGroup() {
         setRows(array);
       });
   };
+
   const getGroupList = async () => {
     var array = [];
     await axios
@@ -56,16 +76,16 @@ export default function ProductGroup() {
       });
     setServiceGroupList(array);
   };
+
   useEffect(() => {
     getData();
     getGroupList();
   }, []);
+
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [deleteId, setDeleteId] = React.useState();
-  const [search, setSearch] = React.useState("");
-
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
 
@@ -81,13 +101,22 @@ export default function ProductGroup() {
     setTitle("");
     setMessage("");
   };
-  function filter(keyword) {
-    if (keyword.length === 0) {
-      return rows;
-    } else {
-      return rows.filter((row) => row.label.toLowerCase().includes(keyword));
-    }
-  }
+
+  // Filter rows based on the search input (both service name and service group)
+  const filteredRows = search
+    ? rows.filter((row) => {
+        const serviceGroupLabel =
+          serviceGroupList
+            .find((group) => group.id === row.categoryID)
+            ?.label.toLowerCase() || "";
+
+        return (
+          row.label.toLowerCase().includes(search.toLowerCase()) ||
+          serviceGroupLabel.includes(search.toLowerCase())
+        );
+      })
+    : rows;
+
   const handleDelete = async () => {
     //TODO : IMPLEMENT BACK END LOGIC
     axios
@@ -108,6 +137,7 @@ export default function ProductGroup() {
         }
       });
   };
+
   if (serviceGroupList === null) {
     return (
       <>
@@ -126,27 +156,10 @@ export default function ProductGroup() {
       </>
     );
   }
+
   return (
     <>
       <DrawerComponent title="Services List">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        ></div>
-        <Alert
-          style={{
-            width: "80%",
-            display: result.length === 0 ? "none" : "",
-            margin: "1rem",
-          }}
-          severity={result}
-        >
-          {alertMessage}
-        </Alert>
         <div
           style={{
             display: "flex",
@@ -166,110 +179,127 @@ export default function ProductGroup() {
             style={{ minWidth: "20rem" }}
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
-            label="Search by Service Name"
+            label="Search by Service Name or Group"
             variant="outlined"
           />
         </div>
+        <Alert
+          style={{
+            width: "80%",
+            display: result.length === 0 ? "none" : "",
+            margin: "1rem",
+          }}
+          severity={result}
+        >
+          {alertMessage}
+        </Alert>
         <TableContainer component={Paper}>
+          <TablePagination
+            rowsPerPageOptions={[2, 5, 10, 25]}
+            component="div"
+            count={filteredRows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
                 <TableCell align="right">Service Group</TableCell>
                 <TableCell align="right">Service</TableCell>
-
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {filter(search).map((row) => {
-                return (
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              {(rowsPerPage > 0
+                ? filteredRows.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage,
+                  )
+                : filteredRows
+              ).map((row) => (
+                <TableRow
+                  key={row.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {row.id}
+                  </TableCell>
+                  <TableCell align="right">
+                    {
+                      serviceGroupList.find((x) => x.id === row.categoryID)
+                        .label
+                    }
+                  </TableCell>
+                  <TableCell align="right">{row.label}</TableCell>
+
+                  <TableCell
+                    style={{ display: "flex", gap: "1rem" }}
+                    align="right"
                   >
-                    <TableCell component="th" scope="row">
-                      {row.id}
-                    </TableCell>
-                    <TableCell align="right">
-                      {
-                        serviceGroupList.find((x) => x.id === row.categoryID)
-                          .label
-                      }
-                    </TableCell>
-                    <TableCell align="right">{row.label}</TableCell>
-                    {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
-
-                    <TableCell
-                      style={{ display: "flex", gap: "1rem" }}
-                      align="right"
+                    <DialogBoxComponent
+                      open={open}
+                      onClose={handleClose}
+                      title={title}
+                      content={message}
+                      style={{ padding: "1rem" }}
                     >
-                      <DialogBoxComponent
-                        open={open}
-                        onClose={handleClose}
-                        title={title}
-                        content={message}
-                        style={{ padding: "1rem" }}
+                      <div
+                        style={{
+                          margin: "1rem",
+                          flexDirection: "row",
+                          gap: "1rem",
+                        }}
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end",
-                            margin: "1rem",
-                            flexDirection: "row",
-                            gap: "1rem",
-                          }}
+                        <Button
+                          onClick={() => handleDelete(row.id)}
+                          size="small"
+                          variant="contained"
+                          color="error"
                         >
-                          <Button
-                            onClick={() => {
-                              handleDelete(row.iCategoryID);
-                            }}
-                            size="small"
-                            variant="contained"
-                            color="error"
-                          >
-                            <Typography>Yes</Typography>
-                          </Button>
-
-                          <Button
-                            onClick={handleClose}
-                            size="small"
-                            variant="contained"
-                            color="info"
-                          >
-                            <Typography>No</Typography>
-                          </Button>
-                        </div>
-                      </DialogBoxComponent>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="error"
-                        onClick={() => {
-                          handleClickOpen(
-                            "Are you sure?",
-                            `You want to delete "${row.label}" service?`,
-                            row.iProductID,
-                          );
-                        }}
-                      >
-                        <Delete />
-                      </Button>
-                      <Link
-                        to={`/service/edit/`}
-                        state={{
-                          id: row.id,
-                          serviceGroupID: row.categoryID,
-                        }}
-                      >
-                        <Button size="small" variant="contained" color="info">
-                          <Edit />
+                          <Typography>Yes</Typography>
                         </Button>
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+
+                        <Button
+                          onClick={handleClose}
+                          size="small"
+                          variant="contained"
+                          color="info"
+                        >
+                          <Typography>No</Typography>
+                        </Button>
+                      </div>
+                    </DialogBoxComponent>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="error"
+                      onClick={() => {
+                        handleClickOpen(
+                          "Are you sure?",
+                          `You want to delete "${row.label}" service?`,
+                          row.id,
+                        );
+                      }}
+                    >
+                      <Delete />
+                    </Button>
+                    <Link
+                      to={`/service/edit/`}
+                      state={{
+                        id: row.id,
+                        serviceGroupID: row.categoryID,
+                      }}
+                    >
+                      <Button size="small" variant="contained" color="info">
+                        <Edit />
+                      </Button>
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

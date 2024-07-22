@@ -1,13 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
-const parseJwt = (token) => {
-  try {
-    return JSON.parse(atob(token.split(".")[1]));
-  } catch (e) {
-    return null;
-  }
-};
+import { jwt } from "../services/services_export";
 
 const AuthVerify = () => {
   let location = useLocation();
@@ -16,7 +9,7 @@ const AuthVerify = () => {
   useEffect(() => {
     const user = sessionStorage.getItem("jwt-token");
     if (user) {
-      const decodedJwt = parseJwt(user);
+      const decodedJwt = jwt.parse(user);
 
       if (decodedJwt.exp * 1000 < Date.now()) {
         sessionStorage.clear();
