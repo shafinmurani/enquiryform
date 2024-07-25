@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import {
   Alert,
@@ -8,10 +8,29 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  OutlinedInput,
+  InputLabel,
+  MenuItem,
+  ListItemText,
+  Select,
+  Checkbox,
 } from "@mui/material";
 import axios from "axios";
 import "../../styles/AddProductGroup.css";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { serviceGroup } from "../../services/services_export";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
 }
@@ -23,17 +42,33 @@ export default function AddPartyComponent() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [role, setRole] = React.useState("");
-
   const [result, setResult] = React.useState("0");
   const [message, setMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [isPasswordVIsible, setIsPasswordVisible] = React.useState(false);
-
+  const [groupList, setGroupList] = React.useState([]);
+  const [groupItem, setGroupItem] = React.useState([]);
   async function clearMessage() {
     await timeout(1500);
     setResult("");
     setResult("");
   }
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setGroupItem(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value,
+    );
+  };
+
+  const getServiceGroupList = () => {
+    serviceGroup.get().then((res) => {
+      setGroupList(res);
+    });
+  };
 
   const [isValidEmail, setIsValidEmail] = React.useState(false);
 
@@ -75,6 +110,7 @@ export default function AddPartyComponent() {
             password,
             email,
             role,
+            iAddedBy: groupItem.join(","),
           })
           .then(async (res) => {
             if (res.data.result) {
@@ -105,6 +141,9 @@ export default function AddPartyComponent() {
     }
   };
 
+  useEffect(() => {
+    getServiceGroupList();
+  }, []);
   return (
     <div>
       <div
@@ -221,6 +260,28 @@ export default function AddPartyComponent() {
                 style={{ width: "100%" }}
                 renderInput={(params) => <TextField {...params} label="Role" />}
               />
+              <Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                multiple
+                value={groupItem}
+                onChange={handleChange}
+                input={<OutlinedInput />}
+                renderValue={(selected) => {
+                  if (selected.length === 0) {
+                    return <em>Placeholder</em>;
+                  }
+
+                  return selected.join(", ");
+                }}
+                MenuProps={MenuProps}
+              >
+                {groupList.map((name) => (
+                  <MenuItem key={name} value={name.id}>
+                    <ListItemText primary={name.label} />
+                  </MenuItem>
+                ))}
+              </Select>
             </div>
           </div>
           <div
@@ -233,8 +294,15 @@ export default function AddPartyComponent() {
           >
             <Button
               onClick={() => {
-                var data = { firstName, lastName, password, email, role };
-                console.log(data);
+                var data = {
+                  firstName,
+                  lastName,
+                  password,
+                  email,
+                  role,
+                  iAddedBy: groupItem.join(","),
+                };
+                // console.log(data);
                 submit();
               }}
               disabled={isLoading}

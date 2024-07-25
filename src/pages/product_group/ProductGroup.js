@@ -13,38 +13,43 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
 import TablePagination from "@mui/material/TablePagination";
+import { decodedToken, serviceGroup } from "../../services/services_export";
 
 export default function ProductGroup() {
   const [rows, setRows] = React.useState([]);
-  const getData = async () => {
-    await axios
-      .post("http://localhost:3001/api/service-group/get", {})
-      .then((res) => {
-        var array = [];
-        for (var i = 0; i < res.data.list.length; i++) {
-          if (res.data.list[i].isDeleted == "No") {
-            array.push({
-              label: res.data.list[i].vCategory,
-              id: res.data.list[i].iCategoryID,
-              dtCreated: res.data.list[i].dtCreated,
-              dtModified: res.data.list[i].dtModified,
-            });
-          }
-        }
-        setRows(array);
-      });
-  };
-  useEffect(() => {
-    getData();
-  }, []);
+  const [filteredRows, setFilteredRows] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [deleteId, setDeleteId] = React.useState();
   const [search, setSearch] = React.useState("");
-
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const getData = async () => {
+    serviceGroup.get().then((res) => {
+      setRows(res);
+      setFilteredRows(res); // Initialize filteredRows with the full dataset
+    });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (search.length === 0) {
+      setFilteredRows(rows);
+    } else {
+      setFilteredRows(
+        rows.filter((row) =>
+          row.label.toLowerCase().includes(search.toLowerCase()),
+        ),
+      );
+    }
+  }, [search, rows]);
 
   const handleClickOpen = (title, message, id) => {
     setOpen(true);
@@ -58,26 +63,14 @@ export default function ProductGroup() {
     setTitle("");
     setMessage("");
   };
-  function filter(keyword) {
-    if (keyword.length === 0) {
-      return rows;
-    } else {
-      return rows.filter((row) =>
-        row.vCategory.toLowerCase().includes(keyword),
-      );
-    }
-  }
+
   const handleDelete = async () => {
-    //TODO : IMPLEMENT BACK END LOGIC
     axios
       .post("http://localhost:3001/api/service-group/delete", {
         id: deleteId,
       })
       .then(async (res) => {
         if (res.data.result) {
-          setAlertMessage(res.data.message);
-          setResult("success");
-          setRows([]);
           getData();
           handleClose();
         } else {
@@ -87,13 +80,6 @@ export default function ProductGroup() {
         }
       });
   };
-
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -135,11 +121,14 @@ export default function ProductGroup() {
             marginBottom: "1rem",
           }}
         >
-          <Link to="/service-group/add">
-            <Button startIcon={<Add />} variant="contained">
-              Add
-            </Button>
-          </Link>
+          {decodedToken.role.toLowerCase() === "admin" ? (
+            <Link to="/service-group/add">
+              <Button startIcon={<Add />} variant="contained">
+                Add
+              </Button>
+            </Link>
+          ) : null}
+
           <TextField
             style={{ minWidth: "20rem" }}
             onChange={(e) => setSearch(e.target.value)}
@@ -152,7 +141,7 @@ export default function ProductGroup() {
           <TablePagination
             rowsPerPageOptions={[2, 5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={filteredRows.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -162,7 +151,6 @@ export default function ProductGroup() {
             <TableHead>
               <TableRow>
                 <TableCell align="right">Service Group</TableCell>
-                {/* <TableCell align="right">Is Deleted</TableCell> */}
                 <TableCell align="right">Date Created</TableCell>
                 <TableCell align="right">Date Modified</TableCell>
                 <TableCell align="right">Actions</TableCell>
@@ -170,18 +158,17 @@ export default function ProductGroup() {
             </TableHead>
             <TableBody>
               {(rowsPerPage > 0
-                ? rows.slice(
+                ? filteredRows.slice(
                     page * rowsPerPage,
                     page * rowsPerPage + rowsPerPage,
                   )
-                : rows
+                : filteredRows
               ).map((row) => (
                 <TableRow
-                  key={row.name}
+                  key={row.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell align="right">{row.label}</TableCell>
-                  {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
                   <TableCell align="right">{row.dtCreated}</TableCell>
                   <TableCell align="right">{row.dtModified}</TableCell>
                   <TableCell
@@ -232,7 +219,7 @@ export default function ProductGroup() {
                       onClick={() => {
                         handleClickOpen(
                           "Are you sure?",
-                          `You want to delete "${row.label}" product group?`,
+                          `You want to delete "${row.label}" service group?`,
                           row.id,
                         );
                       }}

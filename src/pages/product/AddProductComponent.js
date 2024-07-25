@@ -4,12 +4,17 @@ import { Alert, Button, CircularProgress, TextField } from "@mui/material";
 import axios from "axios";
 import "../../styles/AddProductGroup.css";
 import Autocomplete from "@mui/material/Autocomplete";
-
+import {
+  decodedToken,
+  serviceGroup as group,
+} from "../../services/services_export";
+import { useNavigate } from "react-router-dom";
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
 }
 
 export default function AddProductComponent() {
+  const navigate = useNavigate();
   const [service, setService] = React.useState("");
   const [result, setResult] = React.useState("0");
   const [message, setMessage] = React.useState("");
@@ -31,10 +36,9 @@ export default function AddProductComponent() {
           if (res.data.result) {
             if (res.data.affectedRows === 0) {
               setResult("warning");
-              setMessage("No product group added, Data already exists");
+              setMessage("No product added, Data already exists");
             } else {
-              setResult("success");
-              setMessage(res.data.message);
+              navigate("/service/");
             }
             setIsLoading(false);
             await timeout(1500);
@@ -49,24 +53,13 @@ export default function AddProductComponent() {
     }
   };
   const getGroupList = async () => {
-    await axios
-      .post("http://localhost:3001/api/service-group/get", {})
-      .then((res) => {
-        var array = [];
-        for (var i = 0; i < res.data.list.length; i++) {
-          if (res.data.list[i].isDeleted == "No") {
-            array.push({
-              label: res.data.list[i].vCategory,
-              id: res.data.list[i].iCategoryID,
-            });
-          }
-        }
-        setServiceGroupList(array);
-      });
+    group.get().then((res) => {
+      setServiceGroupList(res);
+    });
   };
   useEffect(() => {
     getGroupList();
-  }, []);
+  }, [1]);
   return (
     <div>
       <div

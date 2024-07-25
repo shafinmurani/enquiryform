@@ -27,6 +27,7 @@ import {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
 import { useLocation } from "react-router-dom";
+import { decodedToken } from "../../services/services_export";
 
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
@@ -84,7 +85,7 @@ export default function EditRenewals() {
   const getProductGroupData = async () => {
     var array = [];
     await axios
-      .post("http://localhost:3001/api/service-group/get", {})
+      .post("http://localhost:3001/api/service-group/get", { decodedToken })
       .then((res) => {
         for (var i = 0; i < res.data.list.length; i++) {
           if (res.data.list[i].isDeleted == "No") {
@@ -185,7 +186,7 @@ export default function EditRenewals() {
 
   const getRenewalData = async () => {
     var array = [];
-    var prodcutGroupDataRows = await getProductGroupData();
+    var productGroupDataRows = await getProductGroupData();
     var productDataRows = await getAllProducts();
     var partyDataRows = await getPartyData();
     var companyDataRows = await getCompanyData();
@@ -195,26 +196,28 @@ export default function EditRenewals() {
       .then((res) => {
         for (var i = 0; i < res.data.list.length; i++) {
           if (res.data.list[i].isDeleted == "No") {
+            const partyData = partyDataRows.find(
+              (x) => x.id == res.data.list[i].iPartyID,
+            );
+            const companyData = companyDataRows.find(
+              (x) => x.id == res.data.list[i].iAccountID,
+            );
+            const dealerData = dealerDataRows.find(
+              (x) => x.id == res.data.list[i].iDealerID,
+            );
+            const productData = productDataRows.find(
+              (x) => x.id == res.data.list[i].iProductID,
+            );
+            const productGroupData = productGroupDataRows.find(
+              (x) => x.id == (productData ? productData.groupId : undefined),
+            );
+
             array.push({
-              partyData: partyDataRows.find(
-                (x) => x.id == res.data.list[i].iPartyID,
-              ),
-              companyData: companyDataRows.find(
-                (x) => x.id == res.data.list[i].iAccountID,
-              ),
-              dealerData: dealerDataRows.find(
-                (x) => x.id == res.data.list[i].iDealerID,
-              ),
-              productData: productDataRows.find(
-                (x) => x.id == res.data.list[i].iProductID,
-              ),
-              productGroupData: prodcutGroupDataRows.find(
-                (x) =>
-                  x.id ==
-                  productDataRows.find(
-                    (x) => x.id == res.data.list[i].iProductID,
-                  ).groupId,
-              ),
+              partyData,
+              companyData,
+              dealerData,
+              productData,
+              productGroupData,
               iProductID: res.data.list[i].iProductID,
               dtRegister: res.data.list[i].dtRegister,
               dtExpiry: res.data.list[i].dtExpiry,
@@ -235,35 +238,39 @@ export default function EditRenewals() {
     return array;
   };
 
-  function isObjEmpty(obj) {
-    return Object.keys(obj).length === 0;
-  }
-
   const setValues = (object) => {
     console.log(object);
-    setCompany(object.companyData.label);
-    setCompanyID(object.companyData.id);
+    if (object.companyData) {
+      setCompany(object.companyData.label);
+      setCompanyID(object.companyData.id);
+    }
 
     setExpiryDate(dayjs(object.dtExpiry));
     setRegistrationDate(dayjs(object.dtRegister));
 
-    setProduct(object.productData.label);
-    setProductID(object.productData.id);
+    if (object.productData) {
+      setProduct(object.productData.label);
+      setProductID(object.productData.id);
+    }
 
-    setProductGroup(object.productGroupData.label);
-    setProductGroupID(object.productGroupData.id);
-    getProductData(object.productGroupData.id);
+    if (object.productGroupData) {
+      setProductGroup(object.productGroupData.label);
+      setProductGroupID(object.productGroupData.id);
+      getProductData(object.productGroupData.id);
+    }
 
     setProductType(object.productType);
     setRemarks(object.remarks);
 
-    if (object.dealerData !== undefined) {
+    if (object.dealerData) {
       setDealer(object.dealerData.label);
       setDealerID(object.dealerData.id);
     }
 
-    setParty(object.partyData.label);
-    setPartyID(object.partyData.id);
+    if (object.partyData) {
+      setParty(object.partyData.label);
+      setPartyID(object.partyData.id);
+    }
 
     setQuantity(object.quantity);
     setRate(object.rate);

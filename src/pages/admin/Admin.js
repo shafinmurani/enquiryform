@@ -12,6 +12,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
+import { decodedToken } from "../../services/services_export";
 
 export default function Admin() {
   const [rows, setRows] = React.useState([]);
@@ -109,11 +110,14 @@ export default function Admin() {
             marginBottom: "1rem",
           }}
         >
-          <Link to="/admin/add">
-            <Button startIcon={<Add />} variant="contained">
-              Add
-            </Button>
-          </Link>
+          {decodedToken.role.toLowerCase() == "admin" ? (
+            <Link to="/admin/add">
+              <Button startIcon={<Add />} variant="contained">
+                Add
+              </Button>
+            </Link>
+          ) : null}
+
           <TextField
             style={{ minWidth: "20rem" }}
             onChange={(e) => setSearch(e.target.value)}

@@ -202,13 +202,7 @@ export default function ProductGroup() {
                       <TableCell style={{ maxWidth: "12rem" }} align="right">
                         {row.tAddress}
                       </TableCell>
-                      <TableCell
-                        style={{
-                          display: "flex",
-                          gap: "0.2rem",
-                        }}
-                        align="right"
-                      >
+                      <TableCell style={{}} align="right">
                         <DialogBoxComponent
                           open={open}
                           onClose={handleClose}

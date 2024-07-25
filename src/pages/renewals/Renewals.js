@@ -32,6 +32,7 @@ import IconButton from "@mui/material/IconButton";
 import Autocomplete from "@mui/material/Autocomplete";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ClearIcon from "@mui/icons-material/Clear";
+import { decodedToken } from "../../services/services_export.js";
 
 const useStyles = makeStyles({
   tableRow: {
@@ -69,7 +70,7 @@ export default function Renewals() {
 
       const response = await axios.post(
         "http://localhost:3001/api/renewals/get",
-        {},
+        { decodedToken },
       );
       const resData = response.data.list;
       const array = [];
@@ -123,7 +124,7 @@ export default function Renewals() {
   const getCompanyData = async () => {
     var array = [];
     await axios
-      .post("http://localhost:3001/api/company/get", {})
+      .post("http://localhost:3001/api/company/get", { decodedToken })
       .then((res) => {
         for (var i = 0; i < res.data.list.length; i++) {
           if (res.data.list[i].isDeleted == "No") {
@@ -141,24 +142,26 @@ export default function Renewals() {
 
   const getDealerData = async () => {
     var array = [];
-    await axios.post("http://localhost:3001/api/dealer/get", {}).then((res) => {
-      for (var i = 0; i < res.data.list.length; i++) {
-        if (res.data.list[i].isDeleted == "No") {
-          array.push({
-            label: res.data.list[i].vDName,
-            id: res.data.list[i].iDealerID,
-            type: "dealer",
-          });
+    await axios
+      .post("http://localhost:3001/api/dealer/get", { decodedToken })
+      .then((res) => {
+        for (var i = 0; i < res.data.list.length; i++) {
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              label: res.data.list[i].vDName,
+              id: res.data.list[i].iDealerID,
+              type: "dealer",
+            });
+          }
         }
-      }
-    });
+      });
     setDealerRows(array);
     return array;
   };
   const getProductGroupData = async () => {
     var array = [];
     await axios
-      .post("http://localhost:3001/api/service-group/get", {})
+      .post("http://localhost:3001/api/service-group/get", { decodedToken })
       .then((res) => {
         for (var i = 0; i < res.data.list.length; i++) {
           if (res.data.list[i].isDeleted == "No") {
@@ -175,37 +178,41 @@ export default function Renewals() {
   };
   const getProductData = async () => {
     var array = [];
-    await axios.post("http://localhost:3001/api/service/get").then((res) => {
-      for (var i = 0; i < res.data.list.length; i++) {
-        if (res.data.list[i].isDeleted == "No") {
-          array.push({
-            label: res.data.list[i].vProduct,
-            id: res.data.list[i].iProductID,
-            groupId: res.data.list[i].iCategoryID,
-            type: "product",
-          });
+    await axios
+      .post("http://localhost:3001/api/service/get", { decodedToken })
+      .then((res) => {
+        for (var i = 0; i < res.data.list.length; i++) {
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              label: res.data.list[i].vProduct,
+              id: res.data.list[i].iProductID,
+              groupId: res.data.list[i].iCategoryID,
+              type: "product",
+            });
+          }
         }
-      }
-      setProductRows(array);
-    });
+        setProductRows(array);
+      });
     return array;
   };
   const getPartyData = async () => {
     var array = [];
-    await axios.post("http://localhost:3001/api/party/get", {}).then((res) => {
-      for (var i = 0; i < res.data.list.length; i++) {
-        if (res.data.list[i].isDeleted == "No") {
-          array.push({
-            label: res.data.list[i].vParty,
-            id: res.data.list[i].iPartyID,
-            phone: res.data.list[i].vCMobileno,
-            email: res.data.list[i].vCEmail,
-            name: res.data.list[i].vCName,
-            type: "party",
-          });
+    await axios
+      .post("http://localhost:3001/api/party/get", { decodedToken })
+      .then((res) => {
+        for (var i = 0; i < res.data.list.length; i++) {
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              label: res.data.list[i].vParty,
+              id: res.data.list[i].iPartyID,
+              phone: res.data.list[i].vCMobileno,
+              email: res.data.list[i].vCEmail,
+              name: res.data.list[i].vCName,
+              type: "party",
+            });
+          }
         }
-      }
-    });
+      });
     setPartyRows(array);
     return array;
   };

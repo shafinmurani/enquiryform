@@ -5,7 +5,7 @@ import axios from "axios";
 import "../../styles/AddProductGroup.css";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useLocation } from "react-router-dom";
-
+import { serviceGroup as group } from "../../services/services_export";
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
 }
@@ -66,22 +66,24 @@ export default function AddProduct() {
   };
 
   const getGroupList = async () => {
-    await axios
-      .post("http://localhost:3001/api/service-group/get", {})
-      .then((res) => {
-        var array = [];
-        for (var i = 0; i < res.data.list.length; i++) {
-          if (res.data.list[i].isDeleted == "No") {
-            array.push({
-              label: res.data.list[i].vCategory,
-              id: res.data.list[i].iCategoryID,
-            });
-          }
-        }
-        setServiceGroup(array.find((x) => x.id == serviceGroupID));
-        setServiceGID(array.find((x) => x.id == serviceGroupID).id);
-        setServiceGroupList(array);
-      });
+    group.get().then((res) => {
+      setServiceGroup(res.find((x) => x.id == serviceGroupID));
+      setServiceGID(res.find((x) => x.id == serviceGroupID).id);
+      setServiceGroupList(res);
+    });
+    // await axios
+    //   .post("http://localhost:3001/api/service-group/get", {})
+    //   .then((res) => {
+    //     var array = [];
+    //     for (var i = 0; i < res.data.list.length; i++) {
+    //       if (res.data.list[i].isDeleted == "No") {
+    //         array.push({
+    //           label: res.data.list[i].vCategory,
+    //           id: res.data.list[i].iCategoryID,
+    //         });
+    //       }
+    //     }
+    //   });
   };
 
   useEffect(() => {
@@ -187,7 +189,7 @@ export default function AddProduct() {
                   {isLoading ? (
                     <CircularProgress style={{ color: "white" }} />
                   ) : (
-                    "Reset"
+                    "Undo"
                   )}
                 </Button>
               </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Alert,
   Button,
@@ -14,6 +14,7 @@ function timeout(delay) {
 }
 
 export default function EditProductGroup() {
+  const navigate = useNavigate();
   const [rows, setRows] = React.useState([]);
   const [increment, setIncrement] = React.useState(0);
   const [value, setValue] = React.useState("");
@@ -70,12 +71,8 @@ export default function EditProductGroup() {
         })
         .then(async (res) => {
           if (res.data.result) {
-            setResult("success");
-            setMessage(res.data.message);
             setIsLoading(false);
-            await timeout(1500);
-            setResult("");
-            setResult("");
+            navigate("/service-group/");
           } else {
             setResult("error");
             setMessage(res.data.message);
@@ -87,7 +84,7 @@ export default function EditProductGroup() {
 
   return (
     <>
-      <DrawerComponent title="Add Service Group">
+      <DrawerComponent title="Edit Service Group">
         <div
           style={{
             backgroundColor: "white",
@@ -105,7 +102,6 @@ export default function EditProductGroup() {
               alignItems: "center",
             }}
           >
-            <h1>Edit Services</h1>
             <br />
             <Alert
               style={{
@@ -160,7 +156,7 @@ export default function EditProductGroup() {
                   variant="contained"
                   color="warning"
                 >
-                  Reset
+                  Undo
                 </Button>
               </div>
             </div>

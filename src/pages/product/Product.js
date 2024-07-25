@@ -19,15 +19,29 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
+import { decodedToken, serviceGroup } from "../../services/services_export";
 
 export default function ProductGroup() {
   const [rows, setRows] = React.useState([]);
   const [serviceGroupList, setServiceGroupList] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  // State for search input
   const [search, setSearch] = React.useState("");
+
+  // Filter rows based on the search input (both service name and service group)
+  const filteredRows = search
+    ? rows.filter((row) => {
+        const serviceGroupLabel =
+          serviceGroupList
+            .find((group) => group.id === row.categoryID)
+            ?.label.toLowerCase() || "";
+
+        return (
+          row.label.toLowerCase().includes(search.toLowerCase()) ||
+          serviceGroupLabel.includes(search.toLowerCase())
+        );
+      })
+    : rows;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -50,12 +64,28 @@ export default function ProductGroup() {
       .post("http://localhost:3001/api/service/get", {})
       .then((res) => {
         for (var i = 0; i < res.data.list.length; i++) {
-          if (res.data.list[i].isDeleted === "No") {
-            array.push({
-              label: res.data.list[i].vProduct,
-              id: res.data.list[i].iProductID,
-              categoryID: res.data.list[i].iCategoryID,
-            });
+          if (decodedToken.role.toLowerCase() == "admin") {
+            // ADD ALL DATA
+            if (res.data.list[i].isDeleted === "No") {
+              array.push({
+                label: res.data.list[i].vProduct,
+                id: res.data.list[i].iProductID,
+                categoryID: res.data.list[i].iCategoryID,
+              });
+            }
+          } else {
+            if (
+              decodedToken.moduleFilter.includes(res.data.list[i].iCategoryID)
+            ) {
+              if (res.data.list[i].isDeleted === "No") {
+                array.push({
+                  label: res.data.list[i].vProduct,
+                  id: res.data.list[i].iProductID,
+                  categoryID: res.data.list[i].iCategoryID,
+                });
+              }
+              // ADD ONLY REQUIRED DATA
+            }
           }
         }
         setRows(array);
@@ -63,18 +93,9 @@ export default function ProductGroup() {
   };
 
   const getGroupList = async () => {
-    var array = [];
-    await axios
-      .post("http://localhost:3001/api/service-group/get", {})
-      .then((res) => {
-        for (var i = 0; i < res.data.list.length; i++) {
-          array.push({
-            label: res.data.list[i].vCategory,
-            id: res.data.list[i].iCategoryID,
-          });
-        }
-      });
-    setServiceGroupList(array);
+    serviceGroup.get().then((res) => {
+      setServiceGroupList(res);
+    });
   };
 
   useEffect(() => {
@@ -102,21 +123,6 @@ export default function ProductGroup() {
     setMessage("");
   };
 
-  // Filter rows based on the search input (both service name and service group)
-  const filteredRows = search
-    ? rows.filter((row) => {
-        const serviceGroupLabel =
-          serviceGroupList
-            .find((group) => group.id === row.categoryID)
-            ?.label.toLowerCase() || "";
-
-        return (
-          row.label.toLowerCase().includes(search.toLowerCase()) ||
-          serviceGroupLabel.includes(search.toLowerCase())
-        );
-      })
-    : rows;
-
   const handleDelete = async () => {
     //TODO : IMPLEMENT BACK END LOGIC
     axios
@@ -125,8 +131,6 @@ export default function ProductGroup() {
       })
       .then(async (res) => {
         if (res.data.result) {
-          setAlertMessage(res.data.message);
-          setResult("success");
           setRows([]);
           getData();
           getGroupList();

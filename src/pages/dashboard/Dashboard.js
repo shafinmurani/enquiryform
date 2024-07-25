@@ -48,6 +48,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import { decodedToken } from "../../services/services_export.js";
 
 const useStyles = makeStyles({
   tableRow: {
@@ -80,7 +81,7 @@ export default function Dashboard() {
     var companyDataRows = await getCompanyData();
     var dealerDataRows = await getDealerData();
     await axios
-      .post("http://localhost:3001/api/renewals/get", {})
+      .post("http://localhost:3001/api/renewals/get", { decodedToken })
       .then((res) => {
         var array = [];
         var srNo = 1;
@@ -128,7 +129,7 @@ export default function Dashboard() {
   const getCompanyData = async () => {
     var array = [];
     await axios
-      .post("http://localhost:3001/api/company/get", {})
+      .post("http://localhost:3001/api/company/get", { decodedToken })
       .then((res) => {
         for (var i = 0; i < res.data.list.length; i++) {
           if (res.data.list[i].isDeleted == "No") {
@@ -146,24 +147,26 @@ export default function Dashboard() {
 
   const getDealerData = async () => {
     var array = [];
-    await axios.post("http://localhost:3001/api/dealer/get", {}).then((res) => {
-      for (var i = 0; i < res.data.list.length; i++) {
-        if (res.data.list[i].isDeleted == "No") {
-          array.push({
-            label: res.data.list[i].vDName,
-            id: res.data.list[i].iDealerID,
-            type: "dealer",
-          });
+    await axios
+      .post("http://localhost:3001/api/dealer/get", { decodedToken })
+      .then((res) => {
+        for (var i = 0; i < res.data.list.length; i++) {
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              label: res.data.list[i].vDName,
+              id: res.data.list[i].iDealerID,
+              type: "dealer",
+            });
+          }
         }
-      }
-    });
+      });
     setDealerRows(array);
     return array;
   };
   const getProductGroupData = async () => {
     var array = [];
     await axios
-      .post("http://localhost:3001/api/service-group/get", {})
+      .post("http://localhost:3001/api/service-group/get", { decodedToken })
       .then((res) => {
         for (var i = 0; i < res.data.list.length; i++) {
           if (res.data.list[i].isDeleted == "No") {
@@ -180,19 +183,21 @@ export default function Dashboard() {
   };
   const getProductData = async () => {
     var array = [];
-    await axios.post("http://localhost:3001/api/service/get").then((res) => {
-      for (var i = 0; i < res.data.list.length; i++) {
-        if (res.data.list[i].isDeleted == "No") {
-          array.push({
-            label: res.data.list[i].vProduct,
-            id: res.data.list[i].iProductID,
-            groupId: res.data.list[i].iCategoryID,
-            type: "product",
-          });
+    await axios
+      .post("http://localhost:3001/api/service/get", { decodedToken })
+      .then((res) => {
+        for (var i = 0; i < res.data.list.length; i++) {
+          if (res.data.list[i].isDeleted == "No") {
+            array.push({
+              label: res.data.list[i].vProduct,
+              id: res.data.list[i].iProductID,
+              groupId: res.data.list[i].iCategoryID,
+              type: "product",
+            });
+          }
         }
-      }
-      setProductRows(array);
-    });
+        setProductRows(array);
+      });
     return array;
   };
   const getPartyData = async () => {
@@ -369,6 +374,9 @@ export default function Dashboard() {
     setExpiringGroups(serviceGroupArray);
   };
   useEffect(() => {
+    if (decodedToken == null) {
+      window.location.reload();
+    }
     getData();
   }, []);
   useEffect(() => {
@@ -649,6 +657,7 @@ export default function Dashboard() {
                     align="center"
                   >
                     <a
+                      target="_blank"
                       href={`https://api.whatsapp.com/send?phone=+91${row.partyData.phone}&text=${encodeURI(
                         `Dear ${row.partyData.label},
 Your ${row.productGroupData.label} ${row.productData.label} is going to expire on  ${new Date(Date.parse(row.dtExpiry)).getDate()}/${months[new Date(Date.parse(row.dtExpiry)).getMonth()]}/${new Date(Date.parse(row.dtExpiry)).getFullYear()}. So kindly renew service.
@@ -673,6 +682,7 @@ web@yeshasoftware.com
                       </IconButton>
                     </a>{" "}
                     <a
+                      target="_blank"
                       href={`mailto:${row.partyData.email}?subject=${encodeURI(`Your ${row.productGroupData.label} ${row.productData.label} is going to expire`)}&body=${encodeURI(
                         `Dear ${row.partyData.label},
 Your ${row.productGroupData.label} ${row.productData.label} is going to expire on  ${new Date(Date.parse(row.dtExpiry)).getDate()}/${months[new Date(Date.parse(row.dtExpiry)).getMonth()]}/${new Date(Date.parse(row.dtExpiry)).getFullYear()}. So kindly renew service.

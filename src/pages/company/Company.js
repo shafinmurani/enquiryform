@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import {
   Alert,
@@ -18,19 +18,20 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
-import { company } from "../../services/services_export";
+import { company, decodedToken } from "../../services/services_export";
 export default function Company() {
-  const [rows, setRows] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [search, setSearch] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const [title, setTitle] = React.useState("");
-  const [message, setMessage] = React.useState("");
-  const [deleteId, setDeleteId] = React.useState();
-  const [result, setResult] = React.useState("");
-  const [alertMessage, setAlertMessage] = React.useState("");
+  const [rows, setRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
+  const [deleteId, setDeleteId] = useState();
+  const [result, setResult] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
   const filteredRows = company.filter(search, rows);
+  const [decodedJwt, setDecodedJwt] = useState(decodedToken);
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
@@ -112,11 +113,14 @@ export default function Company() {
             marginBottom: "1rem",
           }}
         >
-          <Link to="/company/add">
-            <Button startIcon={<Add />} variant="contained">
-              Add
-            </Button>
-          </Link>
+          {decodedJwt.role == "Admin" ? (
+            <Link to="/company/add">
+              <Button startIcon={<Add />} variant="contained">
+                Add
+              </Button>
+            </Link>
+          ) : null}
+
           <TextField
             style={{ minWidth: "20rem" }}
             onChange={(e) => setSearch(e.target.value)}

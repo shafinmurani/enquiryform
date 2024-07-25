@@ -5,6 +5,7 @@ import axios from "axios";
 import "../../styles/AddProductGroup.css";
 import Autocomplete from "@mui/material/Autocomplete";
 import AddProductComponent from "./AddProductComponent";
+import { decodedToken } from "../../services/services_export";
 
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
@@ -51,7 +52,7 @@ export default function AddProduct() {
   };
   const getGroupList = async () => {
     await axios
-      .post("http://localhost:3001/api/service-group/get", {})
+      .post("http://localhost:3001/api/service-group/get", { decodedToken })
       .then((res) => {
         var array = [];
         for (var i = 0; i < res.data.list.length; i++) {

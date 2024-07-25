@@ -25,6 +25,7 @@ import {
   TablePagination,
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
+import { decodedToken } from "../../services/services_export";
 const token = sessionStorage.getItem("jwt-token");
 
 function timeout(delay) {
@@ -80,7 +81,7 @@ export default function AddRenewals() {
 
   const getProductGroupData = () => {
     axios
-      .post("http://localhost:3001/api/service-group/get", {})
+      .post("http://localhost:3001/api/service-group/get", { decodedToken })
       .then((res) => {
         var array = [];
         for (var i = 0; i < res.data.list.length; i++) {
@@ -326,16 +327,18 @@ export default function AddRenewals() {
                           id="input-with-sx"
                           variant="outlined"
                         />
-                        <DialogComponent
-                          title="Service Group"
-                          onClose={() => {
-                            getProductGroupData();
-                            getCompanyData();
-                            getPartyData();
-                            getDealerData();
-                          }}
-                          component={<AddGroupComponent />}
-                        />
+                        {decodedToken.role.toLowerCase() == "admin" ? (
+                          <DialogComponent
+                            title="Service Group"
+                            onClose={() => {
+                              getProductGroupData();
+                              getCompanyData();
+                              getPartyData();
+                              getDealerData();
+                            }}
+                            component={<AddGroupComponent />}
+                          />
+                        ) : null}
                       </Box>
                     )}
                   />
