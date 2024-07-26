@@ -58,7 +58,7 @@ const useStyles = makeStyles({
     padding: "5px 16px",
   },
   tableHeadingCell: {
-    padding: "20px 16px",
+    // padding: "20px 16px",
     fontWeight: "600",
   },
 });
@@ -409,15 +409,16 @@ export default function Dashboard() {
             style={{
               display: "flex",
               flexDirection: "row",
-              // justifyContent: "space-between",
               gap: "1rem",
               alignItems: "center",
-              marginBottom: "1rem",
+              justifyContent: "space-around",
+              // marginBottom: "1rem",
             }}
           >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 views={["year", "month"]}
+                slotProps={{ textField: { size: "small" } }}
                 label="Expiry Month-Year"
                 value={expiryMonthYearFilter}
                 onChange={(newValue) => {
@@ -431,7 +432,8 @@ export default function Dashboard() {
             </LocalizationProvider>
             <div style={{ display: "flex", gap: "1rem" }}>
               <IconButton
-                style={{ backgroundColor: "#1976d2", color: "white" }}
+                size="small"
+                color="primary" // style={{ backgroundColor: "#1976d2", color: "white" }}
                 onClick={(e) => {
                   filterData();
                 }}
@@ -439,7 +441,8 @@ export default function Dashboard() {
                 <FilterAltIcon />
               </IconButton>
               <IconButton
-                style={{ backgroundColor: "#d32f2f", color: "white" }}
+                size="small"
+                style={{ color: "red" }}
                 onClick={(e) => {
                   clearFilter();
                 }}
@@ -449,6 +452,8 @@ export default function Dashboard() {
             </div>
           </div>
           <TextField
+            style={{ minWidth: "17rem" }}
+            size="small"
             label="Search"
             onChange={(e) => {
               setSearch(e.target.value);
@@ -466,14 +471,19 @@ export default function Dashboard() {
               <Grid item>
                 <Card style={{ width: "12rem" }}>
                   <CardContent
-                    style={{ display: "flex", flexDirection: "column" }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
                     <Typography
                       color="text.secondary"
                       variant="h6"
                       component="div"
                     >
-                      {card.label} ({card.count})
+                      {card.label}
                     </Typography>
                   </CardContent>
                   <div
@@ -484,10 +494,21 @@ export default function Dashboard() {
                     }}
                   >
                     <Button
+                      style={{ fontSize: "1rem" }}
                       onClick={() => handleFilterByServiceGroup(card.label)}
                       fullWidth
                     >
-                      More Info <ArrowCircleRightIcon />
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "5px",
+                        }}
+                      >
+                        {card.count}
+
+                        <ArrowCircleRightIcon />
+                      </div>
                     </Button>
                   </div>
                 </Card>
@@ -501,7 +522,7 @@ export default function Dashboard() {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingBlock: "0.8rem",
+              // paddingBlock: "0.8rem",
               paddingInline: "1rem",
             }}
           >
@@ -519,25 +540,53 @@ export default function Dashboard() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow className={classes.tableRow}>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Sr. No.
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Product
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Register
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Expiry
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Party Details
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Actions
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Message
                 </TableCell>
               </TableRow>

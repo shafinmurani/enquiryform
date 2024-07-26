@@ -7,6 +7,11 @@ import {
   Typography,
   TablePagination,
 } from "@mui/material";
+import { Tooltip, Divider } from "@mui/material";
+import FileUploadDialog from "../../components/FileUploadDialog";
+import format from "../../asstes/service_group_format.png";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import IconButton from "@mui/material/IconButton";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
@@ -80,6 +85,7 @@ export default function Company() {
         handleClose();
       }
     });
+    handleClose();
   };
 
   return (
@@ -130,16 +136,45 @@ export default function Company() {
           />
         </div>
         <TableContainer component={Paper}>
-          <TablePagination
-            rowsPerPageOptions={[2, 5, 10, 25]}
-            component="div"
-            count={filteredRows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingBlock: "0.8rem",
+              paddingInline: "1rem",
+            }}
+          >
+            <TablePagination
+              rowsPerPageOptions={[2, 5, 10, 25]}
+              component="div"
+              count={filteredRows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <Tooltip title="Export to CSV" arrow>
+                <a href="http://localhost:3001/api/database/export/company">
+                  <IconButton color="primary" variant="outlined">
+                    <FileUploadIcon />
+                  </IconButton>
+                </a>
+              </Tooltip>
+              <Tooltip title="Import from Excel Sheet" arrow>
+                <a>
+                  <FileUploadDialog
+                    get={getData}
+                    path="company"
+                    image={format}
+                  />
+                </a>
+              </Tooltip>
+            </div>
+          </div>
+          <Divider />
+          <Table sx={{ minWidth: 650 }}  size="small" aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell align="right">Company</TableCell>

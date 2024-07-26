@@ -1,6 +1,14 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { Alert, Button, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  TextField,
+  Typography,
+  Tooltip,
+  Divider,
+} from "@mui/material";
+import AuthVerify from "../../components/AuthVerify";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
@@ -14,7 +22,10 @@ import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
 import TablePagination from "@mui/material/TablePagination";
 import { decodedToken, serviceGroup } from "../../services/services_export";
-
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import IconButton from "@mui/material/IconButton";
+import FileUploadDialog from "../../components/FileUploadDialog";
+import format from "../../asstes/service_group_format.png";
 export default function ProductGroup() {
   const [rows, setRows] = React.useState([]);
   const [filteredRows, setFilteredRows] = React.useState([]);
@@ -81,7 +92,7 @@ export default function ProductGroup() {
       });
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -92,6 +103,7 @@ export default function ProductGroup() {
 
   return (
     <>
+      <AuthVerify />
       <DrawerComponent title="Service Group List">
         <div
           style={{
@@ -138,22 +150,51 @@ export default function ProductGroup() {
           />
         </div>
         <TableContainer component={Paper}>
-          <TablePagination
-            rowsPerPageOptions={[2, 5, 10, 25]}
-            component="div"
-            count={filteredRows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              // paddingBlock: "0.8rem",
+              paddingInline: "1rem",
+            }}
+          >
+            <TablePagination
+              rowsPerPageOptions={[2, 5, 10, 25]}
+              component="div"
+              count={filteredRows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <Tooltip title="Export to CSV" arrow>
+                <a href="http://localhost:3001/api/database/export/service-group">
+                  <IconButton color="primary" variant="outlined">
+                    <FileUploadIcon />
+                  </IconButton>
+                </a>
+              </Tooltip>
+              <Tooltip title="Import from Excel Sheet" arrow>
+                <a>
+                  <FileUploadDialog
+                    get={getData}
+                    path="service-group"
+                    image={format}
+                  />
+                </a>
+              </Tooltip>
+            </div>
+          </div>
+          <Divider />
+          <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="right">Service Group</TableCell>
-                <TableCell align="right">Date Created</TableCell>
-                <TableCell align="right">Date Modified</TableCell>
-                <TableCell align="right">Actions</TableCell>
+                <TableCell align="center">Service Group</TableCell>
+                <TableCell align="center">Date Created</TableCell>
+                <TableCell align="center">Date Modified</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -168,12 +209,12 @@ export default function ProductGroup() {
                   key={row.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell align="right">{row.label}</TableCell>
-                  <TableCell align="right">{row.dtCreated}</TableCell>
-                  <TableCell align="right">{row.dtModified}</TableCell>
+                  <TableCell align="center">{row.label}</TableCell>
+                  <TableCell align="center">{row.dtCreated}</TableCell>
+                  <TableCell align="center">{row.dtModified}</TableCell>
                   <TableCell
-                    style={{ display: "flex", gap: "1rem" }}
-                    align="right"
+                    // style={{ display: "flex", gap: "1rem" }}
+                    align="center"
                   >
                     <DialogBoxComponent
                       open={open}
@@ -212,8 +253,9 @@ export default function ProductGroup() {
                         </Button>
                       </div>
                     </DialogBoxComponent>
-                    <Button
+                    <IconButton
                       size="small"
+                      style={{ margin: "5px" }}
                       variant="contained"
                       color="error"
                       onClick={() => {
@@ -225,11 +267,16 @@ export default function ProductGroup() {
                       }}
                     >
                       <Delete />
-                    </Button>
+                    </IconButton>
                     <Link to={`/service-group/edit/`} state={{ id: row.id }}>
-                      <Button size="small" variant="contained" color="info">
+                      <IconButton
+                        style={{ margin: "5px" }}
+                        size="small"
+                        variant="contained"
+                        color="info"
+                      >
                         <Edit />
-                      </Button>
+                      </IconButton>
                     </Link>
                   </TableCell>
                 </TableRow>

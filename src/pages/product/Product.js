@@ -7,6 +7,7 @@ import {
   Typography,
   CircularProgress,
   TablePagination,
+  IconButton,
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -207,13 +208,13 @@ export default function ProductGroup() {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell align="right">Service Group</TableCell>
-                <TableCell align="right">Service</TableCell>
-                <TableCell align="right">Actions</TableCell>
+                <TableCell align="center">ID</TableCell>
+                <TableCell align="center">Service Group</TableCell>
+                <TableCell align="center">Service</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -228,21 +229,18 @@ export default function ProductGroup() {
                   key={row.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">
+                  <TableCell align="center" component="th" scope="row">
                     {row.id}
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     {
                       serviceGroupList.find((x) => x.id === row.categoryID)
                         .label
                     }
                   </TableCell>
-                  <TableCell align="right">{row.label}</TableCell>
+                  <TableCell align="center">{row.label}</TableCell>
 
-                  <TableCell
-                    style={{ display: "flex", gap: "1rem" }}
-                    align="right"
-                  >
+                  <TableCell align="center">
                     <DialogBoxComponent
                       open={open}
                       onClose={handleClose}
@@ -276,8 +274,9 @@ export default function ProductGroup() {
                         </Button>
                       </div>
                     </DialogBoxComponent>
-                    <Button
+                    <IconButton
                       size="small"
+                      style={{ margin: "5px" }}
                       variant="contained"
                       color="error"
                       onClick={() => {
@@ -289,7 +288,7 @@ export default function ProductGroup() {
                       }}
                     >
                       <Delete />
-                    </Button>
+                    </IconButton>
                     <Link
                       to={`/service/edit/`}
                       state={{
@@ -297,9 +296,14 @@ export default function ProductGroup() {
                         serviceGroupID: row.categoryID,
                       }}
                     >
-                      <Button size="small" variant="contained" color="info">
+                      <IconButton
+                        style={{ margin: "5px" }}
+                        size="small"
+                        variant="contained"
+                        color="info"
+                      >
                         <Edit />
-                      </Button>
+                      </IconButton>
                     </Link>
                   </TableCell>
                 </TableRow>

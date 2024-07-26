@@ -1,4 +1,10 @@
-import { Alert, Button, CircularProgress, TextField } from "@mui/material";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -264,8 +270,6 @@ export default function AddRenewals() {
               paddingInline: "2rem",
             }}
           >
-            <h1>Add Renewal Details</h1>
-
             <div
               style={{
                 display: "flex",
@@ -296,52 +300,52 @@ export default function AddRenewals() {
                 <div
                   style={{
                     display: "flex",
-                    flexDirection: width > 1000 ? "row" : "column",
-                    gap: width > 1000 ? "2rem" : "1rem",
+                    flexDirection: "column",
+                    gap: "1rem",
                   }}
                 >
-                  <Autocomplete
-                    disablePortal
-                    disableClearable
-                    value={productGroup}
-                    options={productGroupRows}
-                    label="vCategory"
-                    style={{ flex: "1" }}
-                    onChange={(event, newInputValue) => {
-                      setProductGroupID(newInputValue.id);
-                      setProductGroup(newInputValue.label);
-                      setProductRows([]);
-                      getProductData(newInputValue.id);
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flex: 1,
+                      alignItems: "center",
                     }}
-                    renderInput={(params) => (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flex: 1,
-                          alignItems: "center",
+                  >
+                    <Autocomplete
+                      disablePortal
+                      disableClearable
+                      size="small"
+                      autoComplete
+                      autoHighlight
+                      openOnFocus
+                      forcePopupIcon={false}
+                      value={productGroup}
+                      options={productGroupRows}
+                      label="vCategory"
+                      style={{ flex: "1" }}
+                      onChange={(event, newInputValue) => {
+                        setProductGroupID(newInputValue.id);
+                        setProductGroup(newInputValue.label);
+                        setProductRows([]);
+                        getProductData(newInputValue.id);
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Group" />
+                      )}
+                    />
+                    {decodedToken.role.toLowerCase() == "admin" ? (
+                      <DialogComponent
+                        title="Service Group"
+                        onClose={() => {
+                          getProductGroupData();
+                          getCompanyData();
+                          getPartyData();
+                          getDealerData();
                         }}
-                      >
-                        <TextField
-                          {...params}
-                          label="Group"
-                          id="input-with-sx"
-                          variant="outlined"
-                        />
-                        {decodedToken.role.toLowerCase() == "admin" ? (
-                          <DialogComponent
-                            title="Service Group"
-                            onClose={() => {
-                              getProductGroupData();
-                              getCompanyData();
-                              getPartyData();
-                              getDealerData();
-                            }}
-                            component={<AddGroupComponent />}
-                          />
-                        ) : null}
-                      </Box>
-                    )}
-                  />
+                        component={<AddGroupComponent />}
+                      />
+                    ) : null}
+                  </Box>
                   <Box
                     sx={{
                       display: "flex",
@@ -353,6 +357,16 @@ export default function AddRenewals() {
                       value={product}
                       key={productRows}
                       disablePortal
+                      size="small"
+                      autoComplete
+                      autoHighlight
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end"></InputAdornment>
+                        ),
+                      }}
+                      openOnFocus
+                      forcePopupIcon={false}
                       disableClearable
                       options={productRows}
                       label="vProduct"
@@ -385,6 +399,16 @@ export default function AddRenewals() {
                   >
                     <Autocomplete
                       disablePortal
+                      size="small"
+                      autoComplete
+                      autoHighlight
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end"></InputAdornment>
+                        ),
+                      }}
+                      openOnFocus
+                      forcePopupIcon={false}
                       value={company}
                       disableClearable
                       options={companyRows}
@@ -411,6 +435,7 @@ export default function AddRenewals() {
                   </Box>
                   <TextField
                     value={productType}
+                    size="small"
                     label="Product Type"
                     style={{ flex: 1 }}
                     onChange={(e) => {
@@ -426,8 +451,8 @@ export default function AddRenewals() {
                 <div
                   style={{
                     display: "flex",
-                    flexDirection: width > 1000 ? "row" : "column",
-                    gap: width > 1000 ? "2rem" : "1rem",
+                    flexDirection: "row",
+                    gap: "1rem",
                   }}
                 >
                   <LocalizationProvider
@@ -441,8 +466,9 @@ export default function AddRenewals() {
                       value={registrationDate}
                       slotProps={{
                         textField: {
+                          size: "small",
                           style: {
-                            minWidth: width > 1000 ? "10rem" : "100%",
+                            // minWidth: "100%",
                             flex: "1",
                           },
                         },
@@ -464,8 +490,9 @@ export default function AddRenewals() {
                       format="DD/MM/YYYY"
                       slotProps={{
                         textField: {
+                          size: "small",
                           style: {
-                            minWidth: width > 1000 ? "10rem" : "100%",
+                            // minWidth: "100%",
                             flex: "1",
                           },
                         },
@@ -477,6 +504,14 @@ export default function AddRenewals() {
                       }}
                     />
                   </LocalizationProvider>{" "}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                  }}
+                >
                   <Box
                     sx={{
                       display: "flex",
@@ -486,6 +521,16 @@ export default function AddRenewals() {
                   >
                     <Autocomplete
                       disablePortal
+                      size="small"
+                      autoComplete
+                      autoHighlight
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end"></InputAdornment>
+                        ),
+                      }}
+                      openOnFocus
+                      forcePopupIcon={false}
                       disableClearable
                       options={partyRows}
                       label="vParty"
@@ -519,6 +564,16 @@ export default function AddRenewals() {
                   >
                     <Autocomplete
                       disablePortal
+                      size="small"
+                      autoComplete
+                      autoHighlight
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end"></InputAdornment>
+                        ),
+                      }}
+                      openOnFocus
+                      forcePopupIcon={false}
                       disableClearable
                       options={dealerRows}
                       label="vDName"
@@ -553,6 +608,7 @@ export default function AddRenewals() {
                 >
                   <TextField
                     style={{ flex: "1" }}
+                    size="small"
                     label="Rate"
                     value={rate}
                     onChange={(e) => {
@@ -562,6 +618,7 @@ export default function AddRenewals() {
                   <TextField
                     style={{ flex: "1" }}
                     label="Quantity"
+                    size="small"
                     value={quantity}
                     onChange={(e) => {
                       setQuantity(e.target.value);
@@ -571,6 +628,7 @@ export default function AddRenewals() {
                   <TextField
                     style={{ flex: "1" }}
                     value={quantity * rate}
+                    size="small"
                     label="Amount"
                     disabled
                   />
@@ -579,6 +637,7 @@ export default function AddRenewals() {
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
+                      size="small"
                       value={isInclusive}
                       label="Age"
                       onChange={(e) => {
@@ -592,6 +651,7 @@ export default function AddRenewals() {
                   <TextField
                     style={{ flex: "1" }}
                     label="Tax %"
+                    size="small"
                     onChange={(e) => {
                       setTaxPercent(e.target.value);
                       console.log(amount);
@@ -605,6 +665,7 @@ export default function AddRenewals() {
                   <TextField
                     style={{ flex: "1" }}
                     label="Final Amount"
+                    size="small"
                     value={totalAmt}
                     disabled
                   />{" "}
@@ -614,7 +675,7 @@ export default function AddRenewals() {
                     display: "flex",
                     flexDirection: "row",
                     gap: "1rem",
-                    width: width > 1000 ? "50%" : "100%",
+                    width: "100%",
                   }}
                 >
                   <TextField

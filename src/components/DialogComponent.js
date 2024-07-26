@@ -1,5 +1,5 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
+import { IconButton, Button } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -33,9 +33,9 @@ export default function DialogComponent(props) {
 
   return (
     <React.Fragment>
-      <Button onClick={handleClickOpen("paper")}>
+      <IconButton onClick={handleClickOpen("paper")}>
         <AddCircleRounded />
-      </Button>
+      </IconButton>
       <Dialog
         PaperProps={{
           sx: {

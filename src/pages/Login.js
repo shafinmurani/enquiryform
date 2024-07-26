@@ -42,6 +42,7 @@ export default function Login() {
   };
 
   const submit = () => {
+    console.log("SUBMITT");
     if (isValidEmail && password.length !== 0) {
       axios
         .post("http://localhost:3001/api/login", {

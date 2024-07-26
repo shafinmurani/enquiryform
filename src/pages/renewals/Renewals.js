@@ -1,15 +1,7 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
 import { Alert, Button, TextField, Tooltip, Typography } from "@mui/material";
-import {
-  Add,
-  Check,
-  Clear,
-  Delete,
-  Download,
-  Edit,
-  ImportExport,
-} from "@mui/icons-material";
+import { Add, Check, Clear, Delete, Download, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -22,9 +14,9 @@ import axios from "axios";
 import DialogBoxComponent from "../../components/DialogBoxComponent";
 import dayjs from "dayjs";
 import TablePagination from "@mui/material/TablePagination";
+import format from "../../asstes/renewal_upload_format.png";
 import useWindowDimensions from "../../components/UseWindowDimensions";
 import FileUploadDialog from "../../components/FileUploadDialog.js";
-import format from "../../asstes/renewal_upload_format.png";
 import { makeStyles } from "@mui/styles";
 import Divider from "@mui/material/Divider";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -36,14 +28,14 @@ import { decodedToken } from "../../services/services_export.js";
 
 const useStyles = makeStyles({
   tableRow: {
-    height: 30,
+    // height: 30,
   },
   tableCell: {
-    padding: "5px 16px",
+    // padding: "5px 16px",
   },
   tableHeadingCell: {
-    padding: "20px 16px",
-    fontWeight: "600",
+    // padding: "20px 16px",
+    // fontWeight: "600",
   },
 });
 
@@ -599,7 +591,7 @@ export default function Renewals() {
             </div>
           </div>
           <Divider />
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow className={classes.tableRow}>
                 <TableCell className={classes.tableHeadingCell} align="center">
