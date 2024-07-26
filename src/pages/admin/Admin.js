@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
 import DrawerComponent from "../../components/DrawerComponent";
-import { Alert, Button, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  IconButton,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
@@ -59,6 +66,8 @@ export default function Admin() {
       });
     }
   }
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const months = [1, 2, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12];
   const handleDelete = () => {
     //TODO : IMPLEMENT BACK END LOGIC
     axios
@@ -81,7 +90,7 @@ export default function Admin() {
   };
   return (
     <>
-      <DrawerComponent title="Renewals">
+      <DrawerComponent title="Admin">
         <div
           style={{
             display: "flex",
@@ -112,17 +121,28 @@ export default function Admin() {
         >
           {decodedToken.role.toLowerCase() == "admin" ? (
             <Link to="/admin/add">
-              <Button startIcon={<Add />} variant="contained">
-                Add
-              </Button>
+              <Tooltip arrow title="Add Admin">
+                <IconButton
+                  size="small"
+                  style={{
+                    backgroundColor: "#00a9d1",
+                    color: "white",
+                    marginTop: "3px",
+                  }}
+                  variant="contained"
+                >
+                  <Add />
+                </IconButton>
+              </Tooltip>
             </Link>
           ) : null}
 
           <TextField
-            style={{ minWidth: "20rem" }}
+            size="small"
+            style={{ minWidth: "17rem" }}
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
-            label="Search by Name"
+            label="Search"
             variant="outlined"
           />
         </div>
@@ -130,13 +150,43 @@ export default function Admin() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="right">Name</TableCell>
-                <TableCell align="right">Email</TableCell>
-                <TableCell align="right">Status</TableCell>
-                <TableCell align="right">Role</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Name
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Email
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Status
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Role
+                </TableCell>
                 {/* <TableCell align="right">Is Deleted</TableCell> */}
-                <TableCell align="right">Date Created</TableCell>
-                <TableCell align="right">Actions</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Date Created
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -149,18 +199,26 @@ export default function Admin() {
                       key={row.name}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="right">
+                      <TableCell align="center">
                         {row.vFirstName} {row.vLastName}
                       </TableCell>
-                      <TableCell align="right">{row.vEmail}</TableCell>
-                      <TableCell align="right">{row.eStatus}</TableCell>
-                      <TableCell align="right">{row.eRole}</TableCell>
+                      <TableCell align="center">{row.vEmail}</TableCell>
+                      <TableCell align="center">{row.eStatus}</TableCell>
+                      <TableCell align="center">{row.eRole}</TableCell>
 
                       {/* <TableCell align="right">{row.isDeleted}</TableCell> */}
-                      <TableCell align="right">{row.dtCreated}</TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        {
+                          days[new Date(Date.parse(row.dtCreated)).getDay()]
+                        }{" "}
+                        {new Date(Date.parse(row.dtCreated)).getDate()}/
+                        {months[new Date(Date.parse(row.dtCreated)).getMonth()]}
+                        /{new Date(Date.parse(row.dtCreated)).getFullYear()}
+                      </TableCell>
                       <TableCell
-                        style={{ display: "flex", gap: "1rem" }}
-                        align="right"
+                        // style={{ display: "flex", gap: "1rem" }}
+                        align="center"
                       >
                         <DialogBoxComponent
                           open={open}
@@ -199,10 +257,11 @@ export default function Admin() {
                             </Button>
                           </div>
                         </DialogBoxComponent>
-                        <Button
+                        <IconButton
                           size="small"
                           variant="contained"
                           color="error"
+                          style={{ margin: "5px" }}
                           onClick={() => {
                             console.log(row);
                             handleClickOpen(
@@ -213,11 +272,16 @@ export default function Admin() {
                           }}
                         >
                           <Delete />
-                        </Button>
+                        </IconButton>
                         <Link to={`/admin/edit/`} state={{ id: row.iAdminID }}>
-                          <Button size="small" variant="contained" color="info">
+                          <IconButton
+                            style={{ margin: "5px" }}
+                            size="small"
+                            variant="contained"
+                            color="info"
+                          >
                             <Edit />
-                          </Button>
+                          </IconButton>
                         </Link>
                       </TableCell>
                     </TableRow>

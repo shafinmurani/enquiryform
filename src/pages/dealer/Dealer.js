@@ -174,8 +174,8 @@ export default function Dealer() {
                 marginTop: "4px",
               }}
             >
-              <Link to="/party/add">
-                <Tooltip arrow title="Add Party">
+              <Link to="/dealer/add">
+                <Tooltip arrow title="Add Dealer">
                   <IconButton
                     size="small"
                     style={{
