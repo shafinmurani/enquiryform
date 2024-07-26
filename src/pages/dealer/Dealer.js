@@ -6,6 +6,9 @@ import {
   TextField,
   Typography,
   TablePagination,
+  Tooltip,
+  IconButton,
+  Divider,
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -138,30 +141,58 @@ export default function Dealer() {
             marginBottom: "1rem",
           }}
         >
-          <Link to="/dealer/add">
-            <Button startIcon={<Add />} variant="contained">
-              Add
-            </Button>
-          </Link>
           <TextField
             style={{ minWidth: "20rem" }}
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
-            label="Search by Dealer Name or Contact Info"
+            label="Search"
             variant="outlined"
           />
         </div>
         <TableContainer component={Paper}>
-          <TablePagination
-            rowsPerPageOptions={[2, 5, 10, 25]}
-            component="div"
-            count={filter(search).length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <TablePagination
+              rowsPerPageOptions={[2, 5, 10, 25]}
+              component="div"
+              count={filter(search).length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            <div
+              style={{
+                display: "flex",
+                marginInline: "1rem",
+                marginTop: "4px",
+              }}
+            >
+              <Link to="/party/add">
+                <Tooltip arrow title="Add Party">
+                  <IconButton
+                    size="small"
+                    style={{
+                      backgroundColor: "#00a9d1",
+                      color: "white",
+                      marginTop: "3px",
+                    }}
+                    variant="contained"
+                  >
+                    <Add />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+            </div>
+          </div>
+          <Divider />
+
+          <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell align="center">ID</TableCell>
@@ -183,7 +214,7 @@ export default function Dealer() {
                 } else {
                   return (
                     <TableRow
-                      align="right"
+                      align="center"
                       key={row.iDealerID}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
@@ -236,7 +267,7 @@ export default function Dealer() {
                             </Button>
                           </div>
                         </DialogBoxComponent>
-                        <Button
+                        <IconButton
                           style={{ margin: "5px" }}
                           size="small"
                           variant="contained"
@@ -250,15 +281,19 @@ export default function Dealer() {
                           }}
                         >
                           <Delete />
-                        </Button>
+                        </IconButton>
                         <Link
                           to={`/dealer/edit/`}
                           style={{ margin: "5px" }}
                           state={{ id: row.iDealerID }}
                         >
-                          <Button size="small" variant="contained" color="info">
+                          <IconButton
+                            size="small"
+                            variant="contained"
+                            color="info"
+                          >
                             <Edit />
-                          </Button>
+                          </IconButton>
                         </Link>
                       </TableCell>
                     </TableRow>

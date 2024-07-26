@@ -169,8 +169,8 @@ export default function Company() {
                 </a>
               </Tooltip>
               {decodedJwt.role == "Admin" ? (
-                <Link to="/party/add">
-                  <Tooltip arrow title="Add Party">
+                <Link to="/company/add">
+                  <Tooltip arrow title="Add Company">
                     <IconButton
                       size="small"
                       style={{
