@@ -301,7 +301,7 @@ export default function Renewals() {
   };
 
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -552,7 +552,7 @@ export default function Renewals() {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingBlock: "0.8rem",
+              // paddingBlock: "0.8rem",
               paddingInline: "1rem",
             }}
           >
@@ -565,7 +565,7 @@ export default function Renewals() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
-            <div style={{ display: "flex", gap: "1rem" }}>
+            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
               <Tooltip title="Export to CSV" arrow>
                 <a href="http://localhost:3001/api/database/export/renewals">
                   <IconButton color="primary" variant="outlined">
@@ -594,22 +594,46 @@ export default function Renewals() {
           <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow className={classes.tableRow}>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Sr. No.
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Product
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Register
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Expiry
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Party Details
                 </TableCell>
-                <TableCell className={classes.tableHeadingCell} align="center">
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
                   Actions
                 </TableCell>
               </TableRow>
