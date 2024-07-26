@@ -140,7 +140,7 @@ export default function ProductGroup() {
             style={{ minWidth: "17rem" }}
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
-            label="Search by Service Group"
+            label="Search"
             variant="outlined"
           />
         </div>

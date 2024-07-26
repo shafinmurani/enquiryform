@@ -142,7 +142,8 @@ export default function Dealer() {
           }}
         >
           <TextField
-            style={{ minWidth: "20rem" }}
+            size="small"
+            style={{ minWidth: "17rem" }}
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
             label="Search"
@@ -195,10 +196,30 @@ export default function Dealer() {
           <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">ID</TableCell>
-                <TableCell align="center">Dealer</TableCell>
-                <TableCell align="center">Contact Info</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  ID
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Dealer
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Contact Info
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
