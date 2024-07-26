@@ -100,6 +100,8 @@ export default function ProductGroup() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const months = [1, 2, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12];
 
   return (
     <>
@@ -199,10 +201,30 @@ export default function ProductGroup() {
           <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">Service Group</TableCell>
-                <TableCell align="center">Date Created</TableCell>
-                <TableCell align="center">Date Modified</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Service Group
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Date Created
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Date Modified
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -218,8 +240,18 @@ export default function ProductGroup() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell align="center">{row.label}</TableCell>
-                  <TableCell align="center">{row.dtCreated}</TableCell>
-                  <TableCell align="center">{row.dtModified}</TableCell>
+                  <TableCell align="center">
+                    {days[new Date(Date.parse(row.dtCreated)).getDay()]}{" "}
+                    {new Date(Date.parse(row.dtCreated)).getDate()}/
+                    {months[new Date(Date.parse(row.dtCreated)).getMonth()]}/
+                    {new Date(Date.parse(row.dtCreated)).getFullYear()}
+                  </TableCell>
+                  <TableCell align="center">
+                    {days[new Date(Date.parse(row.dtModified)).getDay()]}{" "}
+                    {new Date(Date.parse(row.dtModified)).getDate()}/
+                    {months[new Date(Date.parse(row.dtModified)).getMonth()]}/
+                    {new Date(Date.parse(row.dtModified)).getFullYear()}
+                  </TableCell>
                   <TableCell
                     // style={{ display: "flex", gap: "1rem" }}
                     align="center"
