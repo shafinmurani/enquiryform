@@ -302,7 +302,7 @@ export default function Dashboard() {
   };
 
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [expiryMonthYearFilter, setExpiryMonthYearFilter] = React.useState(
     dayjs(new Date()),
   );

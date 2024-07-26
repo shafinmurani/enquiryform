@@ -22,7 +22,7 @@ import DialogBoxComponent from "../../components/DialogBoxComponent";
 export default function Dealer() {
   const [rows, setRows] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [message, setMessage] = React.useState("");
@@ -164,8 +164,9 @@ export default function Dealer() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="right">Dealer</TableCell>
-                <TableCell align="right">Contact Info</TableCell>
+                <TableCell align="center">ID</TableCell>
+                <TableCell align="center">Dealer</TableCell>
+                <TableCell align="center">Contact Info</TableCell>
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -186,8 +187,10 @@ export default function Dealer() {
                       key={row.iDealerID}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="right">{row.vDName}</TableCell>
-                      <TableCell align="right">{row.vDMobileno}</TableCell>
+                      <TableCell align="center">{row.iDealerID}</TableCell>
+
+                      <TableCell align="center">{row.vDName}</TableCell>
+                      <TableCell align="center">{row.vDMobileno}</TableCell>
                       <TableCell
                         style={{
                           gap: "0.2rem",
@@ -234,6 +237,7 @@ export default function Dealer() {
                           </div>
                         </DialogBoxComponent>
                         <Button
+                          style={{ margin: "5px" }}
                           size="small"
                           variant="contained"
                           color="error"
@@ -249,6 +253,7 @@ export default function Dealer() {
                         </Button>
                         <Link
                           to={`/dealer/edit/`}
+                          style={{ margin: "5px" }}
                           state={{ id: row.iDealerID }}
                         >
                           <Button size="small" variant="contained" color="info">

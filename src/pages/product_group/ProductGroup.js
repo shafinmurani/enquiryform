@@ -37,7 +37,7 @@ export default function ProductGroup() {
   const [result, setResult] = React.useState("");
   const [alertMessage, setAlertMessage] = React.useState("");
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const getData = async () => {
     serviceGroup.get().then((res) => {

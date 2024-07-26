@@ -8,6 +8,8 @@ import {
   CircularProgress,
   TablePagination,
   IconButton,
+  Divider,
+  Tooltip,
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -26,7 +28,7 @@ export default function ProductGroup() {
   const [rows, setRows] = React.useState([]);
   const [serviceGroupList, setServiceGroupList] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState("");
 
   // Filter rows based on the search input (both service name and service group)
@@ -175,16 +177,12 @@ export default function ProductGroup() {
             marginBottom: "1rem",
           }}
         >
-          <Link to="/service/add" state={{ list: rows }}>
-            <Button startIcon={<Add />} variant="contained">
-              Add
-            </Button>
-          </Link>
           <TextField
-            style={{ minWidth: "20rem" }}
+            size="small"
+            style={{ minWidth: "17rem" }}
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
-            label="Search by Service Name or Group"
+            label="Search"
             variant="outlined"
           />
         </div>
@@ -199,22 +197,68 @@ export default function ProductGroup() {
           {alertMessage}
         </Alert>
         <TableContainer component={Paper}>
-          <TablePagination
-            rowsPerPageOptions={[2, 5, 10, 25]}
-            component="div"
-            count={filteredRows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <TablePagination
+              rowsPerPageOptions={[2, 5, 10, 25]}
+              component="div"
+              count={filteredRows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            <div
+              style={{
+                display: "flex",
+                marginInline: "1rem",
+                marginTop: "4px",
+              }}
+            >
+              <Link to="/service/add">
+                <Tooltip arrow title="Add Service">
+                  <IconButton
+                    size="small"
+                    style={{
+                      backgroundColor: "#00a9d1",
+                      color: "white",
+                      marginTop: "3px",
+                    }}
+                    variant="contained"
+                  >
+                    <Add />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+            </div>
+          </div>
+          <Divider />
           <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">ID</TableCell>
-                <TableCell align="center">Service Group</TableCell>
-                <TableCell align="center">Service</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  ID
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Service Group
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Service
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

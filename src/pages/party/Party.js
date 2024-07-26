@@ -6,6 +6,9 @@ import {
   TextField,
   Typography,
   TablePagination,
+  Divider,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -135,13 +138,9 @@ export default function ProductGroup() {
             marginBottom: "1rem",
           }}
         >
-          <Link to="/party/add">
-            <Button startIcon={<Add />} variant="contained">
-              Add
-            </Button>
-          </Link>
           <TextField
-            style={{ minWidth: "20rem" }}
+            style={{ minWidth: "17rem" }}
+            size="small"
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
             label="Search"
@@ -159,22 +158,80 @@ export default function ProductGroup() {
           {alertMessage}
         </Alert>
         <TableContainer component={Paper}>
-          <TablePagination
-            rowsPerPageOptions={[2, 5, 10, 25]}
-            component="div"
-            count={filteredRows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <TablePagination
+              rowsPerPageOptions={[2, 5, 10, 25]}
+              component="div"
+              count={filteredRows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+            <div
+              style={{
+                display: "flex",
+                marginInline: "1rem",
+                marginTop: "4px",
+              }}
+            >
+              <Link to="/party/add">
+                <Tooltip arrow title="Add Party">
+                  <IconButton
+                    size="small"
+                    style={{
+                      backgroundColor: "#00a9d1",
+                      color: "white",
+                      marginTop: "3px",
+                    }}
+                    variant="contained"
+                  >
+                    <Add />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+            </div>
+          </div>
+          <Divider />
+          <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="right">Party</TableCell>
-                <TableCell align="right">Contact Information</TableCell>
-                <TableCell align="right">Address</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  ID
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Party
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Contact Information
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Address
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -184,12 +241,14 @@ export default function ProductGroup() {
                 } else {
                   return (
                     <TableRow
-                      align="right"
+                      align="center"
                       key={row.iPartyID}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="right">{row.vParty}</TableCell>
-                      <TableCell align="right">
+                      <TableCell align="center">{row.iPartyID}</TableCell>
+
+                      <TableCell align="center">{row.vParty}</TableCell>
+                      <TableCell align="center">
                         {row.vCName}
                         <br />
                         {row.vCity}
@@ -199,10 +258,10 @@ export default function ProductGroup() {
                         {row.vCEmail}
                         <br />
                       </TableCell>
-                      <TableCell style={{ maxWidth: "12rem" }} align="right">
+                      <TableCell style={{ maxWidth: "12rem" }} align="center">
                         {row.tAddress}
                       </TableCell>
-                      <TableCell style={{}} align="right">
+                      <TableCell style={{}} align="center">
                         <DialogBoxComponent
                           open={open}
                           onClose={handleClose}
@@ -241,6 +300,7 @@ export default function ProductGroup() {
                           size="small"
                           variant="contained"
                           color="error"
+                          style={{ margin: "5px" }}
                           onClick={() =>
                             handleClickOpen(
                               "Are you sure?",
@@ -251,7 +311,11 @@ export default function ProductGroup() {
                         >
                           <Delete />
                         </Button>
-                        <Link to={`/party/edit/`} state={{ id: row.iPartyID }}>
+                        <Link
+                          style={{ margin: "5px" }}
+                          to={`/party/edit/`}
+                          state={{ id: row.iPartyID }}
+                        >
                           <Button size="small" variant="contained" color="info">
                             <Edit />
                           </Button>
