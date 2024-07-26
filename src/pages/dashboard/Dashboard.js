@@ -371,7 +371,11 @@ export default function Dashboard() {
       }),
     );
 
-    setExpiringGroups(serviceGroupArray);
+    // serviceGroupArray.sort((a, b) => a.localeCompare(b));
+
+    setExpiringGroups(
+      serviceGroupArray.sort((a, b) => a.label.localeCompare(b.label)),
+    );
   };
   useEffect(() => {
     if (decodedToken == null) {
@@ -469,7 +473,7 @@ export default function Dashboard() {
           {expiringGroups.map((card) => {
             return (
               <Grid item>
-                <Card style={{ width: "12rem" }}>
+                <Card style={{ minWidth: "12rem" }}>
                   <CardContent
                     style={{
                       display: "flex",

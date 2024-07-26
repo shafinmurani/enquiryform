@@ -81,8 +81,8 @@ export default function FileUploadDialog(props) {
               sx={{
                 width: "80%",
                 display: "block",
-                marginInline: "auto",
-                marginTop: "2rem",
+                // marginInline: "auto",
+                // marginTop: "2rem",
               }}
               name="file"
               id="raised-button-file"
@@ -92,8 +92,8 @@ export default function FileUploadDialog(props) {
               <label htmlFor="raised-button-file">
                 <Button
                   type="submit"
-                  variant="raised"
-                  component="span"
+                  // variant="raised"
+                  // component="span"``
                   // variant="contained"
                 >
                   Select File

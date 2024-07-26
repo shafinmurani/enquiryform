@@ -133,16 +133,9 @@ export default function ProductGroup() {
             marginBottom: "1rem",
           }}
         >
-          {decodedToken.role.toLowerCase() === "admin" ? (
-            <Link to="/service-group/add">
-              <Button startIcon={<Add />} variant="contained">
-                Add
-              </Button>
-            </Link>
-          ) : null}
-
           <TextField
-            style={{ minWidth: "20rem" }}
+            size="small"
+            style={{ minWidth: "17rem" }}
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
             label="Search by Service Group"
@@ -168,7 +161,7 @@ export default function ProductGroup() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
-            <div style={{ display: "flex", gap: "1rem" }}>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "5px" }}>
               <Tooltip title="Export to CSV" arrow>
                 <a href="http://localhost:3001/api/database/export/service-group">
                   <IconButton color="primary" variant="outlined">
@@ -185,6 +178,21 @@ export default function ProductGroup() {
                   />
                 </a>
               </Tooltip>
+              {decodedToken.role.toLowerCase() === "admin" ? (
+                <Link to="/service-group/add">
+                  <IconButton
+                    size="small"
+                    style={{
+                      backgroundColor: "#00a9d1",
+                      color: "white",
+                      marginTop: "3px",
+                    }}
+                    variant="contained"
+                  >
+                    <Add />
+                  </IconButton>
+                </Link>
+              ) : null}
             </div>
           </div>
           <Divider />
