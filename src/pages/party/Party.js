@@ -296,7 +296,7 @@ export default function ProductGroup() {
                             </Button>
                           </div>
                         </DialogBoxComponent>
-                        <Button
+                        <IconButton
                           size="small"
                           variant="contained"
                           color="error"
@@ -310,15 +310,19 @@ export default function ProductGroup() {
                           }
                         >
                           <Delete />
-                        </Button>
+                        </IconButton>
                         <Link
                           style={{ margin: "5px" }}
                           to={`/party/edit/`}
                           state={{ id: row.iPartyID }}
                         >
-                          <Button size="small" variant="contained" color="info">
+                          <IconButton
+                            size="small"
+                            variant="contained"
+                            color="info"
+                          >
                             <Edit />
-                          </Button>
+                          </IconButton>
                         </Link>
                       </TableCell>
                     </TableRow>

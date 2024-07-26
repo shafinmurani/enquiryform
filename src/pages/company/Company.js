@@ -27,7 +27,7 @@ import { company, decodedToken } from "../../services/services_export";
 export default function Company() {
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -88,6 +88,9 @@ export default function Company() {
     handleClose();
   };
 
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const months = [1, 2, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12];
+
   return (
     <>
       <DrawerComponent title="Company List">
@@ -119,19 +122,12 @@ export default function Company() {
             marginBottom: "1rem",
           }}
         >
-          {decodedJwt.role == "Admin" ? (
-            <Link to="/company/add">
-              <Button startIcon={<Add />} variant="contained">
-                Add
-              </Button>
-            </Link>
-          ) : null}
-
           <TextField
-            style={{ minWidth: "20rem" }}
+            size="small"
+            style={{ minWidth: "17rem" }}
             onChange={(e) => setSearch(e.target.value)}
             id="outlined-basic"
-            label="Search by Company"
+            label="Search"
             variant="outlined"
           />
         </div>
@@ -141,7 +137,7 @@ export default function Company() {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingBlock: "0.8rem",
+              // paddingBlock: "0.8rem",
               paddingInline: "1rem",
             }}
           >
@@ -154,7 +150,8 @@ export default function Company() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
-            <div style={{ display: "flex", gap: "1rem" }}>
+
+            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
               <Tooltip title="Export to CSV" arrow>
                 <a href="http://localhost:3001/api/database/export/company">
                   <IconButton color="primary" variant="outlined">
@@ -171,16 +168,53 @@ export default function Company() {
                   />
                 </a>
               </Tooltip>
+              {decodedJwt.role == "Admin" ? (
+                <Link to="/party/add">
+                  <Tooltip arrow title="Add Party">
+                    <IconButton
+                      size="small"
+                      style={{
+                        backgroundColor: "#00a9d1",
+                        color: "white",
+                        marginTop: "3px",
+                      }}
+                      variant="contained"
+                    >
+                      <Add />
+                    </IconButton>
+                  </Tooltip>
+                </Link>
+              ) : null}
             </div>
           </div>
           <Divider />
-          <Table sx={{ minWidth: 650 }}  size="small" aria-label="simple table">
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="right">Company</TableCell>
-                <TableCell align="right">Date Created</TableCell>
-                <TableCell align="right">Date Modified</TableCell>
-                <TableCell align="right">Actions</TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Company
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Date Created
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Date Modified
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  align="center"
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -199,12 +233,26 @@ export default function Company() {
                       key={row.iAccountID}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="right">{row.vAccount}</TableCell>
-                      <TableCell align="right">{row.dtCreated}</TableCell>
-                      <TableCell align="right">{row.dtModified}</TableCell>
+                      <TableCell align="center">{row.vAccount}</TableCell>
+                      <TableCell align="center">
+                        {days[new Date(Date.parse(row.dtCreated)).getDay()]}{" "}
+                        {new Date(Date.parse(row.dtCreated)).getDate()}/
+                        {months[new Date(Date.parse(row.dtCreated)).getMonth()]}
+                        /{new Date(Date.parse(row.dtCreated)).getFullYear()}
+                      </TableCell>
+                      <TableCell align="center">
+                        {days[new Date(Date.parse(row.dtModified)).getDay()]}{" "}
+                        {new Date(Date.parse(row.dtModified)).getDate()}/
+                        {
+                          months[
+                            new Date(Date.parse(row.dtModified)).getMonth()
+                          ]
+                        }
+                        /{new Date(Date.parse(row.dtModified)).getFullYear()}
+                      </TableCell>
                       <TableCell
-                        style={{ display: "flex", gap: "1rem" }}
-                        align="right"
+                        // style={{ display: "flex", gap: "1rem" }}
+                        align="center"
                       >
                         <DialogBoxComponent
                           open={open}
@@ -241,10 +289,11 @@ export default function Company() {
                             </Button>
                           </div>
                         </DialogBoxComponent>
-                        <Button
+                        <IconButton
                           size="small"
                           variant="contained"
                           color="error"
+                          style={{ margin: "5px" }}
                           onClick={() => {
                             handleClickOpen(
                               "Are you sure?",
@@ -254,14 +303,19 @@ export default function Company() {
                           }}
                         >
                           <Delete />
-                        </Button>
+                        </IconButton>
                         <Link
+                          style={{ margin: "5px" }}
                           to={`/company/edit/`}
                           state={{ id: row.iAccountID }}
                         >
-                          <Button size="small" variant="contained" color="info">
+                          <IconButton
+                            size="small"
+                            variant="contained"
+                            color="info"
+                          >
                             <Edit />
-                          </Button>
+                          </IconButton>
                         </Link>
                       </TableCell>
                     </TableRow>
