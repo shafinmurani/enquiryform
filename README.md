@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# Internship Report
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Industry Name:** Yesha Software LLP
 
-## Available Scripts
+**Project Duration:** **6 weeks** (27-06-2024 to 07-08-2024)
 
-In the project directory, you can run:
+**Interns : Shafin Murani (226210307071)** <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Ashlin Colaco (226210307018)**
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## **Project Overview:**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+During my internship at Yesha Software LLP, I worked on a CRM and Service Renewal Management website using React. We moved an old PHP system to a new React.js app. The project was finished in 6 weeks with high quality and functionality.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## **Tech Stack Used:**
 
-### `npm run build`
+- **Node.js**
+- **React.js**
+- **MySQL**
+- **Express.js**
+- **JWT Tokens**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## **Project Repositories:**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Frontend Repository:** [https://github.com/shafinmurani/enquiryform](https://github.com/shafinmurani/enquiryform)
+- **Backend Repository:** [https://github.com/shafinmurani/enquiryform-backend](https://github.com/shafinmurani/enquiryform-backend)
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## **Project Details:**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The main goal was to build a smooth and efficient CRM and renewal management system with modern web tools. Tasks were split as follows:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Backend Development (Shafin Murani):**
+  - Created RESTful APIs with Node.js and Express.js.
+  - Used MySQL for the database.
+  - Used JWT tokens for secure login.
+  - Handled data checks and errors.
+- **Frontend Development (Ashlin Colaco):**
+  - Made a responsive UI with React.js.
+  - Connected frontend to backend APIs.
+  - Ensured a smooth user experience.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## **Project Outcome:**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<div style="text-align:justify">
+The project was a resounding success, fulfilling all the necessary functions and maintaining high standards of quality. The CRM and renewal management website is now significantly more efficient, secure, and user-friendly than before. The team demonstrated excellent collaboration and communication skills, working seamlessly together to ensure the project's timely completion. They met all the client's needs and expectations, delivering a final product that surpassed the initial requirements. Overall, this project showcased the team’s dedication, expertise, and commitment to excellence.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+</div>
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## **Conclusion:**
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<div style="text-align:justify">
+This internship gave me valuable experience in full-stack development and improved my ability to work effectively within a team. Over six weeks, I enhanced my technical skills, particularly in Node.js, React.js, and various development tools. I was involved in migrating an old PHP system to a new React.js application, where I created RESTful APIs with Node.js and Express.js, used MySQL for the database, and implemented JWT tokens for secure login. Collaborating closely with my teammate on the frontend, we ensured a seamless connection between the frontend and backend, delivering a responsive and user-friendly interface. This experience not only broadened my technical expertise but also strengthened my problem-solving and communication skills, making it a significant learning opportunity.
+</div>

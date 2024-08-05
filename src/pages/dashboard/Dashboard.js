@@ -682,7 +682,7 @@ export default function Dashboard() {
                         paddingInline: "5px",
                       }}
                     >
-                      {row.taxType}: {row.tax} %
+                      {row.taxType}:{row.tax}%
                     </span>
                     <br />
                     <span
