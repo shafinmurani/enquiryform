@@ -76,38 +76,42 @@ export default function Dashboard() {
   const [expiringGroups, setExpiringGroups] = React.useState([]);
   const getData = async () => {
     var productDataRows = await getProductData();
-    var prodcutGroupDataRows = await getProductGroupData();
+    var productGroupDataRows = await getProductGroupData();
     var partyDataRows = await getPartyData();
     var companyDataRows = await getCompanyData();
     var dealerDataRows = await getDealerData();
     await axios
       .post("http://localhost:3001/api/renewals/get", { decodedToken })
       .then((res) => {
+        console.log(companyDataRows);
         var array = [];
         var srNo = 1;
         for (var i = 0; i < res.data.list.length; i++) {
           if (res.data.list[i].isDeleted == "No") {
+            console.log(res.data.list[i]);
+            const partyData = partyDataRows.find(
+              (x) => x.id == res.data.list[i].iPartyID,
+            );
+            const companyData = companyDataRows.find(
+              (x) => x.id == res.data.list[i].iAccountID,
+            );
+            const dealerData = dealerDataRows.find(
+              (x) => x.id == res.data.list[i].iDealerID,
+            );
+            const productData = productDataRows.find(
+              (x) => x.id == res.data.list[i].iProductID,
+            );
+            const productGroupData = productData
+              ? productGroupDataRows.find((x) => x.id == productData.groupId)
+              : null;
+
             array.push({
               srNo,
-              partyData: partyDataRows.find(
-                (x) => x.id == res.data.list[i].iPartyID,
-              ),
-              companyData: companyDataRows.find(
-                (x) => x.id == res.data.list[i].iAccountID,
-              ),
-              dealerData: dealerDataRows.find(
-                (x) => x.id == res.data.list[i].iDealerID,
-              ),
-              productData: productDataRows.find(
-                (x) => x.id == res.data.list[i].iProductID,
-              ),
-              productGroupData: prodcutGroupDataRows.find(
-                (x) =>
-                  x.id ==
-                  productDataRows.find(
-                    (x) => x.id == res.data.list[i].iProductID,
-                  ).groupId,
-              ),
+              partyData: partyData || {},
+              companyData: companyData || {},
+              dealerData: dealerData || {},
+              productData: productData || {},
+              productGroupData: productGroupData || {},
               iProductID: res.data.list[i].iProductID,
               iCompanyID: res.data.list[i].iAccountID,
               dtRegister: res.data.list[i].dtRegister,
@@ -117,6 +121,10 @@ export default function Dashboard() {
               remarks: res.data.list[i].tRemarks,
               quantity: res.data.list[i].iQty,
               id: res.data.list[i].iRenewalID,
+              totalAmount: res.data.list[i].dTotalAmount,
+              tax: res.data.list[i].dTax,
+              amount: res.data.list[i].dAmount,
+              taxType: res.data.list[i].eTaxType,
             });
             srNo = srNo + 1;
           }
@@ -126,6 +134,7 @@ export default function Dashboard() {
         setExpiryMonthYearFilter(dayjs(new Date()));
       });
   };
+
   const getCompanyData = async () => {
     var array = [];
     await axios
@@ -142,6 +151,7 @@ export default function Dashboard() {
         }
       });
     setCompanyRows(array);
+    console.log(array);
     return array;
   };
 
@@ -556,7 +566,7 @@ export default function Dashboard() {
                   className={classes.tableHeadingCell}
                   align="center"
                 >
-                  Product
+                  Service
                 </TableCell>
                 <TableCell
                   style={{ fontWeight: 600, fontSize: "1.1rem" }}
@@ -578,6 +588,13 @@ export default function Dashboard() {
                   align="center"
                 >
                   Party Details
+                </TableCell>
+                <TableCell
+                  style={{ fontWeight: 600, fontSize: "1.1rem" }}
+                  className={classes.tableHeadingCell}
+                  align="center"
+                >
+                  Amount
                 </TableCell>
                 <TableCell
                   style={{ fontWeight: 600, fontSize: "1.1rem" }}
@@ -645,7 +662,41 @@ export default function Dashboard() {
                     {row.partyData.email}
                     <br />
                   </TableCell>
-
+                  <TableCell className={classes.tableCell} align="center">
+                    <span
+                      style={{
+                        backgroundColor: "#f69915",
+                        fontWeight: "700",
+                        color: "#fffad9",
+                        paddingInline: "5px",
+                      }}
+                    >
+                      B.A: {row.amount} /-
+                    </span>
+                    <br />
+                    <span
+                      style={{
+                        backgroundColor: "#3b8fc4",
+                        fontWeight: "700",
+                        color: "#fffad9",
+                        paddingInline: "5px",
+                      }}
+                    >
+                      {row.taxType}: {row.tax} %
+                    </span>
+                    <br />
+                    <span
+                      style={{
+                        backgroundColor: "#0e9b5f",
+                        fontWeight: "700",
+                        color: "#fffad9",
+                        paddingInline: "5px",
+                      }}
+                    >
+                      T.A: {row.totalAmount} /-
+                    </span>
+                    <br />
+                  </TableCell>
                   <TableCell
                     className={classes.tableCell}
                     style={{ maxWidth: "8rem" }}
