@@ -38,7 +38,7 @@ cd enquiryform
 2. Create a `.env` file in the `server` directory:
 
    ```bash
-   echo "TOKEN_SECRET=your_long_random_secret_key_here" > server/.env
+   echo "TOKEN_SECRET=your_long_random_secret_key_here" > .env
    ```
 
    Note: Replace `your_long_random_secret_key_here` with a secure, random string
