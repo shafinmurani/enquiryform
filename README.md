@@ -5,6 +5,10 @@
 - Node.js (v14 or higher)
 - MySQL
 - npm or yarn
+  
+## Login Credentials
+- Username: admin@admin.com
+- Password: admin
 
 ## Clone the repository
 
