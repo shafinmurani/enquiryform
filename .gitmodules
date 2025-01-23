@@ -1,3 +1,4 @@
 [submodule "server"]
     path = server
     url = https://github.com/shafinmurani/enquiryform-backend.git
+    fetchRecurseSubmodules = true

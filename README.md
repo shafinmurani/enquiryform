@@ -9,7 +9,7 @@
 ## Clone the repository
 
 ```bash
-git clone https://github.com/shafinmurani/enquiryform
+git clone --recurse-submodules https://github.com/shafinmurani/enquiryform
 cd enquiryform
 ```
 
@@ -69,6 +69,14 @@ cd enquiryform
 - Ensure MySQL user and database creation
 - Check `.env` has a valid `TOKEN_SECRET`
 - Verify database connection
+
+## Update
+
+To pull from the repo
+
+```bash
+git pull --recurse-submodules
+```
 
 ## Need Help?
 
